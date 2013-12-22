@@ -14,9 +14,9 @@ namespace Srk.BetaseriesApi.Clients {
             return Task.Run(() => this.GetShow(url));
         }
 
-        public Task<IList<Show>> GetShowsTaskAsync() {
-            return Task.Run(() => this.GetShows());
-        }
+        ////public Task<IList<Show>> GetShowsTaskAsync() {
+        ////    return Task.Run(() => this.GetShows());
+        ////}
 
         public Task<IList<Episode>> GetEpisodesTaskAsync(string showUrl) {
             return Task.Run(() => this.GetEpisodes(showUrl));

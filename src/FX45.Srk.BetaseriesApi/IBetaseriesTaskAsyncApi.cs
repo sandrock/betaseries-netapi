@@ -24,11 +24,11 @@ namespace Srk.BetaseriesApi {
         /// <returns></returns>
         Task<Show> GetShowTaskAsync(string url);
 
-        /// <summary>
-        /// Get a list of all shows.
-        /// </summary>
-        /// <returns></returns>
-        Task<IList<Show>> GetShowsTaskAsync();
+        /////// <summary>
+        /////// Get a list of all shows.
+        /////// </summary>
+        /////// <returns></returns>
+        ////Task<IList<Show>> GetShowsTaskAsync();
 
         /// <summary>
         /// Get all episodes from a show.
