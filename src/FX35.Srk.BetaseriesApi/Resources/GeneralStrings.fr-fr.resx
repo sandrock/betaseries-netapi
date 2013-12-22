@@ -189,6 +189,9 @@
   <data name="BadgeDesc_LeMillier" xml:space="preserve">
     <value>Ça y est, vous avez vu plus de 1000 épisodes de séries télé. Sale geek.</value>
   </data>
+  <data name="BadgeDesc_Lunettes3d" xml:space="preserve">
+    <value>Cent films dans votre liste, il va falloir penser à aller voir une séance 3D. Comment ça, non ?</value>
+  </data>
   <data name="BadgeDesc_Marathonien" xml:space="preserve">
     <value>Vous avez regardé 6 épisodes en plein dimanche, c'est un grand chelem !</value>
   </data>
@@ -311,6 +314,9 @@
   </data>
   <data name="Badges_LeMillier" xml:space="preserve">
     <value>Le millier</value>
+  </data>
+  <data name="Badges_Lunettes3d" xml:space="preserve">
+    <value>Lunettes 3D</value>
   </data>
   <data name="Badges_Marathonien" xml:space="preserve">
     <value>Marathonien</value>

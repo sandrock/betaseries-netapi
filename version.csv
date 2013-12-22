@@ -1,0 +1,57 @@
+Method,Status,Last,Current,
+comments/episode,OK,20101222,20101222
+comments/member,OK,20101014,20101014
+comments/post,ok (outdated),20121015,20101209
+comments/show,OK,20101014,20101014
+comments/subscribe,Not implemented,20121111,0
+comments/unsubscribe,Not implemented,20121111,0
+members/add,Not implemented,20110202,0
+members/auth,OK,20101014,20101014
+members/badges,OK,20101014,20101014
+members/block,Not implemented,20110202,0
+members/delete,Not implemented,20110202,0
+members/destroy,OK,20101014,20101014
+members/downloaded,OK,20101222,20101222
+members/episodes,ok (outdated),20121015,20101209
+members/friends,ok (outdated),20121015,20101227
+members/infos,ok (outdated),20111018,20110118
+members/is_active,OK,20101031,20101031
+members/note,ok (outdated),20120422,20110201
+members/notifications,ok (outdated),20110421,20110206
+members/oauth,Not implemented,20111226,0
+members/option,Not implemented,20111116,0
+members/options,Not implemented,20110317,0
+members/search,Not implemented,20110316,0
+members/signup,OK,20101014,20101014
+members/sync,Not implemented,20121016,0
+members/unblock,Not implemented,20110202,0
+members/watched,OK,20101104,20101104
+messages/delete,Not implemented,20121105,0
+messages/discussion,Not implemented,20110711,0
+messages/inbox,Not implemented,20110711,0
+messages/send,Not implemented,20110711,0
+pictures/badge,Not implemented,20101014,0
+pictures/episode,Not implemented,20110725,0
+pictures/member,Not implemented,20110725,0
+pictures/show,Not implemented,20110725,0
+planning/general,OK,20110316,20110316
+planning/incoming,Not implemented,20120425,0
+planning/member,ok (outdated),20120423,20110316
+shows/add,OK,20101014,20101014
+shows/archive,Not implemented,20110503,0
+shows/characters,Not implemented,20111201,0
+shows/display,ok (outdated),20121015,20110201
+shows/episodes,ok (outdated),20111128,20101222
+shows/recommend,Not implemented,20101220,0
+shows/remove,OK,20101014,20101014
+shows/scraper,Not implemented,20121015,0
+shows/search,OK,20110316,20110316
+shows/similar,Not implemented,20110606,0
+shows/unarchive,Not implemented,20110503,0
+shows/videos,Not implemented,20121015,0
+status,OK,0,20101222
+subtitles/last,ok (outdated),20110313,20110305
+subtitles/show,ok (outdated),20110313,20110305
+timeline/friends,ok (outdated),20111128,20110118
+timeline/home,ok (outdated),20111128,20110118
+timeline/member,ok (outdated),20111128,20110118

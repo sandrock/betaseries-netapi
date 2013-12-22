@@ -47,6 +47,7 @@ namespace Srk.BetaseriesApi {
             serviceMap.Add("tas_dbeaux_yeux", Badges.BeauxYeux);
             serviceMap.Add("twittos", Badges.Twittos);
             serviceMap.Add("vieux_briscard", Badges.VieuxBriscard);
+            serviceMap.Add("lunettes_3D", Badges.Lunettes3d);
             // All badges below are unsure
             serviceMap.Add("bienfaiteur", Badges.Bienfaiteur);
             serviceMap.Add("donateur", Badges.Donateur);
@@ -170,7 +171,8 @@ namespace Srk.BetaseriesApi {
     /// <summary>
     /// Enumeration of betaseries badges.
     /// </summary>
-    public enum Badges {
+    public enum Badges
+    {
 
         /// <summary>
         /// Badly parsed badges or new one.
@@ -351,12 +353,16 @@ namespace Srk.BetaseriesApi {
         /// Sept nuits, sept épisodes. On a ses petites habitudes, à ce que je vois.
         /// </summary>
         Noctambule,
+
         FreshPaint,
         Bienfaiteur,
         Donateur,
         Fiche,
-        ForumStarter
+        ForumStarter,
 
+        /// <summary>
+        /// Cent films dans votre liste, il va falloir penser à aller voir une séance 3D. Comment ça, non ?
+        /// </summary>
+        Lunettes3d,
     }
-
 }
