@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <key></key>
+ <token></token>
+ <episodes>
+  <episode>
+   <show>24</show>
+   <number>S01E13</number>
+   <url>24</url>
+   <title>Day 1 - 12:00 P.M.-1:00 P.M.</title>
+   <date>1014678000</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/79878</url>
+     <filename>24_1x13_fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/79521</url>
+     <filename>24_1x13_en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/15398</url>
+     <filename>24_1x13_DVD.en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>A Developer's Life</show>
+   <number>S02E01</number>
+   <url>a-developers-life</url>
+   <title>Le livre de visage</title>
+   <date>1295305200</date>
+   <downloaded>0</downloaded>
+  </episode>
+  <episode>
+   <show>Dexter</show>
+   <number>S01E11</number>
+   <url>dexter</url>
+   <title>Truth Be Told</title>
+   <date>1165705200</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/115347</url>
+     <filename>Dexter_1x11_HDTV.LOL.fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/115340</url>
+     <filename>Dexter_1x11_en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>Doctor Who</show>
+   <number>S01E03</number>
+   <url>doctorwho</url>
+   <title>The Unquiet Dead</title>
+   <date>1112997600</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/250286</url>
+     <filename>Doctor Who_1x03_WS PDTV.2005.fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>How I Met Your Mother</show>
+   <number>S06E08</number>
+   <url>himym</url>
+   <title>Natural History</title>
+   <date>1289170800</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277208</url>
+     <filename>How I Met Your Mother_6x08_HDTV.Ad[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/277257</url>
+     <filename>How I Met Your Mother_6x08_HDTV.Ho[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/277173</url>
+     <filename>How I Met Your Mother_6x08_HDTV.fe[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/277159</url>
+     <filename>How I Met Your Mother_6x08_HDTV.FE[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/277145</url>
+     <filename>How I Met Your Mother_6x08_HDTV.Fe[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277320</url>
+     <filename>How I Met Your Mother_6x08_HDTV.fr[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277649</url>
+     <filename>How I Met Your Mother_6x08_HDTV.Ad[...](1).zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277362</url>
+     <filename>How.I.Met.Your.Mother.6x08.FR.WTFM[...]TFM.zip</filename>
+     <source>soustitres</source>
+     <quality>5</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/276935</url>
+     <filename>How I Met Your Mother - 06x08 - Na[...]ory.srt</filename>
+     <source>addic7ed</source>
+     <quality>3</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/278251</url>
+     <filename>How I Met Your Mother_6x08_720p HD[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277950</url>
+     <filename>How I Met Your Mother_6x08_720p HD[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/277404</url>
+     <filename>How.I.Met.Your.Mother.6x08.FR.WTFM[...]TFM.zip</filename>
+     <source>usub</source>
+     <quality>5</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>Sons of Anarchy</show>
+   <number>S01E05</number>
+   <url>sonsofanarchy</url>
+   <title>Giving Back</title>
+   <date>1222812000</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/132703</url>
+     <filename>Sons of Anarchy_1x05_repack.dot.fr[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/132697</url>
+     <filename>Sons of Anarchy_1x05_repack.dot.en[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>Stargate Atlantis</show>
+   <number>S01E03</number>
+   <url>stargateatlantis</url>
+   <title>Hide and Seek</title>
+   <date>1090533600</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/86969</url>
+     <filename>Stargate Atlantis_1x03_en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/86752</url>
+     <filename>Stargate Atlantis_1x03_DVD.WS.iNTE[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/86745</url>
+     <filename>Stargate Atlantis_1x03_HDTV.fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>Stargate Universe</show>
+   <number>S01E02</number>
+   <url>stargateuniverse</url>
+   <title>Air (2)</title>
+   <date>1254434400</date>
+   <downloaded>0</downloaded>
+  </episode>
+  <episode>
+   <show>The Big Bang Theory</show>
+   <number>S04E14</number>
+   <url>bigbangtheory</url>
+   <title>The Thespian Catalyst</title>
+   <date>1296687600</date>
+   <downloaded>0</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/310395</url>
+     <filename>The Big Bang Theory_4x14_HDTV.FQM.[...](1).zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/309142</url>
+     <filename>The Big Bang Theory_4x14_HDTV.FQM.[...].fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/308610</url>
+     <filename>The Big Bang Theory_4x14_HDTV.FQM.[...].en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/310129</url>
+     <filename>The.Big.Bang.Theory.4x14.FR.TBBT.zip</filename>
+     <source>soustitres</source>
+     <quality>5</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>The IT Crowd</show>
+   <number>S04E05</number>
+   <url>itcrowd</url>
+   <title>Bad Boys</title>
+   <date>1279836000</date>
+   <downloaded>1</downloaded>
+   <subs>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/234459</url>
+     <filename>The IT Crowd_4x05_fr.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/238673</url>
+     <filename>The.IT.Crowd.S04E05.PDTV.FoV.en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VO</language>
+     <url>http://www.betaseries.com/srt/234354</url>
+     <filename>The IT Crowd_4x05_WS PDTV.FoV.en.zip</filename>
+     <source>tvsubtitles</source>
+     <quality>1</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/240906</url>
+     <filename>The.IT.Crowd.4x05.FR.FBK.zip</filename>
+     <source>soustitres</source>
+     <quality>5</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/240626</url>
+     <filename>The.IT.Crowd.4x05.FR.FBK.zip</filename>
+     <source>soustitres</source>
+     <quality>5</quality>
+    </sub>
+    <sub>
+     <language>VF</language>
+     <url>http://www.betaseries.com/srt/235495</url>
+     <filename>The.IT.Crowd.4x05.FR.FBK.zip</filename>
+     <source>soustitres</source>
+     <quality>5</quality>
+    </sub>
+   </subs>
+  </episode>
+  <episode>
+   <show>Toaru Majutsu no Index</show>
+   <number>S01E02</number>
+   <url>toarumajutsunoindex</url>
+   <title>The King of Witch Hunt (Innocentius)</title>
+   <date>1223762400</date>
+   <downloaded>0</downloaded>
+  </episode>
+ </episodes>
+ <code>1</code>
+ <errors/>
+</root>

@@ -1,0 +1,493 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadgeDesc_Amateur" xml:space="preserve">
+    <value>Votre dixième série ajoutée, vous commencez à avoir un profil intéressant.</value>
+  </data>
+  <data name="BadgeDesc_BeauxYeux" xml:space="preserve">
+    <value>Votre magnifique trombine est maintenant sur votre profil, c'est pour la drague ?</value>
+  </data>
+  <data name="BadgeDesc_Bienfaiteur" xml:space="preserve">
+    <value>Dix vidéos publicitaires regardées, c'est ce qu'on appelle un vrai soutien :)</value>
+  </data>
+  <data name="BadgeDesc_BlogueurInfluent" xml:space="preserve">
+    <value>Vous avez suggéré 25 fois à vos amis de suivre une série, vous ont-ils écouté ?</value>
+  </data>
+  <data name="BadgeDesc_CapitaineSpock" xml:space="preserve">
+    <value>Vous suivez 5 séries fantastiques, attention aux extra-terrestres.</value>
+  </data>
+  <data name="BadgeDesc_Confirme" xml:space="preserve">
+    <value>25 séries regardées, vous commencez à devenir accro, faites attention ! </value>
+  </data>
+  <data name="BadgeDesc_Debutant" xml:space="preserve">
+    <value>Vous avez regardé votre premier épisode. Bienvenue sur BetaSeries !</value>
+  </data>
+  <data name="BadgeDesc_Developpeur" xml:space="preserve">
+    <value>Vous utilisez vos petites mains pleines de doigts pour améliorer l'écosystème de BetaSeries. Merci mille fois !</value>
+  </data>
+  <data name="BadgeDesc_Donateur" xml:space="preserve">
+    <value>Merci de soutenir BetaSeries en ayant regardé une vidéo publicitaire, nous vous en sommes très reconnaissants.</value>
+  </data>
+  <data name="BadgeDesc_DramaQueen" xml:space="preserve">
+    <value>10 drama dans votre compte ? Faudra prévoir les mouchoirs la prochaine fois.</value>
+  </data>
+  <data name="BadgeDesc_EcoleBuissoniere" xml:space="preserve">
+    <value>Vous osez regarder encore des séries après 3 heures du matin, en pleine semaine...</value>
+  </data>
+  <data name="BadgeDesc_Einstein" xml:space="preserve">
+    <value>One week, 10 episodes. You're gonna have to relativize your life.</value>
+  </data>
+  <data name="BadgeDesc_Fiche" xml:space="preserve">
+    <value>Une fiche personnage créée par vos soins apparaît maintenant dans BetaSeries.</value>
+  </data>
+  <data name="BadgeDesc_Flashmob" xml:space="preserve">
+    <value>You watched the same episode as 75 members this day. You're fashionable.</value>
+  </data>
+  <data name="BadgeDesc_ForumStarter" xml:space="preserve">
+    <value>Votre premier message sur le forum, c'est quelque chose qui se fête !</value>
+  </data>
+  <data name="BadgeDesc_FreshPaint" xml:space="preserve">
+    <value>Merci de nous avoir soumis une image pour illustrer une série. Vous pouvez recommencer !</value>
+  </data>
+  <data name="BadgeDesc_Gendarme" xml:space="preserve">
+    <value>Grâce à vous, déjà 10 sous-titres ont été signalés comme inadéquats.</value>
+  </data>
+  <data name="BadgeDesc_Glandeur" xml:space="preserve">
+    <value>Quand on passe sa soirée à regarder 4 épisodes, faut pas s'étonner de ce qu'on dit.</value>
+  </data>
+  <data name="BadgeDesc_HadopiMaster" xml:space="preserve">
+    <value>Bonne lecture avec vos 100 fichiers de sous-titres téléchargés... </value>
+  </data>
+  <data name="BadgeDesc_Hyperactifs" xml:space="preserve">
+    <value>Vos amis ont effectué 30 actions dans les dernières 24 heures, ce sont des clients fidèles.</value>
+  </data>
+  <data name="BadgeDesc_JerrySeinfeld" xml:space="preserve">
+    <value>10 séries humoristiques, on a un peu peur pour vous, respirez de temps en temps.</value>
+  </data>
+  <data name="BadgeDesc_JoyeuxNoel" xml:space="preserve">
+    <value>Vous avez préféré regarder un épisode plutôt que de vous taper les repas de famille. On vous comprend.</value>
+  </data>
+  <data name="BadgeDesc_Junior" xml:space="preserve">
+    <value>Vous avez regardé 10 épisodes de 10 séries différentes, bon début.</value>
+  </data>
+  <data name="BadgeDesc_LeMillier" xml:space="preserve">
+    <value>Ça y est, vous avez vu plus de 1000 épisodes de séries télé. Sale geek.</value>
+  </data>
+  <data name="BadgeDesc_Marathonien" xml:space="preserve">
+    <value>Vous avez regardé 6 épisodes en plein dimanche, c'est un grand chelem !</value>
+  </data>
+  <data name="BadgeDesc_MartineAubry" xml:space="preserve">
+    <value>Vous avez regardé plus de 35 heures d'épisodes. C'est la lutte...</value>
+  </data>
+  <data name="BadgeDesc_MeilleurAmi" xml:space="preserve">
+    <value>10 amis réciproques. C'est beau l'amitié, surtout quand l'autre est au courant.</value>
+  </data>
+  <data name="BadgeDesc_Noctambule" xml:space="preserve">
+    <value>Sept nuits, sept épisodes. On a ses petites habitudes, à ce que je vois.</value>
+  </data>
+  <data name="BadgeDesc_OldSchool" xml:space="preserve">
+    <value>Vous vous êtes inscrit pendant la première année d'existence de BetaSeries.</value>
+  </data>
+  <data name="BadgeDesc_Parrain" xml:space="preserve">
+    <value>Vous avez parrainé un ami sur BetaSeries, maintenant il faut s'en occuper.</value>
+  </data>
+  <data name="BadgeDesc_PetitBavard" xml:space="preserve">
+    <value>Vous avez posté 25 commentaires sur BetaSeries, que de bla bla !</value>
+  </data>
+  <data name="BadgeDesc_Planque" xml:space="preserve">
+    <value>Ces douze dernières heures vous avez regardé 4 épisodes. Faites quelque chose de votre vie.</value>
+  </data>
+  <data name="BadgeDesc_PokeHerFace" xml:space="preserve">
+    <value>Vous avez activé Facebook sur votre compte BetaSeries, vous êtes social.</value>
+  </data>
+  <data name="BadgeDesc_Rattrapage" xml:space="preserve">
+    <value>3 épisodes d'une même série à la suite... On a une série à rattraper, à ce que je vois.</value>
+  </data>
+  <data name="BadgeDesc_Senior" xml:space="preserve">
+    <value>50 séries, on ne peut plus vous arrêter. Continuez, après tout, ça ne nous dérange pas.</value>
+  </data>
+  <data name="BadgeDesc_Serievore" xml:space="preserve">
+    <value>Un mois s'est écoulé et 30 épisodes ont été regardés, vous avez le double-clic facile.</value>
+  </data>
+  <data name="BadgeDesc_Superstar" xml:space="preserve">
+    <value>50 personnes vous ont ajouté à leurs amis, Michel Drucker n'a qu'à bien se tenir.</value>
+  </data>
+  <data name="BadgeDesc_Surbooking" xml:space="preserve">
+    <value>Woh, 12 badges sur votre profil, on va plus avoir la place pour d'autres.</value>
+  </data>
+  <data name="BadgeDesc_Twittos" xml:space="preserve">
+    <value>Votre compte Twitter est configuré, vous faites partie de la grande famille du microblogging.</value>
+  </data>
+  <data name="BadgeDesc_VieuxBriscard" xml:space="preserve">
+    <value>Cela fait un an que vous êtes inscrit sur BetaSeries, ça se fête.</value>
+  </data>
+  <data name="Badges_" xml:space="preserve">
+    <value>badge inconnu</value>
+  </data>
+  <data name="Badges_Amateur" xml:space="preserve">
+    <value>Amateur</value>
+  </data>
+  <data name="Badges_BeauxYeux" xml:space="preserve">
+    <value>T'as de beaux yeux</value>
+  </data>
+  <data name="Badges_Bienfaiteur" xml:space="preserve">
+    <value>Bienfaiteur</value>
+  </data>
+  <data name="Badges_BlogueurInfluent" xml:space="preserve">
+    <value>Bloggueur influent</value>
+  </data>
+  <data name="Badges_CapitaineSpock" xml:space="preserve">
+    <value>Capitaine Spock</value>
+  </data>
+  <data name="Badges_Confirme" xml:space="preserve">
+    <value>Confirmé</value>
+  </data>
+  <data name="Badges_Debutant" xml:space="preserve">
+    <value>Débutant</value>
+  </data>
+  <data name="Badges_Developpeur" xml:space="preserve">
+    <value>Développeur</value>
+  </data>
+  <data name="Badges_Donateur" xml:space="preserve">
+    <value>Donateur</value>
+  </data>
+  <data name="Badges_DramaQueen" xml:space="preserve">
+    <value>Drama Queen</value>
+  </data>
+  <data name="Badges_EcoleBuissoniere" xml:space="preserve">
+    <value>Ecole buissonnière</value>
+  </data>
+  <data name="Badges_Einstein" xml:space="preserve">
+    <value>Einstein</value>
+  </data>
+  <data name="Badges_Fiche" xml:space="preserve">
+    <value>Fiché</value>
+  </data>
+  <data name="Badges_Flashmob" xml:space="preserve">
+    <value>Flashmob</value>
+  </data>
+  <data name="Badges_ForumStarter" xml:space="preserve">
+    <value>Forumeur Débutant</value>
+  </data>
+  <data name="Badges_FreshPaint" xml:space="preserve">
+    <value>Peinture fraîche</value>
+  </data>
+  <data name="Badges_Gendarme" xml:space="preserve">
+    <value>Gendarme</value>
+  </data>
+  <data name="Badges_Glandeur" xml:space="preserve">
+    <value>Glandeur</value>
+  </data>
+  <data name="Badges_HadopiMaster" xml:space="preserve">
+    <value>Hadopi Master</value>
+  </data>
+  <data name="Badges_Hyperactifs" xml:space="preserve">
+    <value>Hyperactifs</value>
+  </data>
+  <data name="Badges_JerrySeinfeld" xml:space="preserve">
+    <value>Jerry Seinfeld</value>
+  </data>
+  <data name="Badges_JoyeuxNoel" xml:space="preserve">
+    <value>Joyeux Noël</value>
+  </data>
+  <data name="Badges_Junior" xml:space="preserve">
+    <value>Junior</value>
+  </data>
+  <data name="Badges_LeMillier" xml:space="preserve">
+    <value>Le millier</value>
+  </data>
+  <data name="Badges_Marathonien" xml:space="preserve">
+    <value>Marathonien</value>
+  </data>
+  <data name="Badges_MartineAubry" xml:space="preserve">
+    <value>Martine Aubry</value>
+  </data>
+  <data name="Badges_MeilleurAmi" xml:space="preserve">
+    <value>Meilleur ami</value>
+  </data>
+  <data name="Badges_Noctambule" xml:space="preserve">
+    <value>Noctambule</value>
+  </data>
+  <data name="Badges_OldSchool" xml:space="preserve">
+    <value>Old-school</value>
+  </data>
+  <data name="Badges_Parrain" xml:space="preserve">
+    <value>Parrain</value>
+  </data>
+  <data name="Badges_PetitBavard" xml:space="preserve">
+    <value>Petit bavard</value>
+  </data>
+  <data name="Badges_Planque" xml:space="preserve">
+    <value>Planqué</value>
+  </data>
+  <data name="Badges_PokeHerFace" xml:space="preserve">
+    <value>Poke her face</value>
+  </data>
+  <data name="Badges_Rattrapage" xml:space="preserve">
+    <value>Rattrapage</value>
+  </data>
+  <data name="Badges_Senior" xml:space="preserve">
+    <value>Senior</value>
+  </data>
+  <data name="Badges_Serievore" xml:space="preserve">
+    <value>Serievore</value>
+  </data>
+  <data name="Badges_Superstar" xml:space="preserve">
+    <value>Superstar</value>
+  </data>
+  <data name="Badges_Surbooking" xml:space="preserve">
+    <value>Surbooking</value>
+  </data>
+  <data name="Badges_Twittos" xml:space="preserve">
+    <value>Twittos</value>
+  </data>
+  <data name="Badges_Unknown" xml:space="preserve">
+    <value>badge inconnu</value>
+  </data>
+  <data name="Badges_VieuxBriscard" xml:space="preserve">
+    <value>Vieux Briscard</value>
+  </data>
+  <data name="TimelineItemType_BadgeEarned_" xml:space="preserve">
+    <value>{0} a un nouveau badge : {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is the badge name</comment>
+  </data>
+  <data name="TimelineItemType_Comment" xml:space="preserve">
+    <value>a commenté</value>
+  </data>
+  <data name="TimelineItemType_CommentOnEpisode_" xml:space="preserve">
+    <value>{0} a commenté sur {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is an episode</comment>
+  </data>
+  <data name="TimelineItemType_CommentOnMember_" xml:space="preserve">
+    <value>{0} a commenté sur le profile de {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is a username</comment>
+  </data>
+  <data name="TimelineItemType_CommentOnShow_" xml:space="preserve">
+    <value>{0} a commenté sur {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is a tv show</comment>
+  </data>
+  <data name="TimelineItemType_Comment_" xml:space="preserve">
+    <value>{0} a commenté sur {1}.</value>
+    <comment>{0} is a username (subject)
+{1} can be a username or anything else (stupid API)</comment>
+  </data>
+  <data name="TimelineItemType_FriendAdded" xml:space="preserve">
+    <value>est maintenant ami avec</value>
+  </data>
+  <data name="TimelineItemType_FriendAdded_" xml:space="preserve">
+    <value>{0} est maintenant ami avec {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is a username (friendee)</comment>
+  </data>
+  <data name="TimelineItemType_FriendRemoved" xml:space="preserve">
+    <value>n'est plus ami avec</value>
+  </data>
+  <data name="TimelineItemType_FriendRemoved_" xml:space="preserve">
+    <value>{0} n'est plus ami avec {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is a username (unfreindee)</comment>
+  </data>
+  <data name="TimelineItemType_MarkedAs" xml:space="preserve">
+    <value>a regardé</value>
+  </data>
+  <data name="TimelineItemType_MarkedAs_" xml:space="preserve">
+    <value>{0} a regardé {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is the thing watched like "Dexter S01E02"</comment>
+  </data>
+  <data name="TimelineItemType_Recommendation" xml:space="preserve">
+    <value>a recommandé</value>
+  </data>
+  <data name="TimelineItemType_RecommendationAccepted_" xml:space="preserve">
+    <value>{0} a accepté la recommandation de {2} à regarder {1}.</value>
+    <comment>{0} is the recommendee
+{1} is the show
+{2} is the recommender</comment>
+  </data>
+  <data name="TimelineItemType_RecommendationDenied_" xml:space="preserve">
+    <value>{0} a refusé la recommandation de {2} à regarder {1}.</value>
+    <comment>{0} is the recommendee
+{1} is the show
+{2} is the recommender</comment>
+  </data>
+  <data name="TimelineItemType_Recommendation_" xml:space="preserve">
+    <value>{0} a recommandé {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is the name of the tv show like "Dexter"</comment>
+  </data>
+  <data name="TimelineItemType_ShowAdded" xml:space="preserve">
+    <value>a ajouté une série</value>
+  </data>
+  <data name="TimelineItemType_ShowAdded_" xml:space="preserve">
+    <value>{0} a ajouté {1} à sa liste.</value>
+    <comment>{0} is a username (subject)
+{1} is the name of the tv show like "Dexter"</comment>
+  </data>
+  <data name="TimelineItemType_ShowArchived" xml:space="preserve">
+    <value>a archivé</value>
+  </data>
+  <data name="TimelineItemType_ShowArchived_" xml:space="preserve">
+    <value>{0} a archivé {1}.</value>
+    <comment>{0} is a username (subject)
+{1} is the name of the tv show like "Dexter"</comment>
+  </data>
+  <data name="TimelineItemType_ShowRemoved" xml:space="preserve">
+    <value>a retiré</value>
+  </data>
+  <data name="TimelineItemType_ShowRemoved_" xml:space="preserve">
+    <value>{0} a retiré  {1} de son profile.</value>
+    <comment>{0} is a username (subject)
+{1} is the name of the tv show like "Dexter"</comment>
+  </data>
+  <data name="TimelineItemType_ShowUnarchived" xml:space="preserve">
+    <value>a retiré des archives</value>
+  </data>
+  <data name="TimelineItemType_ShowUnarchived_" xml:space="preserve">
+    <value>{0} a retiré {1} des archives.</value>
+    <comment>{0} is a username (subject)
+{1} is the name of the tv show like "Dexter"</comment>
+  </data>
+  <data name="TimelineItemType_Unknown_" xml:space="preserve">
+    <value>{0} {2} {1}</value>
+    <comment>{0} is a username (subject)
+{1} the reference
+{2} is the service type</comment>
+  </data>
+  <data name="TimelineItemType_Update_" xml:space="preserve">
+    <value>{0} updated {1}.</value>
+  </data>
+  <data name="TimelineItemType_Update_1" xml:space="preserve">
+    <value>{0} a mis à jour {1}.</value>
+  </data>
+  <data name="TimelineItemType_UserRegistered" xml:space="preserve">
+    <value>s'est inscrit sur betaseries.</value>
+  </data>
+  <data name="TimelineItemType_UserRegistered_" xml:space="preserve">
+    <value>{0} s'est inscrit sur betaseries.</value>
+    <comment>{0} is not used
+{1} is a username</comment>
+  </data>
+  <data name="TimelineItemType_WikiUpdate_" xml:space="preserve">
+    <value>{0} changed the wiki page {1}.</value>
+  </data>
+</root>

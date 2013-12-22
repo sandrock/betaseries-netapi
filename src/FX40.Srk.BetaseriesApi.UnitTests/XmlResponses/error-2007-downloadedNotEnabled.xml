@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <key>unit-test-api-key</key>
+  <token>aaaa</token>
+ <code>0</code>
+ <errors>
+  <error>
+    <code>2007</code>
+    <content>The user has not activated the downloaded option.</content>
+  </error>
+ </errors>
+</root>

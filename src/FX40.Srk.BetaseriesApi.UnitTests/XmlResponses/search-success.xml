@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <key>unit-test-api-key</key>
+ <shows>
+  <show>
+   <url>battlestargalactica</url>
+   <title>Battlestar Galactica</title>
+  </show>
+  <show>
+   <url>battlestargalactica1978</url>
+   <title>Battlestar Galactica (1978)</title>
+  </show>
+  <show>
+   <url>stargateatlantis</url>
+   <title>Stargate Atlantis</title>
+  </show>
+  <show>
+   <url>stargatesg1</url>
+   <title>Stargate SG1</title>
+  </show>
+  <show>
+   <url>stargateuniverse</url>
+   <title>Stargate Universe</title>
+  </show>
+  <show>
+   <url>startrekdeepspacenine</url>
+   <title>Star Trek: Deep Space Nine</title>
+  </show>
+ </shows>
+ <code>1</code>
+ <errors/>
+</root>

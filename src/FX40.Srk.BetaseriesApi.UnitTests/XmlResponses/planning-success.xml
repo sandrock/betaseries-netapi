@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <key>unit-test-api-key</key>
+ <token>unit-test-api-token</token>
+ <planning>
+  <item>
+   <number>S09E03</number>
+   <season>9</season>
+   <episode>3</episode>
+   <date>1303336800</date>
+   <show>MythBusters</show>
+   <url>mythbusters</url>
+   <title>Running on Water</title>
+  </item>
+  <item>
+   <number>S06E01</number>
+   <season>6</season>
+   <episode>1</episode>
+   <date>1303596000</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The Impossible Astronaut (1)</title>
+  </item>
+  <item>
+   <number>S02E18</number>
+   <season>2</season>
+   <episode>18</episode>
+   <date>1303768800</date>
+   <show>Stargate Universe</show>
+   <url>stargateuniverse</url>
+   <title>Epilogue (2)</title>
+  </item>
+  <item>
+   <number>S09E04</number>
+   <season>9</season>
+   <episode>4</episode>
+   <date>1303941600</date>
+   <show>MythBusters</show>
+   <url>mythbusters</url>
+   <title>Bubble Trouble</title>
+  </item>
+  <item>
+   <number>S06E02</number>
+   <season>6</season>
+   <episode>2</episode>
+   <date>1304200800</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>Day of the Moon (2)</title>
+  </item>
+  <item>
+   <number>S02E19</number>
+   <season>2</season>
+   <episode>19</episode>
+   <date>1304373600</date>
+   <show>Stargate Universe</show>
+   <url>stargateuniverse</url>
+   <title>Blockade</title>
+  </item>
+  <item>
+   <number>S06E22</number>
+   <season>6</season>
+   <episode>22</episode>
+   <date>1304373600</date>
+   <show>How I Met Your Mother</show>
+   <url>himym</url>
+   <title>The Perfect Cocktail</title>
+  </item>
+  <item>
+   <number>S09E05</number>
+   <season>9</season>
+   <episode>5</episode>
+   <date>1304546400</date>
+   <show>MythBusters</show>
+   <url>mythbusters</url>
+   <title>Torpedo Tastic</title>
+  </item>
+  <item>
+   <number>S06E03</number>
+   <season>6</season>
+   <episode>3</episode>
+   <date>1304805600</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The Curse of the Black Spot</title>
+  </item>
+  <item>
+   <number>S02E20</number>
+   <season>2</season>
+   <episode>20</episode>
+   <date>1304978400</date>
+   <show>Stargate Universe</show>
+   <url>stargateuniverse</url>
+   <title>Gauntlet</title>
+  </item>
+  <item>
+   <number>S06E23</number>
+   <season>6</season>
+   <episode>23</episode>
+   <date>1304978400</date>
+   <show>How I Met Your Mother</show>
+   <url>himym</url>
+   <title>Landsmarks</title>
+  </item>
+  <item>
+   <number>S09E06</number>
+   <season>9</season>
+   <episode>6</episode>
+   <date>1305151200</date>
+   <show>MythBusters</show>
+   <url>mythbusters</url>
+   <title>Blow Your Own Sail</title>
+  </item>
+  <item>
+   <number>S06E04</number>
+   <season>6</season>
+   <episode>4</episode>
+   <date>1305410400</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The Doctor's Wife</title>
+  </item>
+  <item>
+   <number>S06E24</number>
+   <season>6</season>
+   <episode>24</episode>
+   <date>1305583200</date>
+   <show>How I Met Your Mother</show>
+   <url>himym</url>
+   <title>Challenge Accepted</title>
+  </item>
+  <item>
+   <number>S09E07</number>
+   <season>9</season>
+   <episode>7</episode>
+   <date>1305756000</date>
+   <show>MythBusters</show>
+   <url>mythbusters</url>
+   <title>Spy Car 2</title>
+  </item>
+  <item>
+   <number>S06E05</number>
+   <season>6</season>
+   <episode>5</episode>
+   <date>1306015200</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The Rebel Flesh (1)</title>
+  </item>
+  <item>
+   <number>S06E06</number>
+   <season>6</season>
+   <episode>6</episode>
+   <date>1306620000</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The Almost People (2)</title>
+  </item>
+  <item>
+   <number>S06E07</number>
+   <season>6</season>
+   <episode>7</episode>
+   <date>1307224800</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>A Good Man Goes to War (1)</title>
+  </item>
+  <item>
+   <number>S06E08</number>
+   <season>6</season>
+   <episode>8</episode>
+   <date>1315087200</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>TBA (2)</title>
+  </item>
+  <item>
+   <number>S06E09</number>
+   <season>6</season>
+   <episode>9</episode>
+   <date>1315692000</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>What Are Little Boys Made Of?</title>
+  </item>
+  <item>
+   <number>S06E10</number>
+   <season>6</season>
+   <episode>10</episode>
+   <date>1316296800</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title></title>
+  </item>
+  <item>
+   <number>S06E11</number>
+   <season>6</season>
+   <episode>11</episode>
+   <date>1316901600</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title>The God Complex</title>
+  </item>
+  <item>
+   <number>S06E01</number>
+   <season>6</season>
+   <episode>1</episode>
+   <date>1316988000</date>
+   <show>Dexter</show>
+   <url>dexter</url>
+   <title>TBD</title>
+  </item>
+  <item>
+   <number>S06E12</number>
+   <season>6</season>
+   <episode>12</episode>
+   <date>1317506400</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title></title>
+  </item>
+  <item>
+   <number>S06E13</number>
+   <season>6</season>
+   <episode>13</episode>
+   <date>1318111200</date>
+   <show>Doctor Who</show>
+   <url>doctorwho</url>
+   <title></title>
+  </item>
+ </planning>
+ <code>1</code>
+ <errors/>
+</root>

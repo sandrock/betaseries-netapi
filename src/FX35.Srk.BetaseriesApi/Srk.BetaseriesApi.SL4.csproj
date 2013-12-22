@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{52BAAB33-31FE-4D8E-8E9A-B1B1F24C69F7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Srk.BetaseriesApi</RootNamespace>
+    <AssemblyName>Srk.BetaseriesApi</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Srk.BetaseriesApi.xml</DocumentationFile>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\LibRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Srk.BetaseriesApi.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiStatus.cs" />
+    <Compile Include="ApiVersionReport.cs" />
+    <Compile Include="AsyncResponseArgs.cs" />
+    <Compile Include="AsyncResponseHandler.cs" />
+    <Compile Include="Badges.cs" />
+    <Compile Include="BetaError.cs" />
+    <Compile Include="BetaException.cs" />
+    <Compile Include="BetaseriesClientFactory.Common.cs" />
+    <Compile Include="BetaseriesClientFactory.cs" />
+    <Compile Include="ClientException.cs" />
+    <Compile Include="Clients\BetaseriesBaseHttpClient.cs" />
+    <Compile Include="Clients\BetaseriesBaseHttpClient.Common.cs" />
+    <Compile Include="Clients\BetaseriesXmlClient.cs" />
+    <Compile Include="Clients\BetaseriesXmlClient.Parsing.cs" />
+    <Compile Include="Clients\BetaseriesXmlClient.Common.cs" />
+    <None Include="ApiImplementation.cd" />
+    <None Include="Clients\UnitTestClient.cs" />
+    <Compile Include="Comment.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="EpisodeNumber.cs" />
+    <Compile Include="EpisodesExtentions.cs" />
+    <Compile Include="EpisodesLoader.cs" />
+    <Compile Include="EpisodeNumbers.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HttpRequestWrapper.Common.cs" />
+    <Compile Include="HttpRequestWrapper.cs" />
+    <Compile Include="IBetaseriesAsyncApi.cs" />
+    <Compile Include="Episode.cs" />
+    <Compile Include="IBetaseriesBaseApi.cs" />
+    <Compile Include="IBetaseriesApi.cs" />
+    <Compile Include="IHttpRequestWrapper.cs" />
+    <Compile Include="IMethodVersionReport.cs" />
+    <Compile Include="Member.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="Resources\ErrorStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ErrorStrings.fr-fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorStrings.fr-fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\GeneralStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GeneralStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="IBetaseriesSyncApi.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\GeneralStrings.fr-fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GeneralStrings.fr-fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceException.cs" />
+    <Compile Include="Show.cs" />
+    <Compile Include="Subtitle.cs" />
+    <Compile Include="TimelineItem.cs" />
+    <Compile Include="Version.cs" />
+    <Compile Include="XmlTools.cs" />
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ErrorStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\GeneralStrings.fr-fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GeneralStrings.fr-fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\GeneralStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GeneralStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ErrorStrings.fr-fr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorStrings.fr-fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Compile Include="BetaError.FX.cs" />
+    <Compile Include="ClientException.FX.cs" />
+    <Compile Include="BetaException.FX.cs" />
+    <Compile Include="ServiceException.FX.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

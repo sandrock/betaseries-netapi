@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="Srk.BetaseriesApiApp.Views.Account"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="5"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Margin="8" Background="LightGray"
+                                BorderThickness="5" CornerRadius="4">
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0" Color="Blue" />
+                    <GradientStop Offset="0.5" Color="LightGray" />
+                    <GradientStop Offset="1" Color="Green" />
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Image Source="{Binding PictureUrl}" Width="100" Height="128"/>
+        </Border>
+
+        <Label Grid.Row="0" Grid.Column="1" xml:space="preserve" Content="Username: "/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Username}" />
+
+        <Label Grid.Row="1" Grid.Column="1" xml:space="preserve" Content="Shows: "/>
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ShowCount}" />
+
+        <Label Grid.Row="2" Grid.Column="1" xml:space="preserve" Content="Seasons: "/>
+        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding SeasonCount}" />
+
+        <Label Grid.Row="3" Grid.Column="1" xml:space="preserve" Content="Episodes: "/>
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding EpisodeCount}" />
+
+        <Label Grid.Row="0" Grid.Column="4" xml:space="preserve" Content="Progress: "/>
+        <TextBlock Grid.Row="0" Grid.Column="5" Text="{Binding Progress}" />
+
+        <Label Grid.Row="1" Grid.Column="4" xml:space="preserve" Content="Episodes remaining: "/>
+        <TextBlock Grid.Row="1" Grid.Column="5" Text="{Binding EpisodesToWatchCount}" />
+
+        <Label Grid.Row="2" Grid.Column="4" xml:space="preserve" Content="Time spent: "/>
+        <TextBlock Grid.Row="2" Grid.Column="5" Text="{Binding TimeSpent}" />
+
+        <Label Grid.Row="3" Grid.Column="4" xml:space="preserve" Content="Time remaining: "/>
+        <TextBlock Grid.Row="3" Grid.Column="5" Text="{Binding TimeRemaining}" />
+        <!--
+                    
+        <Label Grid.Row="" Grid.Column="1" xml:space="preserve">XXXXXX: </Label>
+        <TextBlock Grid.Row="" Grid.Column="2" Text="{Binding YYYYYYYY}" />
+        -->
+    </Grid>
+</UserControl>

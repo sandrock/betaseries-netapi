@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <key></key>
+ <code>0</code>
+ <errors>
+  <error code="2002">
+    <code>2002</code>
+    <content>User's privacy settings don't allow you to retrieve these informations.</content>
+  </error>
+ </errors>
+</root>

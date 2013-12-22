@@ -1,0 +1,104 @@
+﻿<Window
+    x:Class="Srk.BetaseriesApiApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:cmd="clr-namespace:Srk.BetaseriesApiApp.Controls"
+    xmlns:vm="clr-namespace:Srk.BetaseriesApiApp.ViewModels"
+    xmlns:ctrls="clr-namespace:Srk.BetaseriesApiApp.Controls"
+    xmlns:conv="clr-namespace:Srk.BetaseriesApiApp.Converters"
+    xmlns:views="clr-namespace:Srk.BetaseriesApiApp.Views"
+    Title="Betaseries WPF Demo" Height="600" Width="680"
+    x:Name="me">
+    <Window.Resources>
+        <vm:Main x:Key="Main" />
+    </Window.Resources>
+    
+    <Grid DataContext="{StaticResource Main}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Expander DataContext="{Binding Login}">
+            <Expander.Header>
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock xml:space="preserve"><Run Text="Auth // "/></TextBlock>
+                        <TextBlock Text="{Binding StatusMessage}" Margin="0,0,4,0" />
+                        <TextBlock Text="{Binding ErrorMessage}" 
+                                   Foreground="Red"
+                                   Visibility="{Binding ErrorMessage, Converter={StaticResource NotNullToVisibilityConverter}}" />
+                    </StackPanel>
+                </Grid>
+            </Expander.Header>
+            <TabControl x:Name="tcAccount" Margin="4,0,4,12">
+                <TabItem Header="Login / Logout">
+                    <views:Login DataContext="{Binding}" />
+                </TabItem>
+                <TabItem Header="Account informations">
+                    <views:Account DataContext="{Binding CurrentMember}" />
+                </TabItem>
+                <TabItem Header="Badges">
+                    <views:UserBadges DataContext="{Binding UserBadges, Source={StaticResource Main}}" />
+                </TabItem>
+                <TabItem Header="Friends">
+                    <views:Friends DataContext="{Binding Friends, Source={StaticResource Main}}" />
+                </TabItem>
+            </TabControl>
+        </Expander>
+        
+        <TabControl x:Name="tcMain" Grid.Row="2">
+            <TabControl.Background>
+                <LinearGradientBrush StartPoint=".5,0" EndPoint=".5,1">
+                    <GradientStop Color="LightGray" Offset="0" />
+                    <GradientStop Color="White" Offset=".01" />
+                    <GradientStop Color="#ffC7D5EA" Offset="1" />
+                </LinearGradientBrush>
+            </TabControl.Background>
+            
+            <TabItem Header="Search shows" x:Name="tabSearch">
+                <views:ShowSearch DataContext="{Binding ShowsSearch}" />
+            </TabItem>
+            <TabItem Header="Show" x:Name="tabInfo">
+                <views:ShowInfo DataContext="{Binding ShowInfo}" />
+            </TabItem>
+            <TabItem Header="Version">
+                <views:Version DataContext="{Binding Version}" />
+            </TabItem>
+            <TabItem Header="Badges">
+                <views:Badges DataContext="{Binding Badges}" />
+            </TabItem>
+            <TabItem Header="Timelines">
+                <TabControl>
+                    <TabItem Header="Main">
+                        <ctrls:TimelineControl DataContext="{Binding MainTimeline}" />
+                    </TabItem>
+                    <TabItem Header="Own">
+                        <ctrls:TimelineControl DataContext="{Binding OwnTimeline}" />
+                    </TabItem>
+                    <TabItem Header="Friends">
+                        <ctrls:TimelineControl DataContext="{Binding FriendsTimeline}" />
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="Comments" x:Name="tabComments">
+                <views:Comments DataContext="{Binding EpisodesComments}" />
+            </TabItem>
+            <!--<TabItem Header="Site news" x:Name="tabSitenews">
+                <views:SiteNews DataContext="{Binding SiteNews}" />
+            </TabItem>-->
+            <TabItem Header="Query">
+                <views:Query DataContext="{Binding Query}" />
+            </TabItem>
+            <TabItem Header="Debug" DataContext="{Binding Debug}">
+                <StackPanel>
+                    <Button Command="{Binding BreakCommand}" HorizontalAlignment="Left" Content="Breakpoint"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>

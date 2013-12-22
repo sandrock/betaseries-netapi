@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <key>unit-test-api-key</key>
+  <token>aaaa</token>
+ <code>0</code>
+ <errors>
+   <error>
+     <code>3004</code>
+     <content>This episode doesn't exist.</content>
+   </error>
+ </errors>
+</root>

@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C7E7B38-94C6-4EC6-A2C9-3122FFE44FED}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Srk.BetaseriesApi</RootNamespace>
+    <AssemblyName>Srk.BetaseriesApi</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Srk.BetaseriesApi.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ApiStatus.cs">
+      <Link>ApiStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ApiVersionReport.cs">
+      <Link>ApiVersionReport.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\AsyncResponseArgs.cs">
+      <Link>AsyncResponseArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\AsyncResponseHandler.cs">
+      <Link>AsyncResponseHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Badges.cs">
+      <Link>Badges.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaError.cs">
+      <Link>BetaError.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaError.FX.cs">
+      <Link>BetaError.FX.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaException.cs">
+      <Link>BetaException.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaException.FX.cs">
+      <Link>BetaException.FX.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaseriesClientFactory.Common.cs">
+      <Link>BetaseriesClientFactory.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\BetaseriesClientFactory.cs">
+      <Link>BetaseriesClientFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ClientException.cs">
+      <Link>ClientException.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ClientException.FX.cs">
+      <Link>ClientException.FX.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Clients\BetaseriesBaseHttpClient.Common.cs">
+      <Link>Clients\BetaseriesBaseHttpClient.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Clients\BetaseriesBaseHttpClient.cs">
+      <Link>Clients\BetaseriesBaseHttpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Clients\BetaseriesXmlClient.Common.cs">
+      <Link>Clients\BetaseriesXmlClient.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Clients\BetaseriesXmlClient.cs">
+      <Link>Clients\BetaseriesXmlClient.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Clients\BetaseriesXmlClient.Parsing.cs">
+      <Link>Clients\BetaseriesXmlClient.Parsing.cs</Link>
+    </Compile>
+    <None Include="..\FX35.Srk.BetaseriesApi\Clients\UnitTestClient.cs">
+      <Link>Clients\UnitTestClient.cs</Link>
+    </None>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Comment.cs">
+      <Link>Comment.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\DictionaryExtensions.cs">
+      <Link>DictionaryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Episode.cs">
+      <Link>Episode.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\EpisodeNumber.cs">
+      <Link>EpisodeNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\EpisodeNumbers.cs">
+      <Link>EpisodeNumbers.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\EpisodesExtentions.cs">
+      <Link>EpisodesExtentions.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\EpisodesLoader.cs">
+      <Link>EpisodesLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\HttpRequestWrapper.Common.cs">
+      <Link>HttpRequestWrapper.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\HttpRequestWrapper.cs">
+      <Link>HttpRequestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\IBetaseriesAsyncApi.cs">
+      <Link>IBetaseriesAsyncApi.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\IBetaseriesBaseApi.cs">
+      <Link>IBetaseriesBaseApi.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\IBetaseriesSyncApi.cs">
+      <Link>IBetaseriesSyncApi.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\IHttpRequestWrapper.cs">
+      <Link>IHttpRequestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\IMethodVersionReport.cs">
+      <Link>IMethodVersionReport.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Member.cs">
+      <Link>Member.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Notification.cs">
+      <Link>Notification.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Resources\ErrorStrings.Designer.cs">
+      <Link>Resources\ErrorStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Resources\ErrorStrings.fr-fr.Designer.cs">
+      <Link>Resources\ErrorStrings.fr-fr.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Resources\GeneralStrings.Designer.cs">
+      <Link>Resources\GeneralStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Resources\GeneralStrings.fr-fr.Designer.cs">
+      <Link>Resources\GeneralStrings.fr-fr.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ServiceException.cs">
+      <Link>ServiceException.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\ServiceException.FX.cs">
+      <Link>ServiceException.FX.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Show.cs">
+      <Link>Show.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Subtitle.cs">
+      <Link>Subtitle.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\TimelineItem.cs">
+      <Link>TimelineItem.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\TrackedQuery.cs">
+      <Link>TrackedQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApi\XmlTools.cs">
+      <Link>XmlTools.cs</Link>
+    </Compile>
+    <Compile Include="Clients\BetaseriesBaseHttpClient.TaskAsync.cs" />
+    <Compile Include="IBetaseriesApi.cs" />
+    <Compile Include="IBetaseriesTaskAsyncApi.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\FX35.Srk.BetaseriesApi\Resources\ErrorStrings.fr-fr.resx">
+      <Link>Resources\ErrorStrings.fr-fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FX35.Srk.BetaseriesApi\Resources\ErrorStrings.resx">
+      <Link>Resources\ErrorStrings.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FX35.Srk.BetaseriesApi\Resources\GeneralStrings.fr-fr.resx">
+      <Link>Resources\GeneralStrings.fr-fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FX35.Srk.BetaseriesApi\Resources\GeneralStrings.resx">
+      <Link>Resources\GeneralStrings.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\LICENSE.txt">
+      <Link>LICENSE.txt</Link>
+    </EmbeddedResource>
+    <Content Include="README.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="52baab33-31fe-4d8e-8e9a-b1b1f24c69f7" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

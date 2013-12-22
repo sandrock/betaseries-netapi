@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4F4D6FC5-03AB-447C-A04F-4E2C788DE33D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Srk.BetaseriesApiApp</RootNamespace>
+    <AssemblyName>Srk.BetaseriesApiApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WPF4">
+      <HintPath>..\Resources\WPF4\GalaSoft.MvvmLight.Extras.WPF4.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.WPF4">
+      <HintPath>..\Resources\WPF4\GalaSoft.MvvmLight.WPF4.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Resources\WPF4\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\AppVersion.cs">
+      <Link>AppVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\MainWindow.xaml.cs">
+      <Link>MainWindow.xaml.cs</Link>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Properties\Resources.Designer.cs">
+      <Link>Properties\Resources.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Properties\Settings.Designer.cs">
+      <Link>Properties\Settings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="Controls\EventToCommand.cs" />
+    <Compile Include="ViewModels\Login.cs" />
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Controls\ShowControl.xaml">
+      <Link>Controls\ShowControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Controls\TimelineControl.xaml">
+      <Link>Controls\TimelineControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\default.xaml">
+      <Link>default.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Controls\ShowControl.xaml.cs">
+      <Link>Controls\ShowControl.xaml.cs</Link>
+      <DependentUpon>ShowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Controls\TimelineControl.xaml.cs">
+      <Link>Controls\TimelineControl.xaml.cs</Link>
+      <DependentUpon>TimelineControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\BadgeListViewItemStyleSelector.cs">
+      <Link>Converters\BadgeListViewItemStyleSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\BoolToColorConverter.cs">
+      <Link>Converters\BoolToColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\ImplementedVerifiedConverter.cs">
+      <Link>Converters\ImplementedVerifiedConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\NotNullToVisibilityConverter.cs">
+      <Link>Converters\NotNullToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\PasswordParameterConverter.cs">
+      <Link>Converters\PasswordParameterConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Converters\VersionListViewItemStyleSelector.cs">
+      <Link>Converters\VersionListViewItemStyleSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\CoreExtensions\ExtendedHttpRequestWrapper.cs">
+      <Link>CoreExtensions\ExtendedHttpRequestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\Badges.cs">
+      <Link>ViewModels\Badges.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\CommonViewModel.cs">
+      <Link>ViewModels\CommonViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\DebugVM.cs">
+      <Link>ViewModels\DebugVM.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\FriendsVM.cs">
+      <Link>ViewModels\FriendsVM.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\Main.cs">
+      <Link>ViewModels\Main.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\NotifyPropertyChanged.cs">
+      <Link>ViewModels\NotifyPropertyChanged.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\QueryArgument.cs">
+      <Link>ViewModels\QueryArgument.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\QueryVM.cs">
+      <Link>ViewModels\QueryVM.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\ShowEpisodesComments.cs">
+      <Link>ViewModels\ShowEpisodesComments.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\ShowEpisodesSubtitles.cs">
+      <Link>ViewModels\ShowEpisodesSubtitles.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\ShowInfo.cs">
+      <Link>ViewModels\ShowInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\ShowsSearch.cs">
+      <Link>ViewModels\ShowsSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\SiteNews.cs">
+      <Link>ViewModels\SiteNews.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\TimelineVM.cs">
+      <Link>ViewModels\TimelineVM.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\UserBadges.cs">
+      <Link>ViewModels\UserBadges.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\ViewModels\Version.cs">
+      <Link>ViewModels\Version.cs</Link>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Account.xaml.cs">
+      <Link>Views\Account.xaml.cs</Link>
+      <DependentUpon>Account.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Badges.xaml.cs">
+      <Link>Views\Badges.xaml.cs</Link>
+      <DependentUpon>Badges.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Comments.xaml.cs">
+      <Link>Views\Comments.xaml.cs</Link>
+      <DependentUpon>Comments.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Friends.xaml.cs">
+      <Link>Views\Friends.xaml.cs</Link>
+      <DependentUpon>Friends.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Login.xaml.cs">
+      <Link>Views\Login.xaml.cs</Link>
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Query.xaml.cs">
+      <Link>Views\Query.xaml.cs</Link>
+      <DependentUpon>Query.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\ShowInfo.xaml.cs">
+      <Link>Views\ShowInfo.xaml.cs</Link>
+      <DependentUpon>ShowInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\ShowSearch.xaml.cs">
+      <Link>Views\ShowSearch.xaml.cs</Link>
+      <DependentUpon>ShowSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\UserBadges.xaml.cs">
+      <Link>Views\UserBadges.xaml.cs</Link>
+      <DependentUpon>UserBadges.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\FX35.Srk.BetaseriesApiApp\Views\Version.xaml.cs">
+      <Link>Views\Version.xaml.cs</Link>
+      <DependentUpon>Version.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\MainWindow.xaml">
+      <Link>MainWindow.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Account.xaml">
+      <Link>Views\Account.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Badges.xaml">
+      <Link>Views\Badges.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Comments.xaml">
+      <Link>Views\Comments.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Friends.xaml">
+      <Link>Views\Friends.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Login.xaml">
+      <Link>Views\Login.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Query.xaml">
+      <Link>Views\Query.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\ShowInfo.xaml">
+      <Link>Views\ShowInfo.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\ShowSearch.xaml">
+      <Link>Views\ShowSearch.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\UserBadges.xaml">
+      <Link>Views\UserBadges.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\FX35.Srk.BetaseriesApiApp\Views\Version.xaml">
+      <Link>Views\Version.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="..\FX35.Srk.BetaseriesApiApp\Properties\Settings.settings">
+      <Link>Properties\Settings.settings</Link>
+    </None>
+    <None Include="app.config" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FX45.Srk.BetaseriesApi\Srk.BetaseriesApi.csproj">
+      <Project>{2C7E7B38-94C6-4EC6-A2C9-3122FFE44FED}</Project>
+      <Name>Srk.BetaseriesApi %28.NET 4.5 %28async%29\Srk.BetaseriesApi%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\FX35.Srk.BetaseriesApiApp\Properties\Resources.resx">
+      <Link>Properties\Resources.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

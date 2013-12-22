@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <key>unit-test-api-key</key>
+  <member>
+    <login>srktest</login>
+    <cached>1294850416</cached>
+    <avatar>aaaa</avatar>
+    <stats>
+      <shows>7</shows>
+      <seasons>18</seasons>
+      <episodes>236</episodes>
+      <progress>45,38 %</progress>
+      <episodes_to_watch>284</episodes_to_watch>
+      <time_on_tv>7890</time_on_tv>
+      <time_to_spend>16680</time_to_spend>
+    </stats>
+    <shows>
+      <show>
+        <url>24</url>
+        <title>24</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>a-developers-life</url>
+        <title>A Developer's Life</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>dexter</url>
+        <title>Dexter</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>himym</url>
+        <title>How I Met Your Mother</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>sonsofanarchy</url>
+        <title>Sons of Anarchy</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>bigbangtheory</url>
+        <title>The Big Bang Theory</title>
+        <archive>0</archive>
+      </show>
+      <show>
+        <url>itcrowd</url>
+        <title>The IT Crowd</title>
+        <archive>0</archive>
+      </show>
+    </shows>
+  </member>
+  <code>1</code>
+  <errors/>
+</root>

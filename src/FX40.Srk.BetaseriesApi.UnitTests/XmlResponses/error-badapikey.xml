@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <code>0</code>
+  <errors>
+    <error>
+      <code>1001</code>
+      <content>Wrong API key.</content>
+    </error>
+  </errors>
+</root>

@@ -1,0 +1,128 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:Srk.BetaseriesApiApp.Converters"
+    >
+
+    <conv:PasswordParameterConverter x:Key="PasswordParameterConverter" />
+    <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+    <conv:BoolToColorConverter x:Key="BoolToColorConverter" />
+    <conv:ImplementedVerifiedConverter x:Key="ImplementedVerifiedConverter" />
+    <!--<CollectionViewSource x:Key="MethodsCvs" Source="{Binding MethodsCV}" />-->
+
+    <conv:VersionListViewItemStyleSelector x:Key="VersionListViewItemStyleSelector" />
+    <conv:BadgeListViewItemStyleSelector x:Key="BadgeListViewItemStyleSelector" />
+
+    <DataTemplate x:Key="BoolGridViewColumnWithColors">
+        <TextBlock Text="{Binding}" Foreground="{Binding Converter={StaticResource BoolToColorConverter}}" Background="Gray" />
+    </DataTemplate>
+
+    <Style TargetType="{x:Type ListViewItem}" x:Key="ListViewItemStyleBase">
+        <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
+        <Setter Property="BorderThickness" Value="1" />
+        <!--<Setter Property="BorderBrush" Value="LightGray" />-->
+        <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								Padding="{TemplateBinding Padding}">
+                        <StackPanel>
+                            <GridViewRowPresenter />
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="true">
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="BorderBrush" Value="Navy" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" x:Key="EpisodeListViewItemStyle">
+        <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
+        <Setter Property="BorderThickness" Value="1" />
+        <!--<Setter Property="BorderBrush" Value="LightGray" />-->
+        <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Vertical">
+                            <GridViewRowPresenter />
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap"
+                                           x:Name="tb" Visibility="Collapsed" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Visibility" Value="Visible" TargetName="tb" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="true">
+                <!--<Setter Property="Background" Value="Navy" />
+                        <Setter Property="Foreground" Value="White" />-->
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="BorderBrush" Value="Navy" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_NotImplemented">
+        <Setter Property="Background" Value="LightGray" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_UpToDate">
+        <Setter Property="Background" Value="LightGreen" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Outdated">
+        <Setter Property="Background" Value="LightSalmon" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Green">
+        <Setter Property="Background" Value="LightGreen" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Yellow">
+        <Setter Property="Background" Value="Yellow" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Orange">
+        <Setter Property="Background" Value="Orange" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Red">
+        <Setter Property="Background" Value="LightSalmon" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Gray">
+        <Setter Property="Background" Value="LightGray" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemStyleBase}" 
+               x:Key="ListViewItemStyle_Blue">
+        <Setter Property="Background" Value="LightBlue" />
+    </Style>
+
+</ResourceDictionary>

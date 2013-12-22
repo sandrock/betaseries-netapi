@@ -1,0 +1,194 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6F7879FD-2751-470E-97FC-EC951C689244}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SrkWM.BetaseriesApi.Common</RootNamespace>
+    <AssemblyName>SrkWM.BetaseriesApi.Common</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>b2c48bd2-963d-4549-9169-1fa021dce484</PlatformID>
+    <OSVersion>5.2</OSVersion>
+    <DeployDirSuffix>SrkWM.BetaseriesApi.Common</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 6 Professional SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Srk.BetaseriesApi\ApiStatus.cs">
+      <Link>ApiStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\ApiVersionReport.cs">
+      <Link>ApiVersionReport.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\AsyncResponseArgs.cs">
+      <Link>AsyncResponseArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\AsyncResponseHandler.cs">
+      <Link>AsyncResponseHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Badges.cs">
+      <Link>Badges.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\BetaError.cs">
+      <Link>BetaError.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\BetaException.cs">
+      <Link>BetaException.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\BetaseriesClientFactory.cs">
+      <Link>BetaseriesClientFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\ClientException.cs">
+      <Link>ClientException.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Clients\BetaseriesBaseHttpClient.Common.cs">
+      <Link>Clients\BetaseriesBaseHttpClient.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Clients\BetaseriesBaseHttpClient.cs">
+      <Link>Clients\BetaseriesBaseHttpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Clients\BetaseriesXmlClient.Common.cs">
+      <Link>Clients\BetaseriesXmlClient.Common.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Clients\BetaseriesXmlClient.cs">
+      <Link>Clients\BetaseriesXmlClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Clients\BetaseriesXmlClient.Parsing.cs">
+      <Link>Clients\BetaseriesXmlClient.Parsing.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Comment.cs">
+      <Link>Comment.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Episode.cs">
+      <Link>Episode.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\EpisodeNumbers.cs">
+      <Link>EpisodeNumbers.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\IBetaseriesAsyncApi.cs">
+      <Link>IBetaseriesAsyncApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\IBetaseriesBaseApi.cs">
+      <Link>IBetaseriesBaseApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\IBetaseriesSyncApi.cs">
+      <Link>IBetaseriesSyncApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\IBetaseriesSyncAsyncApi.cs">
+      <Link>IBetaseriesSyncAsyncApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\IMethodVersionReport.cs">
+      <Link>IMethodVersionReport.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Member.cs">
+      <Link>Member.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Notification.cs">
+      <Link>Notification.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Resources\ErrorStrings.Designer.cs">
+      <Link>Resources\ErrorStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Resources\ErrorStrings.fr-fr.Designer.cs">
+      <Link>Resources\ErrorStrings.fr-fr.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Resources\GeneralStrings.Designer.cs">
+      <Link>Resources\GeneralStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Resources\GeneralStrings.fr-fr.Designer.cs">
+      <Link>Resources\GeneralStrings.fr-fr.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\ServiceException.cs">
+      <Link>ServiceException.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Show.cs">
+      <Link>Show.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\Subtitle.cs">
+      <Link>Subtitle.cs</Link>
+    </Compile>
+    <Compile Include="..\Srk.BetaseriesApi\TimelineItem.cs">
+      <Link>TimelineItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SrkSL.BetaseriesApi.Common\DictionaryExtensions.cs">
+      <Link>DictionaryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SrkSL.BetaseriesApi.Common\HttpUtility.cs">
+      <Link>HttpUtility.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlTools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Srk.BetaseriesApi\Resources\ErrorStrings.fr-fr.resx">
+      <Link>Resources\ErrorStrings.fr-fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Srk.BetaseriesApi\Resources\ErrorStrings.resx">
+      <Link>Resources\ErrorStrings.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Srk.BetaseriesApi\Resources\GeneralStrings.fr-fr.resx">
+      <Link>Resources\GeneralStrings.fr-fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Srk.BetaseriesApi\Resources\GeneralStrings.resx">
+      <Link>Resources\GeneralStrings.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

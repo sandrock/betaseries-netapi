@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <key>unit-test-api-key</key>
+  <code>0</code>
+  <errors>
+    <error>
+      <code>2001</code>
+      <content>Invalid token.</content>
+    </error>
+  </errors>
+</root>
