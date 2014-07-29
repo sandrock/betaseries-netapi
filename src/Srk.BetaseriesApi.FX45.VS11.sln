@@ -33,6 +33,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srk.BetaseriesApiApp", "FX4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srk.BetaseriesApi", "WP70.BetaseriesApi\Srk.BetaseriesApi.csproj", "{15783446-116A-4C1F-9024-92A4475BDAB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srk.BetaseriesApiFactory", "Srk.BetaseriesApiFactory\Srk.BetaseriesApiFactory.csproj", "{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__ Factory", "__ Factory", "{EE7337CA-442C-4847-A52D-BD0EB413D655}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srk.BetaseriesApiFactory.Tests", "Srk.BetaseriesApiFactory.Tests\Srk.BetaseriesApiFactory.Tests.csproj", "{276A7648-742C-4098-8395-2F23332F7E17}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Srk.BetaseriesApi.vsmdi
@@ -100,6 +106,18 @@ Global
 		{15783446-116A-4C1F-9024-92A4475BDAB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15783446-116A-4C1F-9024-92A4475BDAB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15783446-116A-4C1F-9024-92A4475BDAB1}.Release|x86.ActiveCfg = Release|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0}.Release|x86.ActiveCfg = Release|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{276A7648-742C-4098-8395-2F23332F7E17}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +131,7 @@ Global
 		{15783446-116A-4C1F-9024-92A4475BDAB1} = {76D917F2-C3C1-472A-AAF0-59D279562527}
 		{2C7E7B38-94C6-4EC6-A2C9-3122FFE44FED} = {6230A1B8-8EB8-4D6E-A749-9EA68E8C5CBB}
 		{4F4D6FC5-03AB-447C-A04F-4E2C788DE33D} = {6230A1B8-8EB8-4D6E-A749-9EA68E8C5CBB}
+		{8B3A9161-6036-483B-8F5A-1CBFDA0CEAE0} = {EE7337CA-442C-4847-A52D-BD0EB413D655}
+		{276A7648-742C-4098-8395-2F23332F7E17} = {EE7337CA-442C-4847-A52D-BD0EB413D655}
 	EndGlobalSection
 EndGlobal

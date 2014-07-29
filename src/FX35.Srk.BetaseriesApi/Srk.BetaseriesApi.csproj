@@ -36,6 +36,9 @@
     <DocumentationFile>bin\Release\Srk.BetaseriesApi.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.4.0\lib\net35\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -47,6 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api2.tt.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Api2.tt</DependentUpon>
+    </Compile>
     <Compile Include="ApiStatus.cs" />
     <Compile Include="ApiVersionReport.cs" />
     <Compile Include="AsyncResponseArgs.cs" />
@@ -62,6 +70,10 @@
     <Compile Include="Clients\BetaseriesXmlClient.cs" />
     <Compile Include="Clients\BetaseriesXmlClient.Parsing.cs" />
     <Compile Include="Clients\BetaseriesXmlClient.Common.cs" />
+    <None Include="Api2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Api2.tt.cs</LastGenOutput>
+    </None>
     <None Include="ApiImplementation.cd" />
     <None Include="Clients\UnitTestClient.cs" />
     <Compile Include="Comment.cs" />
@@ -109,6 +121,7 @@
     <Compile Include="TimelineItem.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="XmlTools.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ErrorStrings.resx">
@@ -141,6 +154,9 @@
     <EmbeddedResource Include="..\..\LICENSE.txt">
       <Link>LICENSE.txt</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
