@@ -1,7 +1,15 @@
-Srk.BetaseriesApi, the .NET wrapper to the [betaseries.com](http://www.betaseries.com/) API!
+Srk.BetaseriesApi, the .NET wrapper to the [betaseries.com](http://www.betaseries.com/) API v2!
 ========================
 
 This project started on [CodePlex](https://betaseries.codeplex.com/). The codebase has a new home here.
+
+WORK IN PROGRESS
+============
+
+In this branch: implement API v2.2 instead of 1.0.
+
+* Goal: make new apps for betaseries!
+* Fun constraint: Generate code instead of writing it!
 
 What's this?
 ============
