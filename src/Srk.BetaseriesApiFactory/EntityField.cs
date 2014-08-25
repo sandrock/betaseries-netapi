@@ -77,7 +77,11 @@ namespace Srk.BetaseriesApiFactory
         public EntityEnumField()
         {
             this.Values = new List<string>();
+            this.Names = new List<string>();
         }
+
+        public string Name { get; set; }
+        public List<string> Names { get; set; }
 
         public List<string> Values { get; set; }
 

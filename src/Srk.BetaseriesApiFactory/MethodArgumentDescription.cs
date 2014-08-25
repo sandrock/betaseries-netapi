@@ -16,5 +16,9 @@ namespace Srk.BetaseriesApiFactory
         {
             return "MethodArgument " + this.Name;
         }
+
+        public EntityEnumField EnumField { get; set; }
+
+        public bool IsArray { get; set; }
     }
 }

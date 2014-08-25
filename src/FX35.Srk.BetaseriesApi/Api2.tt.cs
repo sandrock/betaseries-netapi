@@ -286,9 +286,88 @@ namespace Srk.BetaseriesApi {
 #endregion
 
 
+#region ArgumentEnums (merged)
+
+namespace Srk.BetaseriesApi {
+    using System;
+    
+    /// <summary>
+    /// Response format id 'episode|show|member|movie'.
+    /// </summary>
+    /// <remark>
+    /// ARGID:episode|show|member|movie
+    /// ARGDESC:Type d&#x27;élément : episode|show|member|movie
+    /// </remark>
+    public enum EntityType {
+        episode,
+        show,
+        member,
+        movie,
+    }
+    
+    /// <summary>
+    /// Response format id 'all|vovf|vo|vf'.
+    /// </summary>
+    /// <remark>
+    /// ARGID:all|vovf|vo|vf
+    /// ARGDESC:Affiche les épisodes avec certains sous-titres disponibles : all|vovf|vo|vf (Facultatif)
+    /// </remark>
+    public enum SubtitleFilter {
+        all,
+        vovf,
+        vo,
+        vf,
+    }
+    
+    /// <summary>
+    /// Response format id 'open|requests|friends|nobody'.
+    /// </summary>
+    /// <remark>
+    /// ARGID:open|requests|friends|nobody
+    /// ARGDESC:Valeur de l&#x27;option (1 ou 0, pour friendship : open|requests|friends|nobody)
+    /// </remark>
+    public enum ProfileConfidentiality {
+        open,
+        requests,
+        friends,
+        nobody,
+    }
+    
+    /// <summary>
+    /// Response format id 'title|popularity'.
+    /// </summary>
+    /// <remark>
+    /// ARGID:title|popularity
+    /// ARGDESC:Ordre de retour (title|popularity), par défaut title
+    /// </remark>
+    public enum TitlePopularity {
+        title,
+        popularity,
+    }
+    
+    /// <summary>
+    /// Response format id 'title|popularity|followers'.
+    /// </summary>
+    /// <remark>
+    /// ARGID:title|popularity|followers
+    /// ARGDESC:Ordre de retour (title|popularity|followers), par défaut title
+    /// </remark>
+    public enum TitlePopularityFollower {
+        title,
+        popularity,
+        followers,
+    }
+}
+
+#endregion
+
+
 #region Services
 
 namespace Srk.BetaseriesApi {
+    using System;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public partial class BetaseriesClient {
 
@@ -348,6 +427,7 @@ namespace Srk.BetaseriesApi {
         }
     }
 
+
     public partial class BetaseriesCommentsClient {
         private readonly BetaseriesClient client;
 
@@ -357,725 +437,116 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
+        /// Call for 'comments/comment'.
         /// Envoie un commentaire pour l'élément spécifié.
         /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
+        /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
+        /// <param name="id">ID de l&#x27;élément en question</param>
+        /// <param name="text">Texte du commentaire</param>
+        /// <param name="in_reply_to">Si c&#x27;est une réponse, inner_id du commentaire correspondant (Facultatif)</param>
+        public Srk.BetaseriesApi.CommentComment CommentComment(EntityType type, string id, string text, string in_reply_to) {
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("type", type.ToString()));
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("text", text));
+            parameters.Add(new KVP<string, string>("in_reply_to", in_reply_to));
+            var response = this.client.ExecuteQuery("comments/comment", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'comments/comment'.
+        /// Call for 'comments/comment'.
         /// Supprime un commentaire de l'utilisateur identifié.
         /// </summary>
+        /// <param name="id">ID du commentaire</param>
         public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("comments/comment", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'comments/comments'.
+        /// Call for 'comments/comments'.
         /// Récupère les commentaires pour un élément donné.
         /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
+        /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
+        /// <param name="id">ID de l&#x27;élément en question</param>
+        /// <param name="nbpp">Nombre de commentaires par page</param>
+        /// <param name="since_id">ID du dernier commentaire reçu (Facultatif)</param>
+        /// <param name="order">Ordre chronologique de retour, desc ou asc (Défaut asc)</param>
+        /// <param name="replies">Inclure les réponses aux commentaires (1 ou 0, par défaut 1)</param>
+        public Srk.BetaseriesApi.CommentComment CommentComment(EntityType type, string id, string nbpp, string since_id, string order, string replies) {
+            var parameters = new List<KVP<string, string>>(6);
+            parameters.Add(new KVP<string, string>("type", type.ToString()));
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("since_id", since_id));
+            parameters.Add(new KVP<string, string>("order", order));
+            parameters.Add(new KVP<string, string>("replies", replies));
+            var response = this.client.ExecuteQuery("comments/comments", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'comments/replies'.
+        /// Call for 'comments/replies'.
         /// Récupère les réponses d'un commentaire donné.
         /// </summary>
+        /// <param name="id">ID du commentaire</param>
+        /// <param name="order">Ordre chronologique de retour, desc ou asc (Défaut asc)</param>
         public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("order", order));
+            var response = this.client.ExecuteQuery("comments/replies", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentReply>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'comments/subscription'.
+        /// Call for 'comments/subscription'.
         /// Inscrit le membre aux notifications e-mail pour l'élément donné.
         /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
+        /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
+        /// <param name="id">ID de l&#x27;élément en question</param>
+        public void CommentSubscription(EntityType type, string id) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("type", type.ToString()));
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("comments/subscription", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'comments/subscription'.
+        /// Call for 'comments/subscription'.
         /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
         /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+        /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
+        /// <param name="id">ID de l&#x27;élément en question</param>
+        public void DeleteCommentSubscription(EntityType type, string id) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("type", type.ToString()));
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("comments/subscription", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesEpisodesClient {
         private readonly BetaseriesClient client;
 
@@ -1085,725 +556,180 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
+        /// Call for 'episodes/display'.
         /// Affiche les informations d'un épisode.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
+        /// <param name="subtitles">Affiche les sous-titres si renseigné (Facultatif)</param>
         public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("subtitles", subtitles));
+            var response = this.client.ExecuteQuery("episodes/display", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/downloaded'.
+        /// Call for 'episodes/downloaded'.
         /// Marque un épisode comme téléchargé.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("episodes/downloaded", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/downloaded'.
+        /// Call for 'episodes/downloaded'.
         /// Enlève le marquage d'un épisode comme téléchargé.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("episodes/downloaded", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/list'.
+        /// Call for 'episodes/list'.
         /// Récupère la liste des épisodes à voir.
         /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
+        /// <param name="subtitles">Affiche les épisodes avec certains sous-titres disponibles : all|vovf|vo|vf (Facultatif)</param>
+        /// <param name="limit">Limite à un nombre d&#x27;épisodes par série (Facultatif)</param>
+        /// <param name="showId">ID de la série (Facultatif)</param>
+        /// <param name="userId">ID du membre (Facultatif, par défaut membre identifié)</param>
+        public void EpisodeList(SubtitleFilter subtitles, string limit, string showId, string userId) {
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("subtitles", subtitles.ToString()));
+            parameters.Add(new KVP<string, string>("limit", limit));
+            parameters.Add(new KVP<string, string>("showId", showId));
+            parameters.Add(new KVP<string, string>("userId", userId));
+            var response = this.client.ExecuteQuery("episodes/list", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/note'.
+        /// Call for 'episodes/note'.
         /// Note un épisode.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
+        /// <param name="note">Note attribuée de 1 à 5</param>
         public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("note", note));
+            var response = this.client.ExecuteQuery("episodes/note", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/note'.
+        /// Call for 'episodes/note'.
         /// Supprime une note d'un épisode.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("episodes/note", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/scraper'.
+        /// Call for 'episodes/scraper'.
         /// Récupère les informations d'un épisode en fonction du nom de fichier
         /// </summary>
+        /// <param name="file">Nom du fichier à traiter</param>
         public void EpisodeScraper(string file) {
-            // call http episodes/scraper
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("file", file));
+            var response = this.client.ExecuteQuery("episodes/scraper", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/search'.
+        /// Call for 'episodes/search'.
         /// Récupère les informations d'un épisode en fonction d'informations.
         /// </summary>
+        /// <param name="show_id">ID de la série pour l&#x27;épisode à chercher</param>
+        /// <param name="number">Numéro de la série, soit SxxExx soit le numéro global</param>
+        /// <param name="subtitles">Si spécifié, retourne les sous-titres des épisodes</param>
         public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("show_id", show_id));
+            parameters.Add(new KVP<string, string>("number", number));
+            parameters.Add(new KVP<string, string>("subtitles", subtitles));
+            var response = this.client.ExecuteQuery("episodes/search", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/watched'.
+        /// Call for 'episodes/watched'.
         /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
+        /// <param name="bulk">Si bulk est spécifié, tous les épisodes précédents seront aussi marqués comme vus (défaut à true)</param>
+        /// <param name="delete">Si delete est spécifié, tous les épisodes d&#x27;après ne seront plus marqués comme vus</param>
+        /// <param name="note">Si la note est spécifiée entre 1 et 5, donne une note à l&#x27;épisode</param>
         public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
+            var parameters = new List<KVP<string, string>>(5);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("bulk", bulk));
+            parameters.Add(new KVP<string, string>("delete", delete));
+            parameters.Add(new KVP<string, string>("note", note));
+            var response = this.client.ExecuteQuery("episodes/watched", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'episodes/watched'.
+        /// Call for 'episodes/watched'.
         /// Enlève le marquage d'un épisode comme vu.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("episodes/watched", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesFriendsClient {
         private readonly BetaseriesClient client;
 
@@ -1813,725 +739,92 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
+        /// Call for 'friends/block'.
         /// Bloque un utilisateur.
         /// </summary>
+        /// <param name="id">ID du membre à bloquer</param>
         public void FriendBlock(string id) {
-            // call http friends/block
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("friends/block", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'friends/block'.
+        /// Call for 'friends/block'.
         /// Supprime le blocage d'un utilisateur.
         /// </summary>
+        /// <param name="id">ID du membre à débloquer</param>
         public void DeleteFriendBlock(string id) {
-            // call http friends/block
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("friends/block", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'friends/friend'.
+        /// Call for 'friends/friend'.
         /// Ajoute un ami dans le compte de l'utilisateur.
         /// </summary>
+        /// <param name="id">ID du membre à ajouter en ami</param>
         public void FriendFriend(string id) {
-            // call http friends/friend
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("friends/friend", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'friends/friend'.
+        /// Call for 'friends/friend'.
         /// Supprime un ami du compte de l'utilisateur.
         /// </summary>
+        /// <param name="id">ID du membre à supprimer</param>
         public void DeleteFriendFriend(string id) {
-            // call http friends/friend
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("friends/friend", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'friends/list'.
+        /// Call for 'friends/list'.
         /// Récupère la liste des amis du membre.
         /// </summary>
+        /// <param name="id">ID du membre, facultatif, si non renseigné utilise le membre identifié. Si renseigné, blocked=false.</param>
+        /// <param name="blocked">Si spécifié, retourne la liste des personnes bloquées</param>
         public void FriendList(string id, string blocked) {
-            // call http friends/list
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("blocked", blocked));
+            var response = this.client.ExecuteQuery("friends/list", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'friends/requests'.
+        /// Call for 'friends/requests'.
         /// Récupère la liste des demandes envoyées par l'utilisateur.
         /// </summary>
+        /// <param name="received">Si spécifié, retourne la liste des demandes reçues</param>
         public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("received", received));
+            var response = this.client.ExecuteQuery("friends/requests", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesMembersClient {
         private readonly BetaseriesClient client;
 
@@ -2541,725 +834,272 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
+        /// Call for 'members/access_token'.
         /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
         /// </summary>
+        /// <param name="client_id">Votre clé API.</param>
+        /// <param name="client_secret">La clé secrète fournie dans les informations de votre clé.</param>
+        /// <param name="redirect_uri">L&#x27;adresse de callback que vous aviez déjà renseignée pour la première partie.</param>
+        /// <param name="code">Code récupéré par la première partie de l&#x27;identification.</param>
         public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("client_id", client_id));
+            parameters.Add(new KVP<string, string>("client_secret", client_secret));
+            parameters.Add(new KVP<string, string>("redirect_uri", redirect_uri));
+            parameters.Add(new KVP<string, string>("code", code));
+            var response = this.client.ExecuteQuery("members/access_token", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/auth'.
+        /// Call for 'members/auth'.
         /// Identification classique du membre.
         /// </summary>
+        /// <param name="login">Identifiant (login ou e-mail)</param>
+        /// <param name="password">Mot de passe encrypté en MD5</param>
         public void MemberAuth(string login, string password) {
-            // call http members/auth
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("login", login));
+            parameters.Add(new KVP<string, string>("password", password));
+            var response = this.client.ExecuteQuery("members/auth", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/avatar'.
+        /// Call for 'members/avatar'.
         /// Uploade et remplace l'avatar de l'utilisateur identifié.
         /// </summary>
+        /// <param name="avatar">Image à utiliser pour l&#x27;avatar de l&#x27;utilisateur.</param>
         public void MemberAvatar(string avatar) {
-            // call http members/avatar
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("avatar", avatar));
+            var response = this.client.ExecuteQuery("members/avatar", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/avatar'.
+        /// Call for 'members/avatar'.
         /// Supprime l'avatar de l'utilisateur identifié.
         /// </summary>
         public void DeleteMemberAvatar() {
-            // call http members/avatar
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/avatar", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/badges'.
+        /// Call for 'members/badges'.
         /// Affiche les badges du membre.
         /// </summary>
+        /// <param name="id">ID du membre</param>
         public void MemberBadge(string id) {
-            // call http members/badges
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("members/badges", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/destroy'.
+        /// Call for 'members/destroy'.
         /// Détruit le token actif.
         /// </summary>
         public void MemberDestroy() {
-            // call http members/destroy
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/destroy", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/infos'.
+        /// Call for 'members/infos'.
         /// Renvoie les informations d'un membre, du membre identifié par défaut.
         /// </summary>
+        /// <param name="id">ID du membre</param>
+        /// <param name="summary">N&#x27;affiche que les informations et pas les séries / films du compte (Défaut false)</param>
         public void MemberInfo(string id, string summary) {
-            // call http members/infos
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("summary", summary));
+            var response = this.client.ExecuteQuery("members/infos", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/is_active'.
+        /// Call for 'members/is_active'.
         /// Vérifie que le token est actif.
         /// </summary>
         public void MemberIActive() {
-            // call http members/is_active
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/is_active", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/lost'.
+        /// Call for 'members/lost'.
         /// Envoie un e-mail pour réinitialiser le mot de passe.
         /// </summary>
+        /// <param name="find">Adresse e-mail ou nom de l&#x27;utilisateur</param>
         public void MemberLost(string find) {
-            // call http members/lost
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("find", find));
+            var response = this.client.ExecuteQuery("members/lost", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/notifications'.
+        /// Call for 'members/notifications'.
         /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
         /// </summary>
+        /// <param name="since_id">Dernier ID (Facultatif)</param>
+        /// <param name="number">Nombre de notifications, maximum 100 (Facultatif, défaut 10)</param>
+        /// <param name="sort">Tri descendant ou ascendant (ASC ou DESC, défaut DESC)</param>
+        /// <param name="types">Retourner uniquement certains types séparés par une virgule (Facultatif)</param>
+        /// <param name="auto_delete">Suppression automatique des notifications (Facultatif, défaut false)</param>
         public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
+            var parameters = new List<KVP<string, string>>(5);
+            parameters.Add(new KVP<string, string>("since_id", since_id));
+            parameters.Add(new KVP<string, string>("number", number));
+            parameters.Add(new KVP<string, string>("sort", sort));
+            parameters.Add(new KVP<string, string>("types", types));
+            parameters.Add(new KVP<string, string>("auto_delete", auto_delete));
+            var response = this.client.ExecuteQuery("members/notifications", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/oauth'.
+        /// Call for 'members/oauth'.
         /// Identification par OAuth.
         /// </summary>
         public void MemberOauth() {
-            // call http members/oauth
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/oauth", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/oauth'.
+        /// Call for 'members/oauth'.
         /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
         /// </summary>
         public void MemberOauth() {
-            // call http members/oauth
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/oauth", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/option'.
+        /// Call for 'members/option'.
         /// Modifie une option de l'utilisateur.
         /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
+        /// <param name="name">Nom de l&#x27;option (downloaded, global, notation, timelag, friendship)</param>
+        /// <param name="value">Valeur de l&#x27;option (1 ou 0, pour friendship : open|requests|friends|nobody)</param>
+        public void MemberOption(string name, ProfileConfidentiality value) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("name", name));
+            parameters.Add(new KVP<string, string>("value", value.ToString()));
+            var response = this.client.ExecuteQuery("members/option", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/options'.
+        /// Call for 'members/options'.
         /// Récupère les options (sous-titres) du membre.
         /// </summary>
         public void MemberOption() {
-            // call http members/options
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("members/options", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/search'.
+        /// Call for 'members/search'.
         /// Recherche des membres.
         /// </summary>
+        /// <param name="login">Nom de l&#x27;utilisateur, 2 caractères minimum. Vous pouvez utiliser % comme wildcard.</param>
         public void MemberSearch(string login) {
-            // call http members/search
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("login", login));
+            var response = this.client.ExecuteQuery("members/search", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/signup'.
+        /// Call for 'members/signup'.
         /// Crée un nouveau compte membre sur BetaSeries.
         /// </summary>
+        /// <param name="login">Nom d&#x27;utilisateur</param>
+        /// <param name="password">Mot de passe en MD5 — Facultatif : S&#x27;il n&#x27;est pas fourni il sera généré et envoyé dans l&#x27;e-mail</param>
+        /// <param name="email">Adresse e-mail</param>
         public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("login", login));
+            parameters.Add(new KVP<string, string>("password", password));
+            parameters.Add(new KVP<string, string>("email", email));
+            var response = this.client.ExecuteQuery("members/signup", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/sync'.
+        /// Call for 'members/sync'.
         /// Cherche les membres parmi les amis du compte.
         /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
+        /// <param name="mails">Tableau POST des adresses e-mail à chercher</param>
+        public void MemberSync(string[] mails) {
+            var parameters = new List<KVP<string, string>>(1);
+            foreach (var argValue in mails) {
+                parameters.Add(new KVP<string, string>("mails[]", argValue));
+            }
+            var response = this.client.ExecuteQuery("members/sync", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'members/username'.
+        /// Call for 'members/username'.
         /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
         /// </summary>
+        /// <param name="username">Nom d&#x27;utilisateur</param>
         public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("username", username));
+            var response = this.client.ExecuteQuery("members/username", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesMessagesClient {
         private readonly BetaseriesClient client;
 
@@ -3269,725 +1109,87 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
+        /// Call for 'messages/discussion'.
         /// Récupère une discussion identifiée par l'ID du premier message.
         /// </summary>
+        /// <param name="id">ID du premier message de la discussion</param>
         public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("messages/discussion", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageDiscussion>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'messages/inbox'.
+        /// Call for 'messages/inbox'.
         /// Récupère la boîte de réception du membre identifié, par pages de 20.
         /// </summary>
+        /// <param name="page">Numéro de la page, 1 par défaut</param>
         public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("page", page));
+            var response = this.client.ExecuteQuery("messages/inbox", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageInbox>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'messages/message'.
+        /// Call for 'messages/message'.
         /// Supprime un message que vous avez écrit.
         /// </summary>
+        /// <param name="id">ID du message à supprimer — Si c&#x27;est le premier d&#x27;une discussion, toute la discussion est supprimée</param>
         public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("messages/message", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageMessage>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'messages/message'.
+        /// Call for 'messages/message'.
         /// Envoie un message à un autre membre du site.
         /// </summary>
+        /// <param name="to">ID du membre destinataire (obligatoire si premier message)</param>
+        /// <param name="text">Texte du message</param>
+        /// <param name="title">Titre du message (obligatoire si premier message)</param>
+        /// <param name="id">ID du premier message de la discussion (facultatif)</param>
         public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("to", to));
+            parameters.Add(new KVP<string, string>("text", text));
+            parameters.Add(new KVP<string, string>("title", title));
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("messages/message", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageMessage>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'messages/read'.
+        /// Call for 'messages/read'.
         /// Marque un message comme lu.
         /// </summary>
+        /// <param name="id">ID du message à marquer comme lu</param>
         public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("messages/read", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageRead>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
     }
+
     public partial class BetaseriesMoviesClient {
         private readonly BetaseriesClient client;
 
@@ -3997,725 +1199,142 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
+        /// Call for 'movies/list'.
         /// Affiche la liste de tous les films.
         /// </summary>
+        /// <param name="start">Nombre de démarrage pour la liste des films (facultatif, défaut 0)</param>
+        /// <param name="limit">Limite du nombre de films à afficher (maximum 1000) (facultatif)</param>
+        /// <param name="order">Spécifie l&#x27;ordre de retour : alphabetical, popularity (facultatif)</param>
         public void MovyList(string start, string limit, string order) {
-            // call http movies/list
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("start", start));
+            parameters.Add(new KVP<string, string>("limit", limit));
+            parameters.Add(new KVP<string, string>("order", order));
+            var response = this.client.ExecuteQuery("movies/list", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/member'.
+        /// Call for 'movies/member'.
         /// Affiche la liste de tous les films du membre.
         /// </summary>
+        /// <param name="state">0 = à voir, 1 = vu, 2 = ne veut pas voir (0 par défaut)</param>
+        /// <param name="start">Nombre de démarrage pour la liste des films (facultatif, défaut 0)</param>
+        /// <param name="limit">Limite du nombre de films à afficher (maximum 1000) (facultatif)</param>
+        /// <param name="order">Spécifie l&#x27;ordre de retour : alphabetical, popularity (facultatif)</param>
         public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("state", state));
+            parameters.Add(new KVP<string, string>("start", start));
+            parameters.Add(new KVP<string, string>("limit", limit));
+            parameters.Add(new KVP<string, string>("order", order));
+            var response = this.client.ExecuteQuery("movies/member", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/movie'.
+        /// Call for 'movies/movie'.
         /// Affiche les détails d'un film.
         /// </summary>
+        /// <param name="id">ID du film</param>
         public void MovyMovie(string id) {
-            // call http movies/movie
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/movie'.
+        /// Call for 'movies/movie'.
         /// Ajoute ou met à jour le film dans les films du membre.
         /// </summary>
+        /// <param name="id">ID du film</param>
+        /// <param name="mail">Activer les alertes e-mail (0 ou 1, 1 par défaut)</param>
+        /// <param name="twitter">Activer les alertes Twitter (0 ou 1, 1 par défaut)</param>
+        /// <param name="state">0 = à voir, 1 = vu, 2 = ne veut pas voir (0 par défaut)</param>
+        /// <param name="profile">Afficher sur le profil (0 ou 1, 1 par défaut)</param>
         public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
+            var parameters = new List<KVP<string, string>>(5);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("mail", mail));
+            parameters.Add(new KVP<string, string>("twitter", twitter));
+            parameters.Add(new KVP<string, string>("state", state));
+            parameters.Add(new KVP<string, string>("profile", profile));
+            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/movie'.
+        /// Call for 'movies/movie'.
         /// Supprime un film du compte membre.
         /// </summary>
+        /// <param name="id">ID du film</param>
         public void DeleteMovyMovie(string id) {
-            // call http movies/movie
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/random'.
+        /// Call for 'movies/random'.
         /// Affiche un film au hasard.
         /// </summary>
+        /// <param name="nb">Nombre de films à afficher, par défaut 1</param>
         public void MovyRandom(string nb) {
-            // call http movies/random
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("nb", nb));
+            var response = this.client.ExecuteQuery("movies/random", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/scraper'.
+        /// Call for 'movies/scraper'.
         /// Récupère les informations d'un film en fonction du nom de fichier
         /// </summary>
+        /// <param name="file">Nom du fichier à traiter</param>
         public void MovyScraper(string file) {
-            // call http movies/scraper
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("file", file));
+            var response = this.client.ExecuteQuery("movies/scraper", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'movies/search'.
+        /// Call for 'movies/search'.
         /// Recherche un film par critères.
         /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+        /// <param name="title">Titre recherché (facultatif si order=popularity)</param>
+        /// <param name="order">Ordre de retour (title|popularity), par défaut title</param>
+        /// <param name="nbpp">Nombre de résultats par page, par défaut 5, maximum 100</param>
+        /// <param name="page">Numéro de la page, par défaut 1</param>
+        public void MovySearch(string title, TitlePopularity order, string nbpp, string page) {
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("title", title));
+            parameters.Add(new KVP<string, string>("order", order.ToString()));
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("page", page));
+            var response = this.client.ExecuteQuery("movies/search", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesPicturesClient {
         private readonly BetaseriesClient client;
 
@@ -4725,725 +1344,112 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
+        /// Call for 'pictures/badges'.
         /// Retourne une image du badge (32x32).
         /// </summary>
+        /// <param name="id">ID du badge</param>
         public void PictureBadge(string id) {
-            // call http pictures/badges
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("pictures/badges", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'pictures/characters'.
+        /// Call for 'pictures/characters'.
         /// Retourne une image du personnage.
         /// </summary>
+        /// <param name="id">ID du personnage</param>
+        /// <param name="width">Largeur désirée (facultatif, défaut 250)</param>
+        /// <param name="height">Hauteur désirée (facultatif, défaut 375)</param>
         public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("width", width));
+            parameters.Add(new KVP<string, string>("height", height));
+            var response = this.client.ExecuteQuery("pictures/characters", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'pictures/episodes'.
+        /// Call for 'pictures/episodes'.
         /// Retourne une image de l'épisode.
         /// </summary>
+        /// <param name="id">ID de l&#x27;épisode</param>
+        /// <param name="width">Largeur désirée (facultatif)</param>
+        /// <param name="height">Hauteur désirée (facultatif)</param>
         public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("width", width));
+            parameters.Add(new KVP<string, string>("height", height));
+            var response = this.client.ExecuteQuery("pictures/episodes", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'pictures/members'.
+        /// Call for 'pictures/members'.
         /// Retourne une image du membre.
         /// </summary>
+        /// <param name="id">ID du membre</param>
+        /// <param name="width">Largeur désirée (facultatif)</param>
+        /// <param name="height">Hauteur désirée (facultatif)</param>
         public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("width", width));
+            parameters.Add(new KVP<string, string>("height", height));
+            var response = this.client.ExecuteQuery("pictures/members", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'pictures/movies'.
+        /// Call for 'pictures/movies'.
         /// Retourne une image du film.
         /// </summary>
+        /// <param name="id">ID du film</param>
+        /// <param name="width">Largeur désirée (facultatif, défaut 250)</param>
+        /// <param name="height">Hauteur désirée (facultatif, défaut 375)</param>
         public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("width", width));
+            parameters.Add(new KVP<string, string>("height", height));
+            var response = this.client.ExecuteQuery("pictures/movies", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'pictures/shows'.
+        /// Call for 'pictures/shows'.
         /// Retourne une image de la série.
         /// </summary>
+        /// <param name="id">ID de la série</param>
+        /// <param name="width">Largeur désirée (facultatif)</param>
+        /// <param name="height">Hauteur désirée (facultatif)</param>
+        /// <param name="picked">Prendre l&#x27;image votée par la communauté (banner ou show, facultatif)</param>
         public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("width", width));
+            parameters.Add(new KVP<string, string>("height", height));
+            parameters.Add(new KVP<string, string>("picked", picked));
+            var response = this.client.ExecuteQuery("pictures/shows", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesPlanningClient {
         private readonly BetaseriesClient client;
 
@@ -5453,725 +1459,56 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
+        /// Call for 'planning/general'.
         /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
         /// </summary>
+        /// <param name="date">Date d&#x27;origine (YYYY-MM-JJ — Facultatif, par défaut &quot;now&quot;)</param>
+        /// <param name="before">Nombre de jours avant (Facultatif, par défaut 8)</param>
+        /// <param name="after">Nombre de jours après (Facultatif, par défaut 8)</param>
+        /// <param name="type">Type d&#x27;épisodes à afficher : &quot;all&quot; ou &quot;premieres&quot; (Facultatif, par défaut &quot;all&quot;)</param>
         public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("date", date));
+            parameters.Add(new KVP<string, string>("before", before));
+            parameters.Add(new KVP<string, string>("after", after));
+            parameters.Add(new KVP<string, string>("type", type));
+            var response = this.client.ExecuteQuery("planning/general", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'planning/incoming'.
+        /// Call for 'planning/incoming'.
         /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
         /// </summary>
         public void PlanningIncoming() {
-            // call http planning/incoming
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("planning/incoming", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'planning/member'.
+        /// Call for 'planning/member'.
         /// Affiche le planning du membre identifié ou d'un autre membre.
         /// </summary>
+        /// <param name="id">ID du membre (Facultatif si identifié)</param>
+        /// <param name="unseen">N&#x27;affiche que les épisodes non-vus</param>
+        /// <param name="month">Affiche le planning du mois spécifié (format YYYY-MM)</param>
         public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("unseen", unseen));
+            parameters.Add(new KVP<string, string>("month", month));
+            var response = this.client.ExecuteQuery("planning/member", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesShowsClient {
         private readonly BetaseriesClient client;
 
@@ -6181,725 +1518,352 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
+        /// Call for 'shows/archive'.
         /// Archive une série dans le compte du membre.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/archive", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/archive'.
+        /// Call for 'shows/archive'.
         /// Sort une série des archives du compte du membre.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/archive", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/characters'.
+        /// Call for 'shows/characters'.
         /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/characters", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.ShowCharacter>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'shows/display'.
+        /// Call for 'shows/display'.
         /// Affiche les informations d'une série.
         /// </summary>
+        /// <param name="id">ID de la série. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
         public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/display", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/episodes'.
+        /// Call for 'shows/episodes'.
         /// Affiche les épisodes d'une série.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
+        /// <param name="season">Numéro de la saison (Facultatif)</param>
+        /// <param name="episode">Numéro de l&#x27;épisode (Facultatif)</param>
+        /// <param name="subtitles">Affiche les sous-titres si renseigné (Facultatif)</param>
         public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
+            var parameters = new List<KVP<string, string>>(5);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("season", season));
+            parameters.Add(new KVP<string, string>("episode", episode));
+            parameters.Add(new KVP<string, string>("subtitles", subtitles));
+            var response = this.client.ExecuteQuery("shows/episodes", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/favorite'.
+        /// Call for 'shows/favorite'.
         /// Ajoute une série favorite sur le profil du membre identifié.
         /// </summary>
+        /// <param name="id">ID de la série à ajouter.</param>
         public void ShowFavorite(string id) {
-            // call http shows/favorite
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("shows/favorite", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/favorite'.
+        /// Call for 'shows/favorite'.
         /// Supprime une série favorite du profil du membre identifié.
         /// </summary>
+        /// <param name="id">ID de la série à supprimer.</param>
         public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("shows/favorite", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/favorites'.
+        /// Call for 'shows/favorites'.
         /// Récupère les séries favorites du membre.
         /// </summary>
+        /// <param name="id">ID du membre, facultatif, si non renseigné utilise le membre identifié.</param>
         public void ShowFavorite(string id) {
-            // call http shows/favorites
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("shows/favorites", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/list'.
+        /// Call for 'shows/list'.
         /// Affiche la liste de toutes les séries.
         /// </summary>
+        /// <param name="order">Spécifie l&#x27;ordre de retour : alphabetical, popularity, followers (facultatif)</param>
+        /// <param name="since">N&#x27;afficher que les séries modifiées à partir de cette date (timestamp UNIX — facultatif)</param>
         public void ShowList(string order, string since) {
-            // call http shows/list
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("order", order));
+            parameters.Add(new KVP<string, string>("since", since));
+            var response = this.client.ExecuteQuery("shows/list", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/note'.
+        /// Call for 'shows/note'.
         /// Note une série.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
+        /// <param name="note">Note attribuée de 1 à 5</param>
         public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("note", note));
+            var response = this.client.ExecuteQuery("shows/note", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/note'.
+        /// Call for 'shows/note'.
         /// Supprime une note d'une série.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/note", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/pictures'.
+        /// Call for 'shows/pictures'.
         /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/pictures", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.ShowPicture>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'shows/random'.
+        /// Call for 'shows/random'.
         /// Affiche une série au hasard.
         /// </summary>
+        /// <param name="nb">Nombre de séries à afficher, par défaut 1</param>
+        /// <param name="summary">Retourne uniquement les infos essentielles de la série (Défaut false)</param>
         public void ShowRandom(string nb, string summary) {
-            // call http shows/random
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("nb", nb));
+            parameters.Add(new KVP<string, string>("summary", summary));
+            var response = this.client.ExecuteQuery("shows/random", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/recommendation'.
+        /// Call for 'shows/recommendation'.
         /// Créer une recommandation d'une série d'un membre pour un ami.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
+        /// <param name="to">ID du membre ami</param>
+        /// <param name="comments">Commentaires pour l&#x27;ami (Facultatif)</param>
         public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("to", to));
+            parameters.Add(new KVP<string, string>("comments", comments));
+            var response = this.client.ExecuteQuery("shows/recommendation", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/recommendation'.
+        /// Call for 'shows/recommendation'.
         /// Supprime une recommandation d'une série envoyée ou reçue.
         /// </summary>
+        /// <param name="id">ID de la recommandation</param>
         public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
+            var parameters = new List<KVP<string, string>>(1);
+            parameters.Add(new KVP<string, string>("id", id));
+            var response = this.client.ExecuteQuery("shows/recommendation", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/recommendations'.
+        /// Call for 'shows/recommendations'.
         /// Récupère les recommandations reçues par l'utilisateur identifié.
         /// </summary>
         public void ShowRecommendation() {
-            // call http shows/recommendations
+            var parameters = new List<KVP<string, string>>(0);
+            var response = this.client.ExecuteQuery("shows/recommendations", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/search'.
+        /// Call for 'shows/search'.
         /// Recherche une série.
         /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
+        /// <param name="title">Titre recherché</param>
+        /// <param name="summary">Retourne uniquement les infos essentielles de la série (Défaut false)</param>
+        /// <param name="order">Ordre de retour (title|popularity|followers), par défaut title</param>
+        /// <param name="nbpp">Nombre de résultats par page, par défaut 5, maximum 100</param>
+        /// <param name="page">Numéro de la page, par défaut 1</param>
+        public void ShowSearch(string title, string summary, TitlePopularityFollower order, string nbpp, string page) {
+            var parameters = new List<KVP<string, string>>(5);
+            parameters.Add(new KVP<string, string>("title", title));
+            parameters.Add(new KVP<string, string>("summary", summary));
+            parameters.Add(new KVP<string, string>("order", order.ToString()));
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("page", page));
+            var response = this.client.ExecuteQuery("shows/search", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/show'.
+        /// Call for 'shows/show'.
         /// Ajoute une série dans le compte du membre.
         /// </summary>
+        /// <param name="id">ID de la série. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
+        /// <param name="episode_id">ID du dernier épisode vu. Si plusieurs séries, l&#x27;ordre des épisodes doit être exactement le même (Facultatif)</param>
         public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            parameters.Add(new KVP<string, string>("episode_id", episode_id));
+            var response = this.client.ExecuteQuery("shows/show", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/show'.
+        /// Call for 'shows/show'.
         /// Supprime une série du compte du membre.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/show", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/similars'.
+        /// Call for 'shows/similars'.
         /// Récupère les séries marquées similaires par les membres de BetaSeries.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/similars", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'shows/videos'.
+        /// Call for 'shows/videos'.
         /// Récupère les vidéos associées à la série par les membres de BetaSeries.
         /// </summary>
+        /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
+        /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
         public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
+            var response = this.client.ExecuteQuery("shows/videos", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
+
     public partial class BetaseriesSubtitlesClient {
         private readonly BetaseriesClient client;
 
@@ -6909,725 +1873,74 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
+        /// Call for 'subtitles/episode'.
         /// Affiche les sous-titres pour un épisode donné.
         /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
+        /// <param name="id">ID de l&#x27;épisode</param>
+        /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
+        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, SubtitleFilter language) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("language", language.ToString()));
+            var response = this.client.ExecuteQuery("subtitles/episode", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleEpisode>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'subtitles/last'.
+        /// Call for 'subtitles/last'.
         /// Affiche les derniers sous-titres récupérés par BetaSeries.
         /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
+        /// <param name="number">Nombre de sous-titres, maximum 100</param>
+        /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
+        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, SubtitleFilter language) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("number", number));
+            parameters.Add(new KVP<string, string>("language", language.ToString()));
+            var response = this.client.ExecuteQuery("subtitles/last", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleLast>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'subtitles/report'.
+        /// Call for 'subtitles/report'.
         /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
         /// </summary>
+        /// <param name="id">ID du sous-titre</param>
+        /// <param name="reason">Raison pour laquelle le sous-titre n&#x27;est pas correct</param>
         public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("reason", reason));
+            var response = this.client.ExecuteQuery("subtitles/report", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleReport>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Response for 'subtitles/show'.
+        /// Call for 'subtitles/show'.
         /// Affiche les sous-titres pour une série donnée.
         /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
-        /// Affiche les derniers évènements des amis du membre identifié.
-        /// </summary>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
-        }
-
-        /// <summary>
-        /// Response for 'timeline/home'.
-        /// Affiche les derniers évènements du site.
-        /// </summary>
-        public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
-        }
-
-        /// <summary>
-        /// Response for 'timeline/member'.
-        /// Affiche les derniers évènements du membre spécifié.
-        /// </summary>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+        /// <param name="id">ID de la série</param>
+        /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
+        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, SubtitleFilter language) {
+            var parameters = new List<KVP<string, string>>(2);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("language", language.ToString()));
+            var response = this.client.ExecuteQuery("subtitles/show", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleShow>>(response);
+            this.client.HandleErrors(result);
+            return result.Data;
         }
     }
+
     public partial class BetaseriesTimelineClient {
         private readonly BetaseriesClient client;
 
@@ -7637,723 +1950,59 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Response for 'comments/comment'.
-        /// Envoie un commentaire pour l'élément spécifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string text, string in_reply_to) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comment'.
-        /// Supprime un commentaire de l'utilisateur identifié.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
-            // call http comments/comment
-        }
-
-        /// <summary>
-        /// Response for 'comments/comments'.
-        /// Récupère les commentaires pour un élément donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentComment CommentComment(string type, string id, string nbpp, string since_id, string order, string replies) {
-            // call http comments/comments
-        }
-
-        /// <summary>
-        /// Response for 'comments/replies'.
-        /// Récupère les réponses d'un commentaire donné.
-        /// </summary>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
-            // call http comments/replies
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Inscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void CommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'comments/subscription'.
-        /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
-        /// </summary>
-        public void DeleteCommentSubscription(string type, string id) {
-            // call http comments/subscription
-        }
-
-        /// <summary>
-        /// Response for 'episodes/display'.
-        /// Affiche les informations d'un épisode.
-        /// </summary>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
-            // call http episodes/display
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Marque un épisode comme téléchargé.
-        /// </summary>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/downloaded'.
-        /// Enlève le marquage d'un épisode comme téléchargé.
-        /// </summary>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
-            // call http episodes/downloaded
-        }
-
-        /// <summary>
-        /// Response for 'episodes/list'.
-        /// Récupère la liste des épisodes à voir.
-        /// </summary>
-        public void EpisodeList(string subtitles, string limit, string showId, string userId) {
-            // call http episodes/list
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Note un épisode.
-        /// </summary>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/note'.
-        /// Supprime une note d'un épisode.
-        /// </summary>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
-            // call http episodes/note
-        }
-
-        /// <summary>
-        /// Response for 'episodes/scraper'.
-        /// Récupère les informations d'un épisode en fonction du nom de fichier
-        /// </summary>
-        public void EpisodeScraper(string file) {
-            // call http episodes/scraper
-        }
-
-        /// <summary>
-        /// Response for 'episodes/search'.
-        /// Récupère les informations d'un épisode en fonction d'informations.
-        /// </summary>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
-            // call http episodes/search
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
-        /// </summary>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'episodes/watched'.
-        /// Enlève le marquage d'un épisode comme vu.
-        /// </summary>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
-            // call http episodes/watched
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Bloque un utilisateur.
-        /// </summary>
-        public void FriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/block'.
-        /// Supprime le blocage d'un utilisateur.
-        /// </summary>
-        public void DeleteFriendBlock(string id) {
-            // call http friends/block
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Ajoute un ami dans le compte de l'utilisateur.
-        /// </summary>
-        public void FriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/friend'.
-        /// Supprime un ami du compte de l'utilisateur.
-        /// </summary>
-        public void DeleteFriendFriend(string id) {
-            // call http friends/friend
-        }
-
-        /// <summary>
-        /// Response for 'friends/list'.
-        /// Récupère la liste des amis du membre.
-        /// </summary>
-        public void FriendList(string id, string blocked) {
-            // call http friends/list
-        }
-
-        /// <summary>
-        /// Response for 'friends/requests'.
-        /// Récupère la liste des demandes envoyées par l'utilisateur.
-        /// </summary>
-        public void FriendRequest(string received) {
-            // call http friends/requests
-        }
-
-        /// <summary>
-        /// Response for 'members/access_token'.
-        /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
-        /// </summary>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
-            // call http members/access_token
-        }
-
-        /// <summary>
-        /// Response for 'members/auth'.
-        /// Identification classique du membre.
-        /// </summary>
-        public void MemberAuth(string login, string password) {
-            // call http members/auth
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Uploade et remplace l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void MemberAvatar(string avatar) {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/avatar'.
-        /// Supprime l'avatar de l'utilisateur identifié.
-        /// </summary>
-        public void DeleteMemberAvatar() {
-            // call http members/avatar
-        }
-
-        /// <summary>
-        /// Response for 'members/badges'.
-        /// Affiche les badges du membre.
-        /// </summary>
-        public void MemberBadge(string id) {
-            // call http members/badges
-        }
-
-        /// <summary>
-        /// Response for 'members/destroy'.
-        /// Détruit le token actif.
-        /// </summary>
-        public void MemberDestroy() {
-            // call http members/destroy
-        }
-
-        /// <summary>
-        /// Response for 'members/infos'.
-        /// Renvoie les informations d'un membre, du membre identifié par défaut.
-        /// </summary>
-        public void MemberInfo(string id, string summary) {
-            // call http members/infos
-        }
-
-        /// <summary>
-        /// Response for 'members/is_active'.
-        /// Vérifie que le token est actif.
-        /// </summary>
-        public void MemberIActive() {
-            // call http members/is_active
-        }
-
-        /// <summary>
-        /// Response for 'members/lost'.
-        /// Envoie un e-mail pour réinitialiser le mot de passe.
-        /// </summary>
-        public void MemberLost(string find) {
-            // call http members/lost
-        }
-
-        /// <summary>
-        /// Response for 'members/notifications'.
-        /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
-        /// </summary>
-        public void MemberNotification(string since_id, string number, string sort, string types, string auto_delete) {
-            // call http members/notifications
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            // call http members/oauth
-        }
-
-        /// <summary>
-        /// Response for 'members/option'.
-        /// Modifie une option de l'utilisateur.
-        /// </summary>
-        public void MemberOption(string name, string value) {
-            // call http members/option
-        }
-
-        /// <summary>
-        /// Response for 'members/options'.
-        /// Récupère les options (sous-titres) du membre.
-        /// </summary>
-        public void MemberOption() {
-            // call http members/options
-        }
-
-        /// <summary>
-        /// Response for 'members/search'.
-        /// Recherche des membres.
-        /// </summary>
-        public void MemberSearch(string login) {
-            // call http members/search
-        }
-
-        /// <summary>
-        /// Response for 'members/signup'.
-        /// Crée un nouveau compte membre sur BetaSeries.
-        /// </summary>
-        public void MemberSignup(string login, string password, string email) {
-            // call http members/signup
-        }
-
-        /// <summary>
-        /// Response for 'members/sync'.
-        /// Cherche les membres parmi les amis du compte.
-        /// </summary>
-        public void MemberSync(string mails[]) {
-            // call http members/sync
-        }
-
-        /// <summary>
-        /// Response for 'members/username'.
-        /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
-        /// </summary>
-        public void MemberUsername(string username) {
-            // call http members/username
-        }
-
-        /// <summary>
-        /// Response for 'messages/discussion'.
-        /// Récupère une discussion identifiée par l'ID du premier message.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
-            // call http messages/discussion
-        }
-
-        /// <summary>
-        /// Response for 'messages/inbox'.
-        /// Récupère la boîte de réception du membre identifié, par pages de 20.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
-            // call http messages/inbox
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Supprime un message que vous avez écrit.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/message'.
-        /// Envoie un message à un autre membre du site.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageMessage MessageMessage(string to, string text, string title, string id) {
-            // call http messages/message
-        }
-
-        /// <summary>
-        /// Response for 'messages/read'.
-        /// Marque un message comme lu.
-        /// </summary>
-        public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
-            // call http messages/read
-        }
-
-        /// <summary>
-        /// Response for 'movies/list'.
-        /// Affiche la liste de tous les films.
-        /// </summary>
-        public void MovyList(string start, string limit, string order) {
-            // call http movies/list
-        }
-
-        /// <summary>
-        /// Response for 'movies/member'.
-        /// Affiche la liste de tous les films du membre.
-        /// </summary>
-        public void MovyMember(string state, string start, string limit, string order) {
-            // call http movies/member
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Affiche les détails d'un film.
-        /// </summary>
-        public void MovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Ajoute ou met à jour le film dans les films du membre.
-        /// </summary>
-        public void MovyMovie(string id, string mail, string twitter, string state, string profile) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/movie'.
-        /// Supprime un film du compte membre.
-        /// </summary>
-        public void DeleteMovyMovie(string id) {
-            // call http movies/movie
-        }
-
-        /// <summary>
-        /// Response for 'movies/random'.
-        /// Affiche un film au hasard.
-        /// </summary>
-        public void MovyRandom(string nb) {
-            // call http movies/random
-        }
-
-        /// <summary>
-        /// Response for 'movies/scraper'.
-        /// Récupère les informations d'un film en fonction du nom de fichier
-        /// </summary>
-        public void MovyScraper(string file) {
-            // call http movies/scraper
-        }
-
-        /// <summary>
-        /// Response for 'movies/search'.
-        /// Recherche un film par critères.
-        /// </summary>
-        public void MovySearch(string title, string order, string nbpp, string page) {
-            // call http movies/search
-        }
-
-        /// <summary>
-        /// Response for 'pictures/badges'.
-        /// Retourne une image du badge (32x32).
-        /// </summary>
-        public void PictureBadge(string id) {
-            // call http pictures/badges
-        }
-
-        /// <summary>
-        /// Response for 'pictures/characters'.
-        /// Retourne une image du personnage.
-        /// </summary>
-        public void PictureCharacter(string id, string width, string height) {
-            // call http pictures/characters
-        }
-
-        /// <summary>
-        /// Response for 'pictures/episodes'.
-        /// Retourne une image de l'épisode.
-        /// </summary>
-        public void PictureEpisode(string id, string width, string height) {
-            // call http pictures/episodes
-        }
-
-        /// <summary>
-        /// Response for 'pictures/members'.
-        /// Retourne une image du membre.
-        /// </summary>
-        public void PictureMember(string id, string width, string height) {
-            // call http pictures/members
-        }
-
-        /// <summary>
-        /// Response for 'pictures/movies'.
-        /// Retourne une image du film.
-        /// </summary>
-        public void PictureMovy(string id, string width, string height) {
-            // call http pictures/movies
-        }
-
-        /// <summary>
-        /// Response for 'pictures/shows'.
-        /// Retourne une image de la série.
-        /// </summary>
-        public void PictureShow(string id, string width, string height, string picked) {
-            // call http pictures/shows
-        }
-
-        /// <summary>
-        /// Response for 'planning/general'.
-        /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
-        /// </summary>
-        public void PlanningGeneral(string date, string before, string after, string type) {
-            // call http planning/general
-        }
-
-        /// <summary>
-        /// Response for 'planning/incoming'.
-        /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
-        /// </summary>
-        public void PlanningIncoming() {
-            // call http planning/incoming
-        }
-
-        /// <summary>
-        /// Response for 'planning/member'.
-        /// Affiche le planning du membre identifié ou d'un autre membre.
-        /// </summary>
-        public void PlanningMember(string id, string unseen, string month) {
-            // call http planning/member
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Archive une série dans le compte du membre.
-        /// </summary>
-        public void ShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/archive'.
-        /// Sort une série des archives du compte du membre.
-        /// </summary>
-        public void DeleteShowArchive(string id, string thetvdb_id) {
-            // call http shows/archive
-        }
-
-        /// <summary>
-        /// Response for 'shows/characters'.
-        /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowCharacter ShowCharacter(string id, string thetvdb_id) {
-            // call http shows/characters
-        }
-
-        /// <summary>
-        /// Response for 'shows/display'.
-        /// Affiche les informations d'une série.
-        /// </summary>
-        public void ShowDisplay(string id, string thetvdb_id) {
-            // call http shows/display
-        }
-
-        /// <summary>
-        /// Response for 'shows/episodes'.
-        /// Affiche les épisodes d'une série.
-        /// </summary>
-        public void ShowEpisode(string id, string thetvdb_id, string season, string episode, string subtitles) {
-            // call http shows/episodes
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Ajoute une série favorite sur le profil du membre identifié.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorite'.
-        /// Supprime une série favorite du profil du membre identifié.
-        /// </summary>
-        public void DeleteShowFavorite(string id) {
-            // call http shows/favorite
-        }
-
-        /// <summary>
-        /// Response for 'shows/favorites'.
-        /// Récupère les séries favorites du membre.
-        /// </summary>
-        public void ShowFavorite(string id) {
-            // call http shows/favorites
-        }
-
-        /// <summary>
-        /// Response for 'shows/list'.
-        /// Affiche la liste de toutes les séries.
-        /// </summary>
-        public void ShowList(string order, string since) {
-            // call http shows/list
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Note une série.
-        /// </summary>
-        public void ShowNote(string id, string thetvdb_id, string note) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/note'.
-        /// Supprime une note d'une série.
-        /// </summary>
-        public void DeleteShowNote(string id, string thetvdb_id) {
-            // call http shows/note
-        }
-
-        /// <summary>
-        /// Response for 'shows/pictures'.
-        /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.ShowPicture ShowPicture(string id, string thetvdb_id) {
-            // call http shows/pictures
-        }
-
-        /// <summary>
-        /// Response for 'shows/random'.
-        /// Affiche une série au hasard.
-        /// </summary>
-        public void ShowRandom(string nb, string summary) {
-            // call http shows/random
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Créer une recommandation d'une série d'un membre pour un ami.
-        /// </summary>
-        public void ShowRecommendation(string id, string thetvdb_id, string to, string comments) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendation'.
-        /// Supprime une recommandation d'une série envoyée ou reçue.
-        /// </summary>
-        public void DeleteShowRecommendation(string id) {
-            // call http shows/recommendation
-        }
-
-        /// <summary>
-        /// Response for 'shows/recommendations'.
-        /// Récupère les recommandations reçues par l'utilisateur identifié.
-        /// </summary>
-        public void ShowRecommendation() {
-            // call http shows/recommendations
-        }
-
-        /// <summary>
-        /// Response for 'shows/search'.
-        /// Recherche une série.
-        /// </summary>
-        public void ShowSearch(string title, string summary, string order, string nbpp, string page) {
-            // call http shows/search
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Ajoute une série dans le compte du membre.
-        /// </summary>
-        public void ShowShow(string id, string thetvdb_id, string episode_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/show'.
-        /// Supprime une série du compte du membre.
-        /// </summary>
-        public void DeleteShowShow(string id, string thetvdb_id) {
-            // call http shows/show
-        }
-
-        /// <summary>
-        /// Response for 'shows/similars'.
-        /// Récupère les séries marquées similaires par les membres de BetaSeries.
-        /// </summary>
-        public void ShowSimilar(string id, string thetvdb_id) {
-            // call http shows/similars
-        }
-
-        /// <summary>
-        /// Response for 'shows/videos'.
-        /// Récupère les vidéos associées à la série par les membres de BetaSeries.
-        /// </summary>
-        public void ShowVideo(string id, string thetvdb_id) {
-            // call http shows/videos
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/episode'.
-        /// Affiche les sous-titres pour un épisode donné.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleEpisode SubtitleEpisode(string id, string language) {
-            // call http subtitles/episode
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/last'.
-        /// Affiche les derniers sous-titres récupérés par BetaSeries.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleLast SubtitleLast(string number, string language) {
-            // call http subtitles/last
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/report'.
-        /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleReport SubtitleReport(string id, string reason) {
-            // call http subtitles/report
-        }
-
-        /// <summary>
-        /// Response for 'subtitles/show'.
-        /// Affiche les sous-titres pour une série donnée.
-        /// </summary>
-        public Srk.BetaseriesApi.SubtitleShow SubtitleShow(string id, string language) {
-            // call http subtitles/show
-        }
-
-        /// <summary>
-        /// Response for 'timeline/friends'.
+        /// Call for 'timeline/friends'.
         /// Affiche les derniers évènements des amis du membre identifié.
         /// </summary>
+        /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
+        /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
+        /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
         public void TimelineFriend(string nbpp, string since_id, string types) {
-            // call http timeline/friends
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("since_id", since_id));
+            parameters.Add(new KVP<string, string>("types", types));
+            var response = this.client.ExecuteQuery("timeline/friends", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'timeline/home'.
+        /// Call for 'timeline/home'.
         /// Affiche les derniers évènements du site.
         /// </summary>
+        /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
+        /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
+        /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
         public void TimelineHome(string nbpp, string since_id, string types) {
-            // call http timeline/home
+            var parameters = new List<KVP<string, string>>(3);
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("since_id", since_id));
+            parameters.Add(new KVP<string, string>("types", types));
+            var response = this.client.ExecuteQuery("timeline/home", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Response for 'timeline/member'.
+        /// Call for 'timeline/member'.
         /// Affiche les derniers évènements du membre spécifié.
         /// </summary>
+        /// <param name="id">ID du membre</param>
+        /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
+        /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
+        /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
         public void TimelineMember(string id, string nbpp, string since_id, string types) {
-            // call http timeline/member
+            var parameters = new List<KVP<string, string>>(4);
+            parameters.Add(new KVP<string, string>("id", id));
+            parameters.Add(new KVP<string, string>("nbpp", nbpp));
+            parameters.Add(new KVP<string, string>("since_id", since_id));
+            parameters.Add(new KVP<string, string>("types", types));
+            var response = this.client.ExecuteQuery("timeline/member", parameters);
+            
+            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            this.client.HandleErrors(result);
         }
     }
 }

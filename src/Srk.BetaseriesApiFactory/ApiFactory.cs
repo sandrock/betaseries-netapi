@@ -56,7 +56,9 @@ namespace Srk.BetaseriesApiFactory
             var context = new ApiFactoryContext();
             this.FetchDocumentation(context);
             this.ReviewDocumentation(context);
+            this.ApplyTransforms(context, text);
             this.WriteEntities(context, text);
+            this.WriteArgumentEnums(context, text);
             this.WriteService(context, text);
         }
 
@@ -106,6 +108,101 @@ namespace Srk.BetaseriesApiFactory
                     }
                 }
             }
+
+            // rename ArgumentEnums
+            foreach (var argEnum in context.ArgumentEnums)
+            {
+                if (argEnum.Value.Name.Contains('|'))
+                {
+                    // changes     title|popularity
+                    // to          Title_Popularity
+                    argEnum.Value.Name = this.GetResultTypeName(argEnum.Value.Name);
+                }
+            }
+        }
+
+        private void ApplyTransforms(ApiFactoryContext context, TextWriter text)
+        {
+            /*
+            var stream = this.GetType().Assembly.GetManifestResourceNames();
+            text.WriteLine("// ");
+            text.WriteLine("// Assembly.GetManifestResourceNames();");
+            text.WriteLine("// ");
+            foreach (var s in stream)
+            {
+                text.WriteLine("//  - " + s);
+            }
+            text.WriteLine("// ");
+            */
+            var xmlStream = this.GetType().Assembly.GetManifestResourceStream("Srk.BetaseriesApiFactory.Api2.xml");
+            if (xmlStream == null)
+            {
+                text.WriteLine("// ");
+                text.WriteLine("// ApplyTransforms: no XML file found");
+                text.WriteLine("// ");
+                return;
+            }
+
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Load(xmlStream);
+            }
+            finally
+            {
+                xmlStream.Dispose();
+            }
+
+            foreach (var transform in doc.Root.Elements("Transform"))
+            {
+                var target = transform.Attribute("Target").Value;
+                if (target == "Method")
+                {
+                    var methodName = transform.Attribute("MethodName").Value;
+                    ////this.ApplyMethodTransform(methodName);
+                }
+                else if (target == "ArgumentEnum")
+                {
+                    var matcher = transform.Element("ArgumentEnumMatch");
+                    var valuesToMatch = matcher.Elements("Value").ToArray();
+                    if (valuesToMatch.Length > 0)
+                    {
+                        foreach (var argEnum in context.ArgumentEnums)
+                        {
+                            var valueMatches = new List<string>(argEnum.Value.Values.Count);
+                            foreach (var valueToMatch in valuesToMatch)
+                            {
+                                string val = valueToMatch.Value;
+                                bool isRequired = true;
+
+                                var isPresentElement = valueToMatch.Attribute("IsPresent");
+                                if (isPresentElement != null && bool.TryParse(isPresentElement.Value, out isRequired))
+                                {
+                                }
+                                else
+                                {
+                                    isRequired = true;
+                                }
+
+                                if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && isRequired)
+                                    valueMatches.Add(val);
+
+                                if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && !isRequired)
+                                    break;
+                            }
+
+                            if (valueMatches.Count == valuesToMatch.Length)
+                            {
+                                var setNameElement = transform.Element("SetName");
+                                if (setNameElement != null)
+                                {
+                                    argEnum.Value.Name = setNameElement.Value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         protected void WriteService(ApiFactoryContext context, TextWriter text)
@@ -115,6 +212,9 @@ namespace Srk.BetaseriesApiFactory
             text.WriteLine("#region Services");
             text.WriteLine();
             text.WriteLine(indent++, "namespace " + this.ServicesNamespace + " {");
+            text.WriteLine(indent, "using System;");
+            text.WriteLine(indent, "using System.Collections.Generic;");
+            text.WriteLine(indent, "using Newtonsoft.Json;");
             text.WriteLine();
             text.WriteLine(indent++, "public partial class " + this.ServicesName + " {");
 
@@ -148,20 +248,27 @@ namespace Srk.BetaseriesApiFactory
                 text.WriteLine(--indent, "}");
                 text.WriteLine();
 
-                foreach (var item in context.Methods)
+                foreach (var item in context.Methods.Where(m => m.Category == category.Key))
                 {
                     text.WriteLine();
                     text.WriteLine(indent, "/// <summary>");
-                    text.WriteLine(indent, "/// Response for '" + item.UrlPath + "'.");
+                    text.WriteLine(indent, "/// Call for '" + item.UrlPath + "'.");
                     text.WriteLine(indent, "/// " + item.Description);
                     text.WriteLine(indent, "/// </summary>");
 
+                    foreach (var arg in item.Arguments)
+                    {
+                        text.WriteLine(indent, "/// <param name=\"" + arg.Name + "\">" + arg.Description.ProperHtmlEscape() + "</param>");
+                    }
+
                     // method return type
                     text.Write(indent, "public ");
+                    string resultType = null, resultTypeFull = null;
                     if (item.ResponseFormat != null)
                     {
-                        var resultType = this.GetResultTypeName(item.UrlPath);
-                        text.Write(this.EntitiesNamespace + "." + resultType + " ");
+                        resultType = this.GetResultTypeName(item.UrlPath);
+                        resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                        text.Write(resultTypeFull + " ");
                     }
                     else
                     {
@@ -179,7 +286,19 @@ namespace Srk.BetaseriesApiFactory
                     foreach (var arg in item.Arguments)
                     {
                         text.Write(sep);
-                        text.Write("string ");
+                        if (arg.EnumField != null)
+                        {
+                            text.Write(arg.EnumField.Name + " ");
+                        }
+                        else if (arg.IsArray)
+                        {
+                            text.Write("string[] ");
+                        }
+                        else
+                        {
+                            text.Write("string ");
+                        }
+
                         text.Write(arg.Name);
                         sep = ", ";
                     }
@@ -187,9 +306,44 @@ namespace Srk.BetaseriesApiFactory
                     text.WriteLine(") {");
                     indent++;
 
-                    text.WriteLine(indent, "// call http " + item.UrlPath);
-                    text.WriteLine(indent, "throw new NotImplementedException();");
-                    
+                    // method code
+                    text.WriteLine(indent, "var parameters = new List<KVP<string, string>>("+item.Arguments.Count+");");
+                    foreach (var arg in item.Arguments)
+                    {
+                        if (arg.EnumField != null)
+                        {
+                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "\", " + arg.Name + ".ToString()));"); 
+                        }
+                        else if (arg.IsArray)
+                        {
+                            text.WriteLine(indent++, "foreach (var argValue in " + arg.Name + ") {");
+                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "[]\", argValue));");
+                            text.WriteLine(--indent, "}"); 
+                        }
+                        else
+                        {
+                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "\", " + arg.Name + "));");
+                        }
+                    }
+
+                    text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.UrlPath + "\", parameters);");
+
+                    text.WriteLine(indent, "");
+                    if (item.ResponseFormat != null)
+                    {
+                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse<" + resultTypeFull + ">>(response);");
+                    }
+                    else
+                    {
+                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse>(response);");
+                    }
+
+                    text.WriteLine(indent, "this.client.HandleErrors(result);");
+
+                    if (item.ResponseFormat != null)
+                    {
+                        text.WriteLine(indent, "return result.Data;");
+                    }
 
                     text.WriteLine(--indent, "}");
                 }
@@ -303,6 +457,47 @@ namespace Srk.BetaseriesApiFactory
             text.Flush();
         }
 
+        protected void WriteArgumentEnums(ApiFactoryContext context, TextWriter text)
+        {
+            int indent = 1;
+            text.WriteLine();
+            text.WriteLine("#region ArgumentEnums (merged)");
+            text.WriteLine();
+            text.WriteLine("namespace " + this.EntitiesNamespace + " {");
+            text.WriteLine(indent, "using System;");
+            
+            foreach (var item in context.ArgumentEnums)
+            {
+                var argEnum = item.Value;
+                var className = argEnum.Name;
+                text.WriteLine(indent, "");
+                text.WriteLine(indent, "/// <summary>");
+                text.WriteLine(indent, "/// Response format id '" + item.Key.ProperHtmlEscape() + "'.");
+                text.WriteLine(indent, "/// </summary>");
+                text.WriteLine(indent, "/// <remark>");
+                foreach (var name in argEnum.Names)
+                {
+                    text.WriteLine(indent, "/// " + name.ProperHtmlEscape() + ""); 
+                }
+
+                text.WriteLine(indent, "/// </remark>");
+                text.WriteLine(indent++, "public enum " + className + " {");
+
+                foreach (var field in item.Value)
+                {
+                    text.WriteLine(indent, field + ",");
+                }
+
+                text.WriteLine(--indent, "}");
+            }
+
+            text.WriteLine("}");
+            text.WriteLine();
+            text.WriteLine("#endregion");
+            text.WriteLine();
+            text.Flush();
+        }
+
         protected void WriteCSharpProperty(ref int indent, TextWriter text, EntityField field)
         {
             text.WriteLine(indent, "");
@@ -372,7 +567,7 @@ namespace Srk.BetaseriesApiFactory
 
         private string GetResultTypeName(string methodName)
         {
-            return string.Join("", methodName.Split('_', '/', '-', ' ').Select(n => Name.ToSingular(Name.ToPublicName(n))));
+            return string.Join("", methodName.Split('_', '/', '-', ' ', '|').Select(n => Name.ToSingular(Name.ToPublicName(n))));
         }
 
         private void FetchDocumentation(ApiFactoryContext context)
@@ -479,7 +674,41 @@ namespace Srk.BetaseriesApiFactory
 
                         var arg = new MethodArgumentDescription();
                         arg.Name = li.Elements("strong").Single().Value.Trim();
+                        if (arg.Name.EndsWith("[]"))
+                        {
+                            arg.Name = arg.Name.Substring(0, arg.Name.Length - 2);
+                            arg.IsArray = true;
+                        }
+
                         arg.Description = li.Nodes().Skip(1).First().ToString();
+                        if (arg.Description.StartsWith(" : "))
+                            arg.Description = arg.Description.Substring(3);
+
+                        var argumentEnumRegex = new Regex(@"([a-zA-Z0-9]+)(\|([a-zA-Z0-9]+))+");
+                        var argumentEnumMatch = argumentEnumRegex.Match(arg.Description);
+                        if (argumentEnumMatch.Success)
+                        {
+                            var id = argumentEnumMatch.Groups[0].Value;
+                            if (context.ArgumentEnums.ContainsKey(id))
+                            {
+                                arg.EnumField = context.ArgumentEnums[id];
+                            }
+                            else
+                            {
+                                arg.EnumField = new EntityEnumField();
+                                arg.EnumField.Name = id;
+                                arg.EnumField.Names.Add("ARGID:" + id);
+                                arg.EnumField.Names.Add("ARGDESC:" + arg.Description);
+                                arg.EnumField.Add(argumentEnumMatch.Groups[1].Captures[0].Value);
+                                foreach (Capture part in argumentEnumMatch.Groups[3].Captures)
+                                {
+                                    arg.EnumField.Add(part.Value);
+                                }
+
+                                context.ArgumentEnums.Add(id, arg.EnumField);
+                            }
+                        }
+
                         method.Arguments.Add(arg);
                     }
 

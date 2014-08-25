@@ -11,10 +11,13 @@ namespace Srk.BetaseriesApiFactory
         public ApiFactoryContext()
         {
             this.Methods = new List<MethodDescription>();
+            this.ArgumentEnums = new Dictionary<string, EntityEnumField>();
         }
 
         public List<MethodDescription> Methods { get; set; }
 
         public Dictionary<string, Response> ResponseFormats { get; set; }
+
+        public Dictionary<string, EntityEnumField> ArgumentEnums { get; set; }
     }
 }

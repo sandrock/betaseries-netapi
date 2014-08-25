@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Api2>
+  <Transform Target="ArgumentEnum">
+    <ArgumentEnumMatch>
+      <Value>episode</Value>
+      <Value>show</Value>
+      <Value>member</Value>
+      <Value>movie</Value>
+    </ArgumentEnumMatch>
+    <SetName>EntityType</SetName>
+  </Transform>
+
+  <Transform Target="ArgumentEnum">
+    <ArgumentEnumMatch>
+      <Value>all</Value>
+      <Value>vo</Value>
+      <Value>vf</Value>
+      <Value>vovf</Value>
+    </ArgumentEnumMatch>
+    <SetName>SubtitleFilter</SetName>
+  </Transform>
+
+  <Transform Target="ArgumentEnum">
+    <ArgumentEnumMatch>
+      <Value>open</Value>
+      <Value>requests</Value>
+      <Value>friends</Value>
+      <Value>nobody</Value>
+    </ArgumentEnumMatch>
+    <SetName>ProfileConfidentiality</SetName>
+  </Transform>
+
+  <Transform Target="ArgumentEnum">
+    <ArgumentEnumMatch>
+      <Value>title</Value>
+      <Value>popularity</Value>
+      <Value IsPresent="False">alphabetical</Value>
+    </ArgumentEnumMatch>
+    <SetName>MovieSortOrder</SetName>
+  </Transform>
+
+  <Transform Target="ArgumentEnum">
+    <ArgumentEnumMatch>
+      <Value>title</Value>
+      <Value>popularity</Value>
+      <Value>alphabetical</Value>
+    </ArgumentEnumMatch>
+    <SetName>ShowSortOrder</SetName>
+  </Transform>
+</Api2>

@@ -36,16 +36,19 @@
     <DocumentationFile>bin\Release\Srk.BetaseriesApi.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Resources\FX35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.104.4.0\lib\net35\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -60,8 +63,10 @@
     <Compile Include="AsyncResponseArgs.cs" />
     <Compile Include="AsyncResponseHandler.cs" />
     <Compile Include="Badges.cs" />
+    <Compile Include="BaseResponse.cs" />
     <Compile Include="BetaError.cs" />
     <Compile Include="BetaException.cs" />
+    <Compile Include="BetaseriesClient.cs" />
     <Compile Include="BetaseriesClientFactory.Common.cs" />
     <Compile Include="BetaseriesClientFactory.cs" />
     <Compile Include="ClientException.cs" />
