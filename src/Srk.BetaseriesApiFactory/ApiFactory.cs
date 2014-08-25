@@ -93,6 +93,8 @@ namespace Srk.BetaseriesApiFactory
                         merged.Entity.Name = format.Format.Entity.Name;
                     }
 
+                    merged.ClassName = merged.ClassName ?? format.Format.ClassName;
+
                     foreach (var field in format.Format.Entity.Fields)
                     {
                         if (merged.Entity.Fields.ContainsKey(field.Key))
@@ -106,6 +108,8 @@ namespace Srk.BetaseriesApiFactory
                             merged.Entity.Fields.Add(field.Key, field.Value);
                         }
                     }
+
+                    format.Method.ResponseFormat = merged;
                 }
             }
 
@@ -280,6 +284,12 @@ namespace Srk.BetaseriesApiFactory
                 {
                     context.ResponseFormats.Remove(format.Key);
                 }
+
+                var setClassNameElement = transform.Element("SetClassName");
+                if (setClassNameElement != null)
+                {
+                    format.Value.ClassName = setClassNameElement.Value;
+                }
             }
         }
 
@@ -344,8 +354,16 @@ namespace Srk.BetaseriesApiFactory
                     string resultType = null, resultTypeFull = null;
                     if (item.ResponseFormat != null)
                     {
-                        resultType = this.GetResultTypeName(item.UrlPath);
-                        resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                        if (item.ResponseFormat.ClassName != null)
+                        {
+                            resultType = item.ResponseFormat.ClassName;
+                            resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                        }
+                        else
+                        {
+                            resultType = this.GetResultTypeName(item.UrlPath);
+                            resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                        }
                         text.Write(resultTypeFull + " ");
                     }
                     else
@@ -454,7 +472,7 @@ namespace Srk.BetaseriesApiFactory
             
             foreach (var item in context.ResponseFormats)
             {
-                var className = this.GetResultTypeName(item.Key);
+                var className = item.Value.ClassName ?? this.GetResultTypeName(item.Key);
                 text.WriteLine(indent, "");
                 text.WriteLine(indent, "/// <summary>");
                 text.WriteLine(indent, "/// Response format for '" + item.Key + "'.");

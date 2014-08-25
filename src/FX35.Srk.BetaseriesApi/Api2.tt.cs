@@ -15,7 +15,7 @@ namespace Srk.BetaseriesApi {
     /// <summary>
     /// Response format for 'comments/comment'.
     /// </summary>
-    public class CommentComment {
+    public class Comment {
         
         /// <summary>
         /// Gets or sets the id.
@@ -456,7 +456,7 @@ namespace Srk.BetaseriesApi {
         /// <param name="id">ID de l&#x27;élément en question</param>
         /// <param name="text">Texte du commentaire</param>
         /// <param name="in_reply_to">Si c&#x27;est une réponse, inner_id du commentaire correspondant (Facultatif)</param>
-        public Srk.BetaseriesApi.CommentComment Post(EntityType type, string id, string text, string in_reply_to) {
+        public Srk.BetaseriesApi.Comment Post(EntityType type, string id, string text, string in_reply_to) {
             var parameters = new List<KVP<string, string>>(4);
             parameters.Add(new KVP<string, string>("type", type.ToString()));
             parameters.Add(new KVP<string, string>("id", id));
@@ -464,7 +464,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("in_reply_to", in_reply_to));
             var response = this.client.ExecuteQuery("POST", "comments/comment", parameters);
             
-            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.Comment>>(response);
             this.client.HandleErrors(result);
             return result.Data;
         }
@@ -474,12 +474,12 @@ namespace Srk.BetaseriesApi {
         /// Call for DELETE 'comments/comment'.
         /// </summary>
         /// <param name="id">ID du commentaire</param>
-        public Srk.BetaseriesApi.CommentComment Delete(string id) {
+        public Srk.BetaseriesApi.Comment Delete(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
             var response = this.client.ExecuteQuery("DELETE", "comments/comment", parameters);
             
-            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.Comment>>(response);
             this.client.HandleErrors(result);
             return result.Data;
         }

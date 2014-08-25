@@ -19,5 +19,7 @@ namespace Srk.BetaseriesApiFactory
         public List<string> Warnings { get; set; }
 
         public string MethodName { get; set; }
+
+        public string ClassName { get; set; }
     }
 }

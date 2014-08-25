@@ -55,6 +55,13 @@
     <Remove />
   </Transform>
 
+  <Transform Target="ResponseFormat">
+    <ResponseFormatMatch>
+      <UrlPath>comments/comment</UrlPath>
+    </ResponseFormatMatch>
+    <SetClassName>Comment</SetClassName>
+  </Transform>
+
   <Transform Target="Method">
     <Match>
       <Method>GET</Method>
