@@ -47,4 +47,284 @@
     </ArgumentEnumMatch>
     <SetName>ShowSortOrder</SetName>
   </Transform>
+
+  <Transform Target="ResponseFormat">
+    <ResponseFormatMatch>
+      <UrlPath>comments/comments</UrlPath>
+    </ResponseFormatMatch>
+    <Remove />
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>members/oauth</UrlPath>
+    </Match>
+    <Remove />
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/oauth</UrlPath>
+    </Match>
+    <Remove />
+    <SetReponseFormat>key: string</SetReponseFormat>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>shows/favorite</UrlPath>
+    </Match>
+    <SetMethodName>SetShowAsFavorite</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>shows/favorites</UrlPath>
+    </Match>
+    <SetMethodName>GetFavoriteShows</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>comments/comment</UrlPath>
+    </Match>
+    <SetMethodName>Post</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>comments/comment</UrlPath>
+    </Match>
+    <SetMethodName>Delete</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>comments/comments</UrlPath>
+    </Match>
+    <SetMethodName>Get</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>comments/replies</UrlPath>
+    </Match>
+    <SetMethodName>Reply</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>comments/subscription</UrlPath>
+    </Match>
+    <SetMethodName>Subscribe</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>comments/subscription</UrlPath>
+    </Match>
+    <SetMethodName>Unsubscribe</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>episodes/display</UrlPath>
+    </Match>
+    <SetMethodName>GetById</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>episodes/downloaded</UrlPath>
+    </Match>
+    <SetMethodName>MarkDownloaded</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>episodes/downloaded</UrlPath>
+    </Match>
+    <SetMethodName>UnmarkDownloaded</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>episodes/watched</UrlPath>
+    </Match>
+    <SetMethodName>MarkWatched</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>episodes/watched</UrlPath>
+    </Match>
+    <SetMethodName>UnmarkWatched</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>episodes/list</UrlPath>
+    </Match>
+    <SetMethodName>List</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>episodes/note</UrlPath>
+    </Match>
+    <SetMethodName>SetMark</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>episodes/note</UrlPath>
+    </Match>
+    <SetMethodName>DeleteMark</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>episodes/search</UrlPath>
+    </Match>
+    <SetMethodName>Search</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>friends/block</UrlPath>
+    </Match>
+    <SetMethodName>Block</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>friends/block</UrlPath>
+    </Match>
+    <SetMethodName>Unblock</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>friends/friend</UrlPath>
+    </Match>
+    <SetMethodName>Friend</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>friends/friend</UrlPath>
+    </Match>
+    <SetMethodName>Unfriend</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>friends/list</UrlPath>
+    </Match>
+    <SetMethodName>GetFriends</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>friends/requests</UrlPath>
+    </Match>
+    <SetMethodName>GetFriendRequests</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/access_token</UrlPath>
+    </Match>
+    <SetMethodName>GetOAuth2AccessToken</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/auth</UrlPath>
+    </Match>
+    <SetMethodName>ClassicAuthenticate</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/avatar</UrlPath>
+    </Match>
+    <SetMethodName>SetProfilePicture</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>DELETE</Method>
+      <UrlPath>members/avatar</UrlPath>
+    </Match>
+    <SetMethodName>DeleteProfilePicture</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>members/badges</UrlPath>
+    </Match>
+    <SetMethodName>GetBadges</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/destroy</UrlPath>
+    </Match>
+    <SetMethodName>DestroyToken</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>members/infos</UrlPath>
+    </Match>
+    <SetMethodName>GetProfile</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>GET</Method>
+      <UrlPath>members/is_active</UrlPath>
+    </Match>
+    <SetMethodName>VerifyToken</SetMethodName>
+  </Transform>
+
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>members/lost</UrlPath>
+    </Match>
+    <SetMethodName>ResetPassword</SetMethodName>
+  </Transform>
 </Api2>

@@ -37,5 +37,7 @@ namespace Srk.BetaseriesApiFactory
         {
             return "Method " + this.Method + " " + this.UrlPath;
         }
+
+        public string MethodName { get; set; }
     }
 }

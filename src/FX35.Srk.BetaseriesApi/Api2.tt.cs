@@ -59,12 +59,6 @@ namespace Srk.BetaseriesApi {
     }
     
     /// <summary>
-    /// Response format for 'comments/comments'.
-    /// </summary>
-    public class CommentComment {
-    }
-    
-    /// <summary>
     /// Response format for 'comments/replies'.
     /// </summary>
     public class CommentReply {
@@ -281,6 +275,24 @@ namespace Srk.BetaseriesApi {
     /// </summary>
     public class SubtitleShow {
     }
+    
+    /// <summary>
+    /// Response format for 'timeline/friends'.
+    /// </summary>
+    public class TimelineFriend {
+    }
+    
+    /// <summary>
+    /// Response format for 'timeline/home'.
+    /// </summary>
+    public class TimelineHome {
+    }
+    
+    /// <summary>
+    /// Response format for 'timeline/member'.
+    /// </summary>
+    public class TimelineMember {
+    }
 }
 
 #endregion
@@ -437,20 +449,20 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'comments/comment'.
         /// Envoie un commentaire pour l'élément spécifié.
+        /// Call for POST 'comments/comment'.
         /// </summary>
         /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
         /// <param name="id">ID de l&#x27;élément en question</param>
         /// <param name="text">Texte du commentaire</param>
         /// <param name="in_reply_to">Si c&#x27;est une réponse, inner_id du commentaire correspondant (Facultatif)</param>
-        public Srk.BetaseriesApi.CommentComment CommentComment(EntityType type, string id, string text, string in_reply_to) {
+        public Srk.BetaseriesApi.CommentComment Post(EntityType type, string id, string text, string in_reply_to) {
             var parameters = new List<KVP<string, string>>(4);
             parameters.Add(new KVP<string, string>("type", type.ToString()));
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("text", text));
             parameters.Add(new KVP<string, string>("in_reply_to", in_reply_to));
-            var response = this.client.ExecuteQuery("comments/comment", parameters);
+            var response = this.client.ExecuteQuery("POST", "comments/comment", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
             this.client.HandleErrors(result);
@@ -458,14 +470,14 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'comments/comment'.
         /// Supprime un commentaire de l'utilisateur identifié.
+        /// Call for DELETE 'comments/comment'.
         /// </summary>
         /// <param name="id">ID du commentaire</param>
-        public Srk.BetaseriesApi.CommentComment DeleteCommentComment(string id) {
+        public Srk.BetaseriesApi.CommentComment Delete(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("comments/comment", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "comments/comment", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
             this.client.HandleErrors(result);
@@ -473,8 +485,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'comments/comments'.
         /// Récupère les commentaires pour un élément donné.
+        /// Call for GET 'comments/comments'.
         /// </summary>
         /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
         /// <param name="id">ID de l&#x27;élément en question</param>
@@ -482,7 +494,7 @@ namespace Srk.BetaseriesApi {
         /// <param name="since_id">ID du dernier commentaire reçu (Facultatif)</param>
         /// <param name="order">Ordre chronologique de retour, desc ou asc (Défaut asc)</param>
         /// <param name="replies">Inclure les réponses aux commentaires (1 ou 0, par défaut 1)</param>
-        public Srk.BetaseriesApi.CommentComment CommentComment(EntityType type, string id, string nbpp, string since_id, string order, string replies) {
+        public Srk.BetaseriesApi.CommentComment Get(EntityType type, string id, string nbpp, string since_id, string order, string replies) {
             var parameters = new List<KVP<string, string>>(6);
             parameters.Add(new KVP<string, string>("type", type.ToString()));
             parameters.Add(new KVP<string, string>("id", id));
@@ -490,7 +502,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("since_id", since_id));
             parameters.Add(new KVP<string, string>("order", order));
             parameters.Add(new KVP<string, string>("replies", replies));
-            var response = this.client.ExecuteQuery("comments/comments", parameters);
+            var response = this.client.ExecuteQuery("GET", "comments/comments", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentComment>>(response);
             this.client.HandleErrors(result);
@@ -498,16 +510,16 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'comments/replies'.
         /// Récupère les réponses d'un commentaire donné.
+        /// Call for GET 'comments/replies'.
         /// </summary>
         /// <param name="id">ID du commentaire</param>
         /// <param name="order">Ordre chronologique de retour, desc ou asc (Défaut asc)</param>
-        public Srk.BetaseriesApi.CommentReply CommentReply(string id, string order) {
+        public Srk.BetaseriesApi.CommentReply Reply(string id, string order) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("order", order));
-            var response = this.client.ExecuteQuery("comments/replies", parameters);
+            var response = this.client.ExecuteQuery("GET", "comments/replies", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.CommentReply>>(response);
             this.client.HandleErrors(result);
@@ -515,32 +527,32 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'comments/subscription'.
         /// Inscrit le membre aux notifications e-mail pour l'élément donné.
+        /// Call for POST 'comments/subscription'.
         /// </summary>
         /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
         /// <param name="id">ID de l&#x27;élément en question</param>
-        public void CommentSubscription(EntityType type, string id) {
+        public void Subscribe(EntityType type, string id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("type", type.ToString()));
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("comments/subscription", parameters);
+            var response = this.client.ExecuteQuery("POST", "comments/subscription", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'comments/subscription'.
         /// Désinscrit le membre aux notifications e-mail pour l'élément donné.
+        /// Call for DELETE 'comments/subscription'.
         /// </summary>
         /// <param name="type">Type d&#x27;élément : episode|show|member|movie</param>
         /// <param name="id">ID de l&#x27;élément en question</param>
-        public void DeleteCommentSubscription(EntityType type, string id) {
+        public void Unsubscribe(EntityType type, string id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("type", type.ToString()));
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("comments/subscription", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "comments/subscription", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -556,174 +568,174 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'episodes/display'.
         /// Affiche les informations d'un épisode.
+        /// Call for GET 'episodes/display'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
         /// <param name="subtitles">Affiche les sous-titres si renseigné (Facultatif)</param>
-        public void EpisodeDisplay(string id, string thetvdb_id, string subtitles) {
+        public void GetById(string id, string thetvdb_id, string subtitles) {
             var parameters = new List<KVP<string, string>>(3);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("subtitles", subtitles));
-            var response = this.client.ExecuteQuery("episodes/display", parameters);
+            var response = this.client.ExecuteQuery("GET", "episodes/display", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/downloaded'.
         /// Marque un épisode comme téléchargé.
+        /// Call for POST 'episodes/downloaded'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
-        public void EpisodeDownloaded(string id, string thetvdb_id) {
+        public void MarkDownloaded(string id, string thetvdb_id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("episodes/downloaded", parameters);
+            var response = this.client.ExecuteQuery("POST", "episodes/downloaded", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/downloaded'.
         /// Enlève le marquage d'un épisode comme téléchargé.
+        /// Call for DELETE 'episodes/downloaded'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
-        public void DeleteEpisodeDownloaded(string id, string thetvdb_id) {
+        public void UnmarkDownloaded(string id, string thetvdb_id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("episodes/downloaded", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "episodes/downloaded", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/list'.
         /// Récupère la liste des épisodes à voir.
+        /// Call for GET 'episodes/list'.
         /// </summary>
         /// <param name="subtitles">Affiche les épisodes avec certains sous-titres disponibles : all|vovf|vo|vf (Facultatif)</param>
         /// <param name="limit">Limite à un nombre d&#x27;épisodes par série (Facultatif)</param>
         /// <param name="showId">ID de la série (Facultatif)</param>
         /// <param name="userId">ID du membre (Facultatif, par défaut membre identifié)</param>
-        public void EpisodeList(SubtitleFilter subtitles, string limit, string showId, string userId) {
+        public void List(SubtitleFilter subtitles, string limit, string showId, string userId) {
             var parameters = new List<KVP<string, string>>(4);
             parameters.Add(new KVP<string, string>("subtitles", subtitles.ToString()));
             parameters.Add(new KVP<string, string>("limit", limit));
             parameters.Add(new KVP<string, string>("showId", showId));
             parameters.Add(new KVP<string, string>("userId", userId));
-            var response = this.client.ExecuteQuery("episodes/list", parameters);
+            var response = this.client.ExecuteQuery("GET", "episodes/list", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/note'.
         /// Note un épisode.
+        /// Call for POST 'episodes/note'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         /// <param name="note">Note attribuée de 1 à 5</param>
-        public void EpisodeNote(string id, string thetvdb_id, string note) {
+        public void SetMark(string id, string thetvdb_id, string note) {
             var parameters = new List<KVP<string, string>>(3);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("note", note));
-            var response = this.client.ExecuteQuery("episodes/note", parameters);
+            var response = this.client.ExecuteQuery("POST", "episodes/note", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/note'.
         /// Supprime une note d'un épisode.
+        /// Call for DELETE 'episodes/note'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
-        public void DeleteEpisodeNote(string id, string thetvdb_id) {
+        public void DeleteMark(string id, string thetvdb_id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("episodes/note", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "episodes/note", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/scraper'.
         /// Récupère les informations d'un épisode en fonction du nom de fichier
+        /// Call for GET 'episodes/scraper'.
         /// </summary>
         /// <param name="file">Nom du fichier à traiter</param>
         public void EpisodeScraper(string file) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("file", file));
-            var response = this.client.ExecuteQuery("episodes/scraper", parameters);
+            var response = this.client.ExecuteQuery("GET", "episodes/scraper", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/search'.
         /// Récupère les informations d'un épisode en fonction d'informations.
+        /// Call for GET 'episodes/search'.
         /// </summary>
         /// <param name="show_id">ID de la série pour l&#x27;épisode à chercher</param>
         /// <param name="number">Numéro de la série, soit SxxExx soit le numéro global</param>
         /// <param name="subtitles">Si spécifié, retourne les sous-titres des épisodes</param>
-        public void EpisodeSearch(string show_id, string number, string subtitles) {
+        public void Search(string show_id, string number, string subtitles) {
             var parameters = new List<KVP<string, string>>(3);
             parameters.Add(new KVP<string, string>("show_id", show_id));
             parameters.Add(new KVP<string, string>("number", number));
             parameters.Add(new KVP<string, string>("subtitles", subtitles));
-            var response = this.client.ExecuteQuery("episodes/search", parameters);
+            var response = this.client.ExecuteQuery("GET", "episodes/search", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/watched'.
         /// Marque un épisode comme vu. Vous pouvez spécifier plusieurs épisodes en séparant les ID par une virgule.
+        /// Call for POST 'episodes/watched'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
         /// <param name="bulk">Si bulk est spécifié, tous les épisodes précédents seront aussi marqués comme vus (défaut à true)</param>
         /// <param name="delete">Si delete est spécifié, tous les épisodes d&#x27;après ne seront plus marqués comme vus</param>
         /// <param name="note">Si la note est spécifiée entre 1 et 5, donne une note à l&#x27;épisode</param>
-        public void EpisodeWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
+        public void MarkWatched(string id, string thetvdb_id, string bulk, string delete, string note) {
             var parameters = new List<KVP<string, string>>(5);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("bulk", bulk));
             parameters.Add(new KVP<string, string>("delete", delete));
             parameters.Add(new KVP<string, string>("note", note));
-            var response = this.client.ExecuteQuery("episodes/watched", parameters);
+            var response = this.client.ExecuteQuery("POST", "episodes/watched", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'episodes/watched'.
         /// Enlève le marquage d'un épisode comme vu.
+        /// Call for DELETE 'episodes/watched'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de l&#x27;épisode sur TheTVDB (Facultatif si id renseigné)</param>
-        public void DeleteEpisodeWatched(string id, string thetvdb_id) {
+        public void UnmarkWatched(string id, string thetvdb_id) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("episodes/watched", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "episodes/watched", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -739,86 +751,86 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'friends/block'.
         /// Bloque un utilisateur.
+        /// Call for POST 'friends/block'.
         /// </summary>
         /// <param name="id">ID du membre à bloquer</param>
-        public void FriendBlock(string id) {
+        public void Block(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("friends/block", parameters);
+            var response = this.client.ExecuteQuery("POST", "friends/block", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'friends/block'.
         /// Supprime le blocage d'un utilisateur.
+        /// Call for DELETE 'friends/block'.
         /// </summary>
         /// <param name="id">ID du membre à débloquer</param>
-        public void DeleteFriendBlock(string id) {
+        public void Unblock(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("friends/block", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "friends/block", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'friends/friend'.
         /// Ajoute un ami dans le compte de l'utilisateur.
+        /// Call for POST 'friends/friend'.
         /// </summary>
         /// <param name="id">ID du membre à ajouter en ami</param>
-        public void FriendFriend(string id) {
+        public void Friend(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("friends/friend", parameters);
+            var response = this.client.ExecuteQuery("POST", "friends/friend", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'friends/friend'.
         /// Supprime un ami du compte de l'utilisateur.
+        /// Call for DELETE 'friends/friend'.
         /// </summary>
         /// <param name="id">ID du membre à supprimer</param>
-        public void DeleteFriendFriend(string id) {
+        public void Unfriend(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("friends/friend", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "friends/friend", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'friends/list'.
         /// Récupère la liste des amis du membre.
+        /// Call for GET 'friends/list'.
         /// </summary>
         /// <param name="id">ID du membre, facultatif, si non renseigné utilise le membre identifié. Si renseigné, blocked=false.</param>
         /// <param name="blocked">Si spécifié, retourne la liste des personnes bloquées</param>
-        public void FriendList(string id, string blocked) {
+        public void GetFriends(string id, string blocked) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("blocked", blocked));
-            var response = this.client.ExecuteQuery("friends/list", parameters);
+            var response = this.client.ExecuteQuery("GET", "friends/list", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'friends/requests'.
         /// Récupère la liste des demandes envoyées par l'utilisateur.
+        /// Call for GET 'friends/requests'.
         /// </summary>
         /// <param name="received">Si spécifié, retourne la liste des demandes reçues</param>
-        public void FriendRequest(string received) {
+        public void GetFriendRequests(string received) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("received", received));
-            var response = this.client.ExecuteQuery("friends/requests", parameters);
+            var response = this.client.ExecuteQuery("GET", "friends/requests", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -834,138 +846,138 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'members/access_token'.
         /// Récupère un token d'accès avec le code fourni par l'identification OAuth 2.
+        /// Call for POST 'members/access_token'.
         /// </summary>
         /// <param name="client_id">Votre clé API.</param>
         /// <param name="client_secret">La clé secrète fournie dans les informations de votre clé.</param>
         /// <param name="redirect_uri">L&#x27;adresse de callback que vous aviez déjà renseignée pour la première partie.</param>
         /// <param name="code">Code récupéré par la première partie de l&#x27;identification.</param>
-        public void MemberAccesToken(string client_id, string client_secret, string redirect_uri, string code) {
+        public void GetOAuth2AccessToken(string client_id, string client_secret, string redirect_uri, string code) {
             var parameters = new List<KVP<string, string>>(4);
             parameters.Add(new KVP<string, string>("client_id", client_id));
             parameters.Add(new KVP<string, string>("client_secret", client_secret));
             parameters.Add(new KVP<string, string>("redirect_uri", redirect_uri));
             parameters.Add(new KVP<string, string>("code", code));
-            var response = this.client.ExecuteQuery("members/access_token", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/access_token", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/auth'.
         /// Identification classique du membre.
+        /// Call for POST 'members/auth'.
         /// </summary>
         /// <param name="login">Identifiant (login ou e-mail)</param>
         /// <param name="password">Mot de passe encrypté en MD5</param>
-        public void MemberAuth(string login, string password) {
+        public void ClassicAuthenticate(string login, string password) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("login", login));
             parameters.Add(new KVP<string, string>("password", password));
-            var response = this.client.ExecuteQuery("members/auth", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/auth", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/avatar'.
         /// Uploade et remplace l'avatar de l'utilisateur identifié.
+        /// Call for POST 'members/avatar'.
         /// </summary>
         /// <param name="avatar">Image à utiliser pour l&#x27;avatar de l&#x27;utilisateur.</param>
-        public void MemberAvatar(string avatar) {
+        public void SetProfilePicture(string avatar) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("avatar", avatar));
-            var response = this.client.ExecuteQuery("members/avatar", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/avatar", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/avatar'.
         /// Supprime l'avatar de l'utilisateur identifié.
+        /// Call for DELETE 'members/avatar'.
         /// </summary>
-        public void DeleteMemberAvatar() {
+        public void DeleteProfilePicture() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/avatar", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "members/avatar", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/badges'.
         /// Affiche les badges du membre.
+        /// Call for GET 'members/badges'.
         /// </summary>
         /// <param name="id">ID du membre</param>
-        public void MemberBadge(string id) {
+        public void GetBadges(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("members/badges", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/badges", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/destroy'.
         /// Détruit le token actif.
+        /// Call for POST 'members/destroy'.
         /// </summary>
-        public void MemberDestroy() {
+        public void DestroyToken() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/destroy", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/destroy", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/infos'.
         /// Renvoie les informations d'un membre, du membre identifié par défaut.
+        /// Call for GET 'members/infos'.
         /// </summary>
         /// <param name="id">ID du membre</param>
         /// <param name="summary">N&#x27;affiche que les informations et pas les séries / films du compte (Défaut false)</param>
-        public void MemberInfo(string id, string summary) {
+        public void GetProfile(string id, string summary) {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("summary", summary));
-            var response = this.client.ExecuteQuery("members/infos", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/infos", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/is_active'.
         /// Vérifie que le token est actif.
+        /// Call for GET 'members/is_active'.
         /// </summary>
-        public void MemberIActive() {
+        public void VerifyToken() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/is_active", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/is_active", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/lost'.
         /// Envoie un e-mail pour réinitialiser le mot de passe.
+        /// Call for POST 'members/lost'.
         /// </summary>
         /// <param name="find">Adresse e-mail ou nom de l&#x27;utilisateur</param>
-        public void MemberLost(string find) {
+        public void ResetPassword(string find) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("find", find));
-            var response = this.client.ExecuteQuery("members/lost", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/lost", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/notifications'.
         /// Affiche les dernières notifications du membre. Types : badge, banner, bugs, character, commentaire, dons, episode, facebook, film, forum, friend, message, quizz, recommend, site, subtitles, video.
+        /// Call for GET 'members/notifications'.
         /// </summary>
         /// <param name="since_id">Dernier ID (Facultatif)</param>
         /// <param name="number">Nombre de notifications, maximum 100 (Facultatif, défaut 10)</param>
@@ -979,39 +991,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("sort", sort));
             parameters.Add(new KVP<string, string>("types", types));
             parameters.Add(new KVP<string, string>("auto_delete", auto_delete));
-            var response = this.client.ExecuteQuery("members/notifications", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/notifications", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/oauth'.
-        /// Identification par OAuth.
-        /// </summary>
-        public void MemberOauth() {
-            var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/oauth", parameters);
-            
-            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
-            this.client.HandleErrors(result);
-        }
-
-        /// <summary>
-        /// Call for 'members/oauth'.
-        /// Identification par OAuth. Renvoie l'utilisateur sur l'URL de callback que vous avez spécifiée dans votre compte avec le paramètre GET token.
-        /// </summary>
-        public void MemberOauth() {
-            var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/oauth", parameters);
-            
-            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
-            this.client.HandleErrors(result);
-        }
-
-        /// <summary>
-        /// Call for 'members/option'.
         /// Modifie une option de l'utilisateur.
+        /// Call for POST 'members/option'.
         /// </summary>
         /// <param name="name">Nom de l&#x27;option (downloaded, global, notation, timelag, friendship)</param>
         /// <param name="value">Valeur de l&#x27;option (1 ou 0, pour friendship : open|requests|friends|nobody)</param>
@@ -1019,41 +1007,41 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("name", name));
             parameters.Add(new KVP<string, string>("value", value.ToString()));
-            var response = this.client.ExecuteQuery("members/option", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/option", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/options'.
         /// Récupère les options (sous-titres) du membre.
+        /// Call for GET 'members/options'.
         /// </summary>
         public void MemberOption() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("members/options", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/options", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/search'.
         /// Recherche des membres.
+        /// Call for GET 'members/search'.
         /// </summary>
         /// <param name="login">Nom de l&#x27;utilisateur, 2 caractères minimum. Vous pouvez utiliser % comme wildcard.</param>
         public void MemberSearch(string login) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("login", login));
-            var response = this.client.ExecuteQuery("members/search", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/search", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/signup'.
         /// Crée un nouveau compte membre sur BetaSeries.
+        /// Call for POST 'members/signup'.
         /// </summary>
         /// <param name="login">Nom d&#x27;utilisateur</param>
         /// <param name="password">Mot de passe en MD5 — Facultatif : S&#x27;il n&#x27;est pas fourni il sera généré et envoyé dans l&#x27;e-mail</param>
@@ -1063,15 +1051,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("login", login));
             parameters.Add(new KVP<string, string>("password", password));
             parameters.Add(new KVP<string, string>("email", email));
-            var response = this.client.ExecuteQuery("members/signup", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/signup", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/sync'.
         /// Cherche les membres parmi les amis du compte.
+        /// Call for POST 'members/sync'.
         /// </summary>
         /// <param name="mails">Tableau POST des adresses e-mail à chercher</param>
         public void MemberSync(string[] mails) {
@@ -1079,21 +1067,21 @@ namespace Srk.BetaseriesApi {
             foreach (var argValue in mails) {
                 parameters.Add(new KVP<string, string>("mails[]", argValue));
             }
-            var response = this.client.ExecuteQuery("members/sync", parameters);
+            var response = this.client.ExecuteQuery("POST", "members/sync", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'members/username'.
         /// Retourne les possibilités de noms d'utilisateur libres sur BetaSeries.
+        /// Call for GET 'members/username'.
         /// </summary>
         /// <param name="username">Nom d&#x27;utilisateur</param>
         public void MemberUsername(string username) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("username", username));
-            var response = this.client.ExecuteQuery("members/username", parameters);
+            var response = this.client.ExecuteQuery("GET", "members/username", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -1109,14 +1097,14 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'messages/discussion'.
         /// Récupère une discussion identifiée par l'ID du premier message.
+        /// Call for GET 'messages/discussion'.
         /// </summary>
         /// <param name="id">ID du premier message de la discussion</param>
         public Srk.BetaseriesApi.MessageDiscussion MessageDiscussion(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("messages/discussion", parameters);
+            var response = this.client.ExecuteQuery("GET", "messages/discussion", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageDiscussion>>(response);
             this.client.HandleErrors(result);
@@ -1124,14 +1112,14 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'messages/inbox'.
         /// Récupère la boîte de réception du membre identifié, par pages de 20.
+        /// Call for GET 'messages/inbox'.
         /// </summary>
         /// <param name="page">Numéro de la page, 1 par défaut</param>
         public Srk.BetaseriesApi.MessageInbox MessageInbox(string page) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("page", page));
-            var response = this.client.ExecuteQuery("messages/inbox", parameters);
+            var response = this.client.ExecuteQuery("GET", "messages/inbox", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageInbox>>(response);
             this.client.HandleErrors(result);
@@ -1139,14 +1127,14 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'messages/message'.
         /// Supprime un message que vous avez écrit.
+        /// Call for DELETE 'messages/message'.
         /// </summary>
         /// <param name="id">ID du message à supprimer — Si c&#x27;est le premier d&#x27;une discussion, toute la discussion est supprimée</param>
         public Srk.BetaseriesApi.MessageMessage DeleteMessageMessage(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("messages/message", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "messages/message", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageMessage>>(response);
             this.client.HandleErrors(result);
@@ -1154,8 +1142,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'messages/message'.
         /// Envoie un message à un autre membre du site.
+        /// Call for POST 'messages/message'.
         /// </summary>
         /// <param name="to">ID du membre destinataire (obligatoire si premier message)</param>
         /// <param name="text">Texte du message</param>
@@ -1167,7 +1155,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("text", text));
             parameters.Add(new KVP<string, string>("title", title));
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("messages/message", parameters);
+            var response = this.client.ExecuteQuery("POST", "messages/message", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageMessage>>(response);
             this.client.HandleErrors(result);
@@ -1175,14 +1163,14 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'messages/read'.
         /// Marque un message comme lu.
+        /// Call for POST 'messages/read'.
         /// </summary>
         /// <param name="id">ID du message à marquer comme lu</param>
         public Srk.BetaseriesApi.MessageRead MessageRead(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("messages/read", parameters);
+            var response = this.client.ExecuteQuery("POST", "messages/read", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.MessageRead>>(response);
             this.client.HandleErrors(result);
@@ -1199,8 +1187,8 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'movies/list'.
         /// Affiche la liste de tous les films.
+        /// Call for GET 'movies/list'.
         /// </summary>
         /// <param name="start">Nombre de démarrage pour la liste des films (facultatif, défaut 0)</param>
         /// <param name="limit">Limite du nombre de films à afficher (maximum 1000) (facultatif)</param>
@@ -1210,15 +1198,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("start", start));
             parameters.Add(new KVP<string, string>("limit", limit));
             parameters.Add(new KVP<string, string>("order", order));
-            var response = this.client.ExecuteQuery("movies/list", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/list", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/member'.
         /// Affiche la liste de tous les films du membre.
+        /// Call for GET 'movies/member'.
         /// </summary>
         /// <param name="state">0 = à voir, 1 = vu, 2 = ne veut pas voir (0 par défaut)</param>
         /// <param name="start">Nombre de démarrage pour la liste des films (facultatif, défaut 0)</param>
@@ -1230,29 +1218,29 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("start", start));
             parameters.Add(new KVP<string, string>("limit", limit));
             parameters.Add(new KVP<string, string>("order", order));
-            var response = this.client.ExecuteQuery("movies/member", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/member", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/movie'.
         /// Affiche les détails d'un film.
+        /// Call for GET 'movies/movie'.
         /// </summary>
         /// <param name="id">ID du film</param>
         public void MovyMovie(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/movie", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/movie'.
         /// Ajoute ou met à jour le film dans les films du membre.
+        /// Call for POST 'movies/movie'.
         /// </summary>
         /// <param name="id">ID du film</param>
         /// <param name="mail">Activer les alertes e-mail (0 ou 1, 1 par défaut)</param>
@@ -1266,57 +1254,57 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("twitter", twitter));
             parameters.Add(new KVP<string, string>("state", state));
             parameters.Add(new KVP<string, string>("profile", profile));
-            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            var response = this.client.ExecuteQuery("POST", "movies/movie", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/movie'.
         /// Supprime un film du compte membre.
+        /// Call for DELETE 'movies/movie'.
         /// </summary>
         /// <param name="id">ID du film</param>
         public void DeleteMovyMovie(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("movies/movie", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "movies/movie", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/random'.
         /// Affiche un film au hasard.
+        /// Call for GET 'movies/random'.
         /// </summary>
         /// <param name="nb">Nombre de films à afficher, par défaut 1</param>
         public void MovyRandom(string nb) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("nb", nb));
-            var response = this.client.ExecuteQuery("movies/random", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/random", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/scraper'.
         /// Récupère les informations d'un film en fonction du nom de fichier
+        /// Call for GET 'movies/scraper'.
         /// </summary>
         /// <param name="file">Nom du fichier à traiter</param>
         public void MovyScraper(string file) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("file", file));
-            var response = this.client.ExecuteQuery("movies/scraper", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/scraper", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'movies/search'.
         /// Recherche un film par critères.
+        /// Call for GET 'movies/search'.
         /// </summary>
         /// <param name="title">Titre recherché (facultatif si order=popularity)</param>
         /// <param name="order">Ordre de retour (title|popularity), par défaut title</param>
@@ -1328,7 +1316,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("order", order.ToString()));
             parameters.Add(new KVP<string, string>("nbpp", nbpp));
             parameters.Add(new KVP<string, string>("page", page));
-            var response = this.client.ExecuteQuery("movies/search", parameters);
+            var response = this.client.ExecuteQuery("GET", "movies/search", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -1344,22 +1332,22 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'pictures/badges'.
         /// Retourne une image du badge (32x32).
+        /// Call for GET 'pictures/badges'.
         /// </summary>
         /// <param name="id">ID du badge</param>
         public void PictureBadge(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("pictures/badges", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/badges", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'pictures/characters'.
         /// Retourne une image du personnage.
+        /// Call for GET 'pictures/characters'.
         /// </summary>
         /// <param name="id">ID du personnage</param>
         /// <param name="width">Largeur désirée (facultatif, défaut 250)</param>
@@ -1369,15 +1357,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("width", width));
             parameters.Add(new KVP<string, string>("height", height));
-            var response = this.client.ExecuteQuery("pictures/characters", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/characters", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'pictures/episodes'.
         /// Retourne une image de l'épisode.
+        /// Call for GET 'pictures/episodes'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode</param>
         /// <param name="width">Largeur désirée (facultatif)</param>
@@ -1387,15 +1375,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("width", width));
             parameters.Add(new KVP<string, string>("height", height));
-            var response = this.client.ExecuteQuery("pictures/episodes", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/episodes", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'pictures/members'.
         /// Retourne une image du membre.
+        /// Call for GET 'pictures/members'.
         /// </summary>
         /// <param name="id">ID du membre</param>
         /// <param name="width">Largeur désirée (facultatif)</param>
@@ -1405,15 +1393,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("width", width));
             parameters.Add(new KVP<string, string>("height", height));
-            var response = this.client.ExecuteQuery("pictures/members", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/members", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'pictures/movies'.
         /// Retourne une image du film.
+        /// Call for GET 'pictures/movies'.
         /// </summary>
         /// <param name="id">ID du film</param>
         /// <param name="width">Largeur désirée (facultatif, défaut 250)</param>
@@ -1423,15 +1411,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("width", width));
             parameters.Add(new KVP<string, string>("height", height));
-            var response = this.client.ExecuteQuery("pictures/movies", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/movies", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'pictures/shows'.
         /// Retourne une image de la série.
+        /// Call for GET 'pictures/shows'.
         /// </summary>
         /// <param name="id">ID de la série</param>
         /// <param name="width">Largeur désirée (facultatif)</param>
@@ -1443,7 +1431,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("width", width));
             parameters.Add(new KVP<string, string>("height", height));
             parameters.Add(new KVP<string, string>("picked", picked));
-            var response = this.client.ExecuteQuery("pictures/shows", parameters);
+            var response = this.client.ExecuteQuery("GET", "pictures/shows", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -1459,8 +1447,8 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'planning/general'.
         /// Affiche tous les épisodes diffusés les 8 derniers jours jusqu'aux 8 prochains jours.
+        /// Call for GET 'planning/general'.
         /// </summary>
         /// <param name="date">Date d&#x27;origine (YYYY-MM-JJ — Facultatif, par défaut &quot;now&quot;)</param>
         /// <param name="before">Nombre de jours avant (Facultatif, par défaut 8)</param>
@@ -1472,27 +1460,27 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("before", before));
             parameters.Add(new KVP<string, string>("after", after));
             parameters.Add(new KVP<string, string>("type", type));
-            var response = this.client.ExecuteQuery("planning/general", parameters);
+            var response = this.client.ExecuteQuery("GET", "planning/general", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'planning/incoming'.
         /// Affiche uniquement le premier épisode des prochaines séries qui vont être diffusées.
+        /// Call for GET 'planning/incoming'.
         /// </summary>
         public void PlanningIncoming() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("planning/incoming", parameters);
+            var response = this.client.ExecuteQuery("GET", "planning/incoming", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'planning/member'.
         /// Affiche le planning du membre identifié ou d'un autre membre.
+        /// Call for GET 'planning/member'.
         /// </summary>
         /// <param name="id">ID du membre (Facultatif si identifié)</param>
         /// <param name="unseen">N&#x27;affiche que les épisodes non-vus</param>
@@ -1502,7 +1490,7 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("unseen", unseen));
             parameters.Add(new KVP<string, string>("month", month));
-            var response = this.client.ExecuteQuery("planning/member", parameters);
+            var response = this.client.ExecuteQuery("GET", "planning/member", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -1518,8 +1506,8 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'shows/archive'.
         /// Archive une série dans le compte du membre.
+        /// Call for POST 'shows/archive'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1527,15 +1515,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/archive", parameters);
+            var response = this.client.ExecuteQuery("POST", "shows/archive", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/archive'.
         /// Sort une série des archives du compte du membre.
+        /// Call for DELETE 'shows/archive'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1543,15 +1531,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/archive", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "shows/archive", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/characters'.
         /// Récupère les personnages de la série, ajoutés par les membres de BetaSeries.
+        /// Call for GET 'shows/characters'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1559,7 +1547,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/characters", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/characters", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.ShowCharacter>>(response);
             this.client.HandleErrors(result);
@@ -1567,8 +1555,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'shows/display'.
         /// Affiche les informations d'une série.
+        /// Call for GET 'shows/display'.
         /// </summary>
         /// <param name="id">ID de la série. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
@@ -1576,15 +1564,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/display", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/display", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/episodes'.
         /// Affiche les épisodes d'une série.
+        /// Call for GET 'shows/episodes'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1598,57 +1586,57 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("season", season));
             parameters.Add(new KVP<string, string>("episode", episode));
             parameters.Add(new KVP<string, string>("subtitles", subtitles));
-            var response = this.client.ExecuteQuery("shows/episodes", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/episodes", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/favorite'.
         /// Ajoute une série favorite sur le profil du membre identifié.
+        /// Call for POST 'shows/favorite'.
         /// </summary>
         /// <param name="id">ID de la série à ajouter.</param>
-        public void ShowFavorite(string id) {
+        public void SetShowAsFavorite(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("shows/favorite", parameters);
+            var response = this.client.ExecuteQuery("POST", "shows/favorite", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/favorite'.
         /// Supprime une série favorite du profil du membre identifié.
+        /// Call for DELETE 'shows/favorite'.
         /// </summary>
         /// <param name="id">ID de la série à supprimer.</param>
         public void DeleteShowFavorite(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("shows/favorite", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "shows/favorite", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/favorites'.
         /// Récupère les séries favorites du membre.
+        /// Call for GET 'shows/favorites'.
         /// </summary>
         /// <param name="id">ID du membre, facultatif, si non renseigné utilise le membre identifié.</param>
-        public void ShowFavorite(string id) {
+        public void GetFavoriteShows(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("shows/favorites", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/favorites", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/list'.
         /// Affiche la liste de toutes les séries.
+        /// Call for GET 'shows/list'.
         /// </summary>
         /// <param name="order">Spécifie l&#x27;ordre de retour : alphabetical, popularity, followers (facultatif)</param>
         /// <param name="since">N&#x27;afficher que les séries modifiées à partir de cette date (timestamp UNIX — facultatif)</param>
@@ -1656,15 +1644,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("order", order));
             parameters.Add(new KVP<string, string>("since", since));
-            var response = this.client.ExecuteQuery("shows/list", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/list", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/note'.
         /// Note une série.
+        /// Call for POST 'shows/note'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1674,15 +1662,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("note", note));
-            var response = this.client.ExecuteQuery("shows/note", parameters);
+            var response = this.client.ExecuteQuery("POST", "shows/note", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/note'.
         /// Supprime une note d'une série.
+        /// Call for DELETE 'shows/note'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1690,15 +1678,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/note", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "shows/note", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/pictures'.
         /// Récupère les images de la série, ajoutées par les membres de BetaSeries.
+        /// Call for GET 'shows/pictures'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1706,7 +1694,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/pictures", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/pictures", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.ShowPicture>>(response);
             this.client.HandleErrors(result);
@@ -1714,8 +1702,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'shows/random'.
         /// Affiche une série au hasard.
+        /// Call for GET 'shows/random'.
         /// </summary>
         /// <param name="nb">Nombre de séries à afficher, par défaut 1</param>
         /// <param name="summary">Retourne uniquement les infos essentielles de la série (Défaut false)</param>
@@ -1723,15 +1711,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("nb", nb));
             parameters.Add(new KVP<string, string>("summary", summary));
-            var response = this.client.ExecuteQuery("shows/random", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/random", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/recommendation'.
         /// Créer une recommandation d'une série d'un membre pour un ami.
+        /// Call for POST 'shows/recommendation'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1743,41 +1731,41 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("to", to));
             parameters.Add(new KVP<string, string>("comments", comments));
-            var response = this.client.ExecuteQuery("shows/recommendation", parameters);
+            var response = this.client.ExecuteQuery("POST", "shows/recommendation", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/recommendation'.
         /// Supprime une recommandation d'une série envoyée ou reçue.
+        /// Call for DELETE 'shows/recommendation'.
         /// </summary>
         /// <param name="id">ID de la recommandation</param>
         public void DeleteShowRecommendation(string id) {
             var parameters = new List<KVP<string, string>>(1);
             parameters.Add(new KVP<string, string>("id", id));
-            var response = this.client.ExecuteQuery("shows/recommendation", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "shows/recommendation", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/recommendations'.
         /// Récupère les recommandations reçues par l'utilisateur identifié.
+        /// Call for GET 'shows/recommendations'.
         /// </summary>
         public void ShowRecommendation() {
             var parameters = new List<KVP<string, string>>(0);
-            var response = this.client.ExecuteQuery("shows/recommendations", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/recommendations", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/search'.
         /// Recherche une série.
+        /// Call for GET 'shows/search'.
         /// </summary>
         /// <param name="title">Titre recherché</param>
         /// <param name="summary">Retourne uniquement les infos essentielles de la série (Défaut false)</param>
@@ -1791,15 +1779,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("order", order.ToString()));
             parameters.Add(new KVP<string, string>("nbpp", nbpp));
             parameters.Add(new KVP<string, string>("page", page));
-            var response = this.client.ExecuteQuery("shows/search", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/search", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/show'.
         /// Ajoute une série dans le compte du membre.
+        /// Call for POST 'shows/show'.
         /// </summary>
         /// <param name="id">ID de la série. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB. Vous pouvez en mettre plusieurs en les séparant par un virgule (Facultatif si id renseigné)</param>
@@ -1809,15 +1797,15 @@ namespace Srk.BetaseriesApi {
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
             parameters.Add(new KVP<string, string>("episode_id", episode_id));
-            var response = this.client.ExecuteQuery("shows/show", parameters);
+            var response = this.client.ExecuteQuery("POST", "shows/show", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/show'.
         /// Supprime une série du compte du membre.
+        /// Call for DELETE 'shows/show'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1825,15 +1813,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/show", parameters);
+            var response = this.client.ExecuteQuery("DELETE", "shows/show", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/similars'.
         /// Récupère les séries marquées similaires par les membres de BetaSeries.
+        /// Call for GET 'shows/similars'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1841,15 +1829,15 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/similars", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/similars", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
         }
 
         /// <summary>
-        /// Call for 'shows/videos'.
         /// Récupère les vidéos associées à la série par les membres de BetaSeries.
+        /// Call for GET 'shows/videos'.
         /// </summary>
         /// <param name="id">ID de la série (Facultatif si thetvdb_id renseigné)</param>
         /// <param name="thetvdb_id">ID de la série sur TheTVDB (Facultatif si id renseigné)</param>
@@ -1857,7 +1845,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("thetvdb_id", thetvdb_id));
-            var response = this.client.ExecuteQuery("shows/videos", parameters);
+            var response = this.client.ExecuteQuery("GET", "shows/videos", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse>(response);
             this.client.HandleErrors(result);
@@ -1873,8 +1861,8 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'subtitles/episode'.
         /// Affiche les sous-titres pour un épisode donné.
+        /// Call for GET 'subtitles/episode'.
         /// </summary>
         /// <param name="id">ID de l&#x27;épisode</param>
         /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
@@ -1882,7 +1870,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("language", language.ToString()));
-            var response = this.client.ExecuteQuery("subtitles/episode", parameters);
+            var response = this.client.ExecuteQuery("GET", "subtitles/episode", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleEpisode>>(response);
             this.client.HandleErrors(result);
@@ -1890,8 +1878,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'subtitles/last'.
         /// Affiche les derniers sous-titres récupérés par BetaSeries.
+        /// Call for GET 'subtitles/last'.
         /// </summary>
         /// <param name="number">Nombre de sous-titres, maximum 100</param>
         /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
@@ -1899,7 +1887,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("number", number));
             parameters.Add(new KVP<string, string>("language", language.ToString()));
-            var response = this.client.ExecuteQuery("subtitles/last", parameters);
+            var response = this.client.ExecuteQuery("GET", "subtitles/last", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleLast>>(response);
             this.client.HandleErrors(result);
@@ -1907,8 +1895,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'subtitles/report'.
         /// Reporte des sous-titres comme incorrects pour se faire supprimer de la liste.
+        /// Call for POST 'subtitles/report'.
         /// </summary>
         /// <param name="id">ID du sous-titre</param>
         /// <param name="reason">Raison pour laquelle le sous-titre n&#x27;est pas correct</param>
@@ -1916,7 +1904,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("reason", reason));
-            var response = this.client.ExecuteQuery("subtitles/report", parameters);
+            var response = this.client.ExecuteQuery("POST", "subtitles/report", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleReport>>(response);
             this.client.HandleErrors(result);
@@ -1924,8 +1912,8 @@ namespace Srk.BetaseriesApi {
         }
 
         /// <summary>
-        /// Call for 'subtitles/show'.
         /// Affiche les sous-titres pour une série donnée.
+        /// Call for GET 'subtitles/show'.
         /// </summary>
         /// <param name="id">ID de la série</param>
         /// <param name="language">N&#x27;affiche que certaines langues : all|vovf|vo|vf (Facultatif)</param>
@@ -1933,7 +1921,7 @@ namespace Srk.BetaseriesApi {
             var parameters = new List<KVP<string, string>>(2);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("language", language.ToString()));
-            var response = this.client.ExecuteQuery("subtitles/show", parameters);
+            var response = this.client.ExecuteQuery("GET", "subtitles/show", parameters);
             
             var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.SubtitleShow>>(response);
             this.client.HandleErrors(result);
@@ -1950,59 +1938,62 @@ namespace Srk.BetaseriesApi {
 
 
         /// <summary>
-        /// Call for 'timeline/friends'.
         /// Affiche les derniers évènements des amis du membre identifié.
+        /// Call for GET 'timeline/friends'.
         /// </summary>
         /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
         /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
         /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
-        public void TimelineFriend(string nbpp, string since_id, string types) {
+        public Srk.BetaseriesApi.TimelineFriend TimelineFriend(string nbpp, string since_id, string types) {
             var parameters = new List<KVP<string, string>>(3);
             parameters.Add(new KVP<string, string>("nbpp", nbpp));
             parameters.Add(new KVP<string, string>("since_id", since_id));
             parameters.Add(new KVP<string, string>("types", types));
-            var response = this.client.ExecuteQuery("timeline/friends", parameters);
+            var response = this.client.ExecuteQuery("GET", "timeline/friends", parameters);
             
-            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.TimelineFriend>>(response);
             this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Call for 'timeline/home'.
         /// Affiche les derniers évènements du site.
+        /// Call for GET 'timeline/home'.
         /// </summary>
         /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
         /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
         /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
-        public void TimelineHome(string nbpp, string since_id, string types) {
+        public Srk.BetaseriesApi.TimelineHome TimelineHome(string nbpp, string since_id, string types) {
             var parameters = new List<KVP<string, string>>(3);
             parameters.Add(new KVP<string, string>("nbpp", nbpp));
             parameters.Add(new KVP<string, string>("since_id", since_id));
             parameters.Add(new KVP<string, string>("types", types));
-            var response = this.client.ExecuteQuery("timeline/home", parameters);
+            var response = this.client.ExecuteQuery("GET", "timeline/home", parameters);
             
-            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.TimelineHome>>(response);
             this.client.HandleErrors(result);
+            return result.Data;
         }
 
         /// <summary>
-        /// Call for 'timeline/member'.
         /// Affiche les derniers évènements du membre spécifié.
+        /// Call for GET 'timeline/member'.
         /// </summary>
         /// <param name="id">ID du membre</param>
         /// <param name="nbpp">Nombre d&#x27;évènements par page, maximum 100</param>
         /// <param name="since_id">ID du dernier évènement reçu (Facultatif)</param>
         /// <param name="types">Types d&#x27;évènements à retourner, séparés par une virgule (Facultatif)</param>
-        public void TimelineMember(string id, string nbpp, string since_id, string types) {
+        public Srk.BetaseriesApi.TimelineMember TimelineMember(string id, string nbpp, string since_id, string types) {
             var parameters = new List<KVP<string, string>>(4);
             parameters.Add(new KVP<string, string>("id", id));
             parameters.Add(new KVP<string, string>("nbpp", nbpp));
             parameters.Add(new KVP<string, string>("since_id", since_id));
             parameters.Add(new KVP<string, string>("types", types));
-            var response = this.client.ExecuteQuery("timeline/member", parameters);
+            var response = this.client.ExecuteQuery("GET", "timeline/member", parameters);
             
-            var result = JsonConvert.DeserializeObject<BaseResponse>(response);
+            var result = JsonConvert.DeserializeObject<BaseResponse<Srk.BetaseriesApi.TimelineMember>>(response);
             this.client.HandleErrors(result);
+            return result.Data;
         }
     }
 }

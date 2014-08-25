@@ -27,6 +27,7 @@ namespace Srk.BetaseriesApiFactory
             {
                 case "string":
                 case "text":
+                case "html":
                     this.Type = EntityFieldType.String;
                     return;
 
@@ -38,7 +39,12 @@ namespace Srk.BetaseriesApiFactory
                     this.Type = EntityFieldType.Boolean;
                     return;
 
+                case "float":
+                    this.Type = EntityFieldType.Float;
+                    return;
+
                 case "datetime":
+                case "date":
                     this.Type = EntityFieldType.DateTime;
                     return;
 
@@ -111,5 +117,6 @@ namespace Srk.BetaseriesApiFactory
         Enum,
         Entity,
         Boolean,
+        Float,
     }
 }

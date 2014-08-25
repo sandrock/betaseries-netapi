@@ -15,7 +15,7 @@ namespace Srk.BetaseriesApi
         /// <param name="action">Service action</param>
         /// <param name="keyValues">Pairs of query string parameters (key1, value1, key2, value2...)</param>
         /// <returns>HTTP response body as a string.</returns>
-        internal virtual string ExecuteQuery(string action, params string[] keyValues)
+        internal virtual string ExecuteQuery(string method, string action, params string[] keyValues)
         {
             if (keyValues.Length % 2 != 0)
                 throw new ArgumentException("Invalid parameters count", "keyvalues");
@@ -47,7 +47,7 @@ namespace Srk.BetaseriesApi
                 }
             }
 
-            return ExecuteQuery(action, parameters);
+            return ExecuteQuery(method, action, parameters);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Srk.BetaseriesApi
         /// <param name="action">Service action</param>
         /// <param name="parameters">Query string parameters</param>
         /// <returns>HTTP response body as a string.</returns>
-        internal virtual string ExecuteQuery(string action, List<KVP<string, string>> parameters)
+        internal virtual string ExecuteQuery(string method, string action, List<KVP<string, string>> parameters)
         {
             parameters = parameters ?? new List<KVP<string, string>>();
             ////parameters["key"] = Key;
@@ -65,7 +65,8 @@ namespace Srk.BetaseriesApi
             ////    parameters["token"] = SessionToken;
             ////}
 
-            return this.http.ExecuteQuery(action, parameters);
+            ////return this.http.ExecuteQuery(method, action, parameters);
+            throw new NotImplementedException();
         }
 
         internal void HandleErrors<T>(BaseResponse<T> result)

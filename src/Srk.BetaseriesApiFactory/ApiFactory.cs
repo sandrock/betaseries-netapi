@@ -134,7 +134,7 @@ namespace Srk.BetaseriesApiFactory
             }
             text.WriteLine("// ");
             */
-            var xmlStream = this.GetType().Assembly.GetManifestResourceStream("Srk.BetaseriesApiFactory.Api2.xml");
+            var xmlStream = typeof(ApiFactory).Assembly.GetManifestResourceStream("Srk.BetaseriesApiFactory.Api2.xml");
             if (xmlStream == null)
             {
                 text.WriteLine("// ");
@@ -158,49 +158,127 @@ namespace Srk.BetaseriesApiFactory
                 var target = transform.Attribute("Target").Value;
                 if (target == "Method")
                 {
-                    var methodName = transform.Attribute("MethodName").Value;
-                    ////this.ApplyMethodTransform(methodName);
+                    ApplyMethodTransform(context, transform);
                 }
                 else if (target == "ArgumentEnum")
                 {
-                    var matcher = transform.Element("ArgumentEnumMatch");
-                    var valuesToMatch = matcher.Elements("Value").ToArray();
-                    if (valuesToMatch.Length > 0)
+                    ApplyArgumentEnumTransform(context, transform);
+                }
+                else if (target == "ResponseFormat")
+                {
+                    ApplyResponseFormatTransform(context, transform);
+                }
+            }
+        }
+
+        private void ApplyMethodTransform(ApiFactoryContext context, XElement transform)
+        {
+            var matchElement = transform.Element("Match");
+            var method = matchElement.Element("Method");
+            var urlPathElement = matchElement.Element("UrlPath");
+
+            foreach (var format in context.Methods.ToArray())
+            {
+                // match
+                bool match = true;
+
+                if (urlPathElement != null)
+                {
+                    match &= urlPathElement.Value == format.UrlPath;
+                }
+
+                if (method != null)
+                {
+                    match &= method.Value == format.Method;
+                }
+
+                if (!match)
+                    continue;
+
+                var removeElement = transform.Element("Remove");
+                if (removeElement != null)
+                {
+                    context.Methods.Remove(format);
+                }
+
+                var setReponseFormat = transform.Element("SetReponseFormat");
+                if (setReponseFormat != null)
+                {
+                    format.ResponseFormat = this.ParseReponseFormat(setReponseFormat.Value);
+                }
+
+                var setMethodName = transform.Element("SetMethodName");
+                if (setMethodName != null)
+                {
+                    format.MethodName = setMethodName.Value;
+                }
+            }
+        }
+
+        private static void ApplyArgumentEnumTransform(ApiFactoryContext context, XElement transform)
+        {
+            var matcher = transform.Element("ArgumentEnumMatch");
+            var valuesToMatch = matcher.Elements("Value").ToArray();
+            if (valuesToMatch.Length > 0)
+            {
+                foreach (var argEnum in context.ArgumentEnums)
+                {
+                    var valueMatches = new List<string>(argEnum.Value.Values.Count);
+                    foreach (var valueToMatch in valuesToMatch)
                     {
-                        foreach (var argEnum in context.ArgumentEnums)
+                        string val = valueToMatch.Value;
+                        bool isRequired = true;
+
+                        var isPresentElement = valueToMatch.Attribute("IsPresent");
+                        if (isPresentElement != null && bool.TryParse(isPresentElement.Value, out isRequired))
                         {
-                            var valueMatches = new List<string>(argEnum.Value.Values.Count);
-                            foreach (var valueToMatch in valuesToMatch)
-                            {
-                                string val = valueToMatch.Value;
-                                bool isRequired = true;
+                        }
+                        else
+                        {
+                            isRequired = true;
+                        }
 
-                                var isPresentElement = valueToMatch.Attribute("IsPresent");
-                                if (isPresentElement != null && bool.TryParse(isPresentElement.Value, out isRequired))
-                                {
-                                }
-                                else
-                                {
-                                    isRequired = true;
-                                }
+                        if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && isRequired)
+                            valueMatches.Add(val);
 
-                                if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && isRequired)
-                                    valueMatches.Add(val);
+                        if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && !isRequired)
+                            break;
+                    }
 
-                                if (argEnum.Value.Values.Contains(val) && !valueMatches.Contains(val) && !isRequired)
-                                    break;
-                            }
-
-                            if (valueMatches.Count == valuesToMatch.Length)
-                            {
-                                var setNameElement = transform.Element("SetName");
-                                if (setNameElement != null)
-                                {
-                                    argEnum.Value.Name = setNameElement.Value;
-                                }
-                            }
+                    if (valueMatches.Count == valuesToMatch.Length)
+                    {
+                        var setNameElement = transform.Element("SetName");
+                        if (setNameElement != null)
+                        {
+                            argEnum.Value.Name = setNameElement.Value;
                         }
                     }
+                }
+            }
+        }
+
+        private static void ApplyResponseFormatTransform(ApiFactoryContext context, XElement transform)
+        {
+            var matcher = transform.Element("ResponseFormatMatch");
+            var urlPathElement = matcher.Element("UrlPath");
+
+            foreach (var format in context.ResponseFormats.ToArray())
+            {
+                // match
+                bool match = true;
+
+                if (urlPathElement != null)
+                {
+                    match &= urlPathElement.Value == format.Key;
+                }
+
+                if (!match)
+                    continue;
+
+                var removeElement = transform.Element("Remove");
+                if (removeElement != null)
+                {
+                    context.ResponseFormats.Remove(format.Key);
                 }
             }
         }
@@ -252,8 +330,8 @@ namespace Srk.BetaseriesApiFactory
                 {
                     text.WriteLine();
                     text.WriteLine(indent, "/// <summary>");
-                    text.WriteLine(indent, "/// Call for '" + item.UrlPath + "'.");
                     text.WriteLine(indent, "/// " + item.Description);
+                    text.WriteLine(indent, "/// Call for " + item.Method + " '" + item.UrlPath + "'.");
                     text.WriteLine(indent, "/// </summary>");
 
                     foreach (var arg in item.Arguments)
@@ -276,9 +354,16 @@ namespace Srk.BetaseriesApiFactory
                     }
 
                     // method name
-                    if (item.Method == "DELETE")
-                        text.Write("Delete");
-                    text.Write(this.GetResultTypeName(item.UrlPath));
+                    if (item.MethodName != null)
+                    {
+                        text.Write(item.MethodName);
+                    }
+                    else
+                    {
+                        if (item.Method == "DELETE")
+                            text.Write("Delete");
+                        text.Write(this.GetResultTypeName(item.UrlPath));
+                    }
 
                     // method args
                     text.Write("(");
@@ -307,7 +392,7 @@ namespace Srk.BetaseriesApiFactory
                     indent++;
 
                     // method code
-                    text.WriteLine(indent, "var parameters = new List<KVP<string, string>>("+item.Arguments.Count+");");
+                    text.WriteLine(indent, "var parameters = new List<KVP<string, string>>(" + item.Arguments.Count + ");");
                     foreach (var arg in item.Arguments)
                     {
                         if (arg.EnumField != null)
@@ -326,7 +411,7 @@ namespace Srk.BetaseriesApiFactory
                         }
                     }
 
-                    text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.UrlPath + "\", parameters);");
+                    text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.Method + "\", \"" + item.UrlPath + "\", parameters);");
 
                     text.WriteLine(indent, "");
                     if (item.ResponseFormat != null)
@@ -361,68 +446,6 @@ namespace Srk.BetaseriesApiFactory
         protected void WriteEntities(ApiFactoryContext context, TextWriter text)
         {
             int indent = 1;
-            /*
-            text.WriteLine();
-            text.WriteLine("#region Entities (from methods)");
-            text.WriteLine();
-            text.WriteLine("namespace " + this.EntitiesNamespace + " {");
-            foreach (var item in context.Methods)
-            {
-                if (item.ResponseFormat == null)
-                    continue;
-
-                var className = this.GetResultTypeName(item.UrlPath);
-                text.WriteLine(indent, "");
-                text.WriteLine(indent, "/// <summary>");
-                text.WriteLine(indent, "/// Response for '" + item.UrlPath + "'.");
-                text.WriteLine(indent, "/// " + item.Description);
-                text.WriteLine(indent, "/// </summary>");
-                text.WriteLine(indent++, "public class " + className + " {");
-                foreach (var field in item.ResponseFormat.Entity.Fields.Values)
-                {
-                    text.WriteLine(indent, "");
-                    text.WriteLine(indent, "/// <summary>");
-                    text.WriteLine(indent, "/// Gets or sets the " + field.Name + ".");
-                    text.WriteLine(indent, "/// </summary>");
-                    switch (field.Type)
-                    {
-                        case EntityFieldType.String:
-                            text.WriteLine(indent, "public string " + field.Name + " { get; set; }");
-                            break;
-                        case EntityFieldType.Url:
-                            text.WriteLine(indent, "public string " + field.Name + " { get; set; }");
-                            break;
-                        case EntityFieldType.DateTime:
-                            text.WriteLine(indent, "public DateTime " + field.Name + " { get; set; }");
-                            break;
-                        case EntityFieldType.Integer:
-                            text.WriteLine(indent, "public int " + field.Name + " { get; set; }");
-                            break;
-                        case EntityFieldType.Enum:
-                            var enumName = field.Name + "Enum";
-                            text.WriteLine(indent, "public " + enumName + " " + field.Name + " { get; set; }");
-                            text.WriteLine(indent, "");
-                            text.WriteLine(indent++, "public enum " + enumName + " {");
-                            foreach (var enumValue in field.EnumField.Values)
-                            {
-                                text.WriteLine(indent, enumValue + ",");
-                            }
-
-                            text.WriteLine(--indent, "}");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                text.WriteLine(--indent, "}");
-            }
-
-            text.WriteLine("}");
-            text.WriteLine();
-            text.WriteLine("#endregion");
-            text.WriteLine();
-            */
             text.WriteLine();
             text.WriteLine("#region Entities (merged)");
             text.WriteLine();
@@ -818,6 +841,14 @@ namespace Srk.BetaseriesApiFactory
                 Debug.Assert(string.IsNullOrWhiteSpace(parts[0]));
                 field.Name = parts[1].Trim();
                 var type = parts[2].Trim();
+                // integer, string, ...
+                // string # comment
+                var sharpPosition = type.IndexOf('#');
+                if (sharpPosition > 0)
+                {
+                    type = type.Substring(0, sharpPosition).TrimEnd();
+                }
+
                 if (level <= 2)
                 {
                     field2 = field;
