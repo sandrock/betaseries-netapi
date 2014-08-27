@@ -12,6 +12,7 @@ namespace Srk.BetaseriesApiFactory
         public Entity()
         {
             this.Fields = new Dictionary<string, EntityField>();
+            this.UseBaseResponse = true;
         }
 
         public string Name { get; set; }
@@ -30,6 +31,10 @@ namespace Srk.BetaseriesApiFactory
                 + (HasOneChild ? ("Contains 1 " + this.ItemName) : "")
                 + (HasMultipleChild ? ("Contains * " + this.ItemName) : "");
         }
+
+        public string Inherit { get; set; }
+
+        public bool UseBaseResponse { get; set; }
     }
 }
 

@@ -1,5 +1,5 @@
 ﻿
-namespace Srk.BetaseriesApi
+namespace Srk.BetaseriesApi2
 {
     using System;
     using System.Collections.Generic;
@@ -17,10 +17,16 @@ namespace Srk.BetaseriesApi
     [DataContract]
     public class BaseResponse<T>
     {
-        [DataMember(Order = 0)]
+        [DataMember]
         public T Data { get; set; }
 
-        [DataMember(Name = "errors", Order = 1)]
+        [DataMember(IsRequired = false, Name = "hash")]
+        public string Hash { get; set; }
+
+        [DataMember(IsRequired = false, Name = "user")]
+        public object User { get; set; }
+
+        [DataMember(Name = "errors")]
         public ResponseError[] Errors { get; set; }
     }
 

@@ -21,6 +21,12 @@ namespace Srk.BetaseriesApiFactory
 
         public string Name { get; set; }
 
+        public EntityFieldType Type { get; set; }
+
+        public EntityEnumField EnumField { get; set; }
+
+        public Entity Entity { get; set; }
+
         internal void SetType(string p)
         {
             switch (p)
@@ -71,11 +77,7 @@ namespace Srk.BetaseriesApiFactory
             throw new NotSupportedException("ENtity field type '" + p + "' is not supported");
         }
 
-        public EntityFieldType Type { get; set; }
-
-        public EntityEnumField EnumField { get; set; }
-
-        public Entity Entity { get; set; }
+        public string ContractName { get; set; }
     }
 
     public class EntityEnumField : IEnumerable<string>
@@ -87,6 +89,7 @@ namespace Srk.BetaseriesApiFactory
         }
 
         public string Name { get; set; }
+
         public List<string> Names { get; set; }
 
         public List<string> Values { get; set; }

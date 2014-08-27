@@ -19,5 +19,7 @@ namespace Srk.BetaseriesApiFactory
         public Dictionary<string, Response> ResponseFormats { get; set; }
 
         public Dictionary<string, EntityEnumField> ArgumentEnums { get; set; }
+
+        public System.Xml.Linq.XDocument Transforms { get; set; }
     }
 }

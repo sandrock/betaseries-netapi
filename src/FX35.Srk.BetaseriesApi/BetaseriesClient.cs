@@ -1,6 +1,7 @@
 ﻿
-namespace Srk.BetaseriesApi
+namespace Srk.BetaseriesApi2
 {
+    using Srk.BetaseriesApi;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,76 +10,89 @@ namespace Srk.BetaseriesApi
 
     partial class BetaseriesClient
     {
-        /// <summary>
-        /// Execute an HTTP GET request through an HTTP wrapper.
-        /// </summary>
-        /// <param name="action">Service action</param>
-        /// <param name="keyValues">Pairs of query string parameters (key1, value1, key2, value2...)</param>
-        /// <returns>HTTP response body as a string.</returns>
-        internal virtual string ExecuteQuery(string method, string action, params string[] keyValues)
+        private string apiKey;
+        private IHttpRequestWrapper _http;
+
+        private string UrlFormat = "{0}{1}?{2}";
+        private string BaseUrl = "https://api.betaseries.com/";
+
+        private string RealUserAgent
         {
-            if (keyValues.Length % 2 != 0)
-                throw new ArgumentException("Invalid parameters count", "keyvalues");
-
-            var parameters = new List<KVP<string, string>>(keyValues.Length / 2);
-
-            if (keyValues.Length > 0)
-            {
-                bool isKey = true;
-                string key = null;
-                foreach (var item in keyValues)
-                {
-                    if (isKey)
-                    {
-                        key = item;
-                    }
-                    else
-                    {
-                        parameters.Add(new KVP<string, string>(key, item));
-                    }
-
-                    isKey = !isKey;
-                }
-
-                var multiKeys = parameters.GroupBy(p => p.Key).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
-                foreach (var item in parameters.Where(p => multiKeys.Contains(p.Key)))
-                {
-                    item.Key += "[]";
-                }
-            }
-
-            return ExecuteQuery(method, action, parameters);
+            get { return string.Format("{0} {1}", Srk.BetaseriesApi.Version.LibraryUserAgent, UserAgent ?? "unknown app"); }
         }
 
         /// <summary>
-        /// Execute an HTTP GET request through an HTTP wrapper.
+        /// This is a http query wrapper. Use for unit testing only.
         /// </summary>
-        /// <param name="action">Service action</param>
-        /// <param name="parameters">Query string parameters</param>
-        /// <returns>HTTP response body as a string.</returns>
-        internal virtual string ExecuteQuery(string method, string action, List<KVP<string, string>> parameters)
+        protected IHttpRequestWrapper http
         {
-            parameters = parameters ?? new List<KVP<string, string>>();
-            ////parameters["key"] = Key;
-            ////if (SessionToken != null)
-            ////{
-            ////    parameters["token"] = SessionToken;
-            ////}
+            get { return _http ?? (_http = new HttpRequestWrapper(UrlFormat, BaseUrl, RealUserAgent)); }
+            set { _http = value; }
+        }
 
-            ////return this.http.ExecuteQuery(method, action, parameters);
-            throw new NotImplementedException();
+        public BetaseriesClient(string apiKey)
+        {
+            this.apiKey = apiKey;
+        }
+
+        public string UserAgent { get; set; }
+
+        internal virtual string ExecuteQuery(RequestContext request)
+        {
+            request.AddUrlArgumentToUrlQueryString("key", this.apiKey);
+
+            string result;
+            if (request.PostQueryStrings != null && request.PostQueryStrings.Count > 0)
+            {
+                result = this.http.ExecuteQuery(
+                    request.UrlPath,
+                    request.QueryStrings,
+                    request.PostQueryStrings,
+                    method: request.Method);
+            }
+            else
+            {
+                result = this.http.ExecuteQuery(
+                    request.UrlPath,
+                    request.QueryStrings,
+                    method: request.Method);
+            }
+
+            return result;
         }
 
         internal void HandleErrors<T>(BaseResponse<T> result)
         {
-            throw new NotImplementedException();
+            if (result.Errors == null || result.Errors.Length == 0)
+                return;
+
+            var first = result.Errors[0];
+            throw new Exception(first.Code + " " + first.Content);
         }
 
         internal void HandleErrors(BaseResponse result)
         {
-            throw new NotImplementedException();
+            if (result.Errors == null || result.Errors.Length == 0)
+                return;
+
+            var first = result.Errors[0];
+            throw new Exception(first.Code + " " + first.Content);
         }
 
+        internal string ApplyMD5(string value)
+        {
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(value);
+
+            using (var x = new System.Security.Cryptography.MD5CryptoServiceProvider())
+            {
+                data = x.ComputeHash(data);
+            }
+
+            string ret = "";
+            for (int i = 0; i < data.Length; i++)
+                ret += data[i].ToString("x2").ToLower();
+            return ret;
+        }
     }
 
     internal class KVP<TKey, TValue>

@@ -33,11 +33,13 @@ namespace Srk.BetaseriesApiFactory
 
         public List<MethodArgumentDescription> Arguments { get; set; }
 
+        public string MethodName { get; set; }
+
         public override string ToString()
         {
             return "Method " + this.Method + " " + this.UrlPath;
         }
 
-        public string MethodName { get; set; }
+        public bool ReturnRawResult { get; set; }
     }
 }

@@ -35,14 +35,13 @@ namespace Srk.BetaseriesApiFactory
         private static readonly string[] validHttpMethods = new string[] { "GET", "POST", "DELETE", };
         private static readonly Regex linkTagRegex = new Regex("<link[^<>]+>");
         private static readonly Regex badHeaderRegex = new Regex("<div class=\"caption\"><p>[^<>]+</p></div>");
-
+        private static readonly Regex unescapedEntitiesRegex = new Regex("&([^a-z])");
 
         public ApiFactory()
         {
             this.EntitiesNamespace = "Srk.BetaseriesApi";
             this.ServicesNamespace = "Srk.BetaseriesApi";
             this.ServicesName = "BetaseriesClient";
-            
         }
 
         public string EntitiesNamespace { get; set; }
@@ -56,7 +55,9 @@ namespace Srk.BetaseriesApiFactory
             var context = new ApiFactoryContext();
             this.FetchDocumentation(context);
             this.ReviewDocumentation(context);
-            this.ApplyTransforms(context, text);
+            this.LoadTransforms(context, text);
+            this.ApplyTransforms(context, text, methods: true, argumentEnums: true);
+            this.ApplyTransforms(context, text, responseFormats: true);
             this.WriteEntities(context, text);
             this.WriteArgumentEnums(context, text);
             this.WriteService(context, text);
@@ -85,6 +86,7 @@ namespace Srk.BetaseriesApiFactory
                     Entity = new Entity(),
                 };
                 merged.MethodName = pathFormats.Key;
+
                 mergedFormats.Add(path, merged);
                 foreach (var format in pathFormats)
                 {
@@ -94,6 +96,7 @@ namespace Srk.BetaseriesApiFactory
                     }
 
                     merged.ClassName = merged.ClassName ?? format.Format.ClassName;
+                    merged.MethodName = merged.MethodName ?? format.Format.MethodName;
 
                     foreach (var field in format.Format.Entity.Fields)
                     {
@@ -125,7 +128,7 @@ namespace Srk.BetaseriesApiFactory
             }
         }
 
-        private void ApplyTransforms(ApiFactoryContext context, TextWriter text)
+        private void LoadTransforms(ApiFactoryContext context, TextWriter text)
         {
             /*
             var stream = this.GetType().Assembly.GetManifestResourceNames();
@@ -151,70 +154,162 @@ namespace Srk.BetaseriesApiFactory
             try
             {
                 doc = XDocument.Load(xmlStream);
+                context.Transforms = doc;
             }
             finally
             {
                 xmlStream.Dispose();
             }
+        }
 
-            foreach (var transform in doc.Root.Elements("Transform"))
+        private void ApplyTransforms(ApiFactoryContext context, TextWriter text, bool methods = false, bool argumentEnums = false, bool responseFormats = false)
+        {
+            if (context.Transforms != null)
             {
-                var target = transform.Attribute("Target").Value;
-                if (target == "Method")
+                foreach (var transform in context.Transforms.Root.Elements("Transform"))
                 {
-                    ApplyMethodTransform(context, transform);
-                }
-                else if (target == "ArgumentEnum")
-                {
-                    ApplyArgumentEnumTransform(context, transform);
-                }
-                else if (target == "ResponseFormat")
-                {
-                    ApplyResponseFormatTransform(context, transform);
+                    var target = transform.Attribute("Target").Value;
+                    if (target == "Method" && methods)
+                    {
+                        ApplyMethodTransform(context, transform);
+                    }
+                    else if (target == "ArgumentEnum" && argumentEnums)
+                    {
+                        ApplyArgumentEnumTransform(context, transform);
+                    }
+                    else if (target == "ResponseFormat" && responseFormats)
+                    {
+                        ApplyResponseFormatTransform(context, transform);
+                    }
                 }
             }
         }
 
         private void ApplyMethodTransform(ApiFactoryContext context, XElement transform)
-        {
+        {/*
+  <Transform Target="Method">
+    <Match>
+      <Method>POST</Method>
+      <UrlPath>comments/comment</UrlPath>
+    </Match>
+    <SetMethodName>Post</SetMethodName>
+    <Transform Target="Argument">...</Transform>
+  </Transform>
+*/
             var matchElement = transform.Element("Match");
             var method = matchElement.Element("Method");
             var urlPathElement = matchElement.Element("UrlPath");
+            var methodTransforms = transform.Elements("Transform");
+
+            var removeElement = transform.Element("Remove");
+            var setReponseFormat = transform.Element("SetReponseFormat");
+            var setMethodName = transform.Element("SetMethodName");
+            var returnRawResult = transform.Element("ReturnRawResult");
+            var responseFormatElement = transform.Element("ResponseFormat");
+            Entity responseFormat = null;
+            Response responseFormatObj = null;
+            if (responseFormatElement != null)
+            {
+                responseFormat = this.ParseResponseFormatDeclaration(responseFormatElement);
+                responseFormatObj = new Response()
+                {
+                    ClassName = responseFormat.Name,
+                    Entity = responseFormat,
+                    Key = responseFormat.Name,
+                };
+                context.ResponseFormats.Add(responseFormat.Name, responseFormatObj);
+            }
 
             foreach (var format in context.Methods.ToArray())
             {
                 // match
-                bool match = true;
-
-                if (urlPathElement != null)
                 {
-                    match &= urlPathElement.Value == format.UrlPath;
+                    bool match = true;
+
+                    if (urlPathElement != null)
+                    {
+                        match &= urlPathElement.Value == format.UrlPath;
+                    }
+
+                    if (method != null)
+                    {
+                        match &= method.Value == format.Method;
+                    }
+
+                    if (!match)
+                        continue;
                 }
 
-                if (method != null)
-                {
-                    match &= method.Value == format.Method;
-                }
-
-                if (!match)
-                    continue;
-
-                var removeElement = transform.Element("Remove");
+                // transform method
                 if (removeElement != null)
                 {
                     context.Methods.Remove(format);
                 }
 
-                var setReponseFormat = transform.Element("SetReponseFormat");
                 if (setReponseFormat != null)
                 {
                     format.ResponseFormat = this.ParseReponseFormat(setReponseFormat.Value);
                 }
 
-                var setMethodName = transform.Element("SetMethodName");
                 if (setMethodName != null)
                 {
                     format.MethodName = setMethodName.Value;
+                }
+
+                if (returnRawResult != null)
+                {
+                    format.ReturnRawResult = true;
+                }
+
+                if (responseFormat != null)
+                {
+                    format.ResponseFormat = responseFormatObj;
+                }
+
+                // other transforms
+                foreach (var methodTransform in methodTransforms)
+                {
+                    this.ApplyMethodArgumentTransform(format, methodTransform);
+                }
+            }
+        }
+
+        private void ApplyMethodArgumentTransform(MethodDescription format, XElement transform)
+        {
+            /*
+    <Transform Target="Argument">
+      <Match Name="text" />
+      <SetArgumentType>PostQueryString</SetArgumentType>
+    </Transform>
+            */
+            var target = transform.AttributeValue("Target");
+            var matchElement = transform.Element("Match");
+            if (target == "Argument")
+            {
+                var matchName = matchElement.AttributeOrElementValue("Name");
+                var setArgumentType = transform.ElementValue("SetArgumentType");
+                var md5 = transform.ElementValue("MD5");
+
+                if (matchName == null)
+                    return;
+
+                foreach (var arg in format.Arguments)
+                {
+                    // match
+                    bool match = true;
+
+                    if (matchName != null)
+                        match &= matchName == arg.Name;
+
+                    if (!match)
+                        continue;
+
+                    // transform method argument
+                    if (setArgumentType != null)
+                        arg.ArgumentType = (ArgumentType)Enum.Parse(typeof(ArgumentType), setArgumentType);
+
+                    if (md5 != null)
+                        arg.Extras.Add("MD5", "MD5");
                 }
             }
         }
@@ -266,7 +361,11 @@ namespace Srk.BetaseriesApiFactory
             var matcher = transform.Element("ResponseFormatMatch");
             var urlPathElement = matcher.Element("UrlPath");
 
-            foreach (var format in context.ResponseFormats.ToArray())
+            var formats = context.ResponseFormats.ToArray();
+            ////var formats = context.ResponseFormats.Values
+            ////    .Union(context.Methods.Select(m => m.ResponseFormat))
+            ////    .ToArray();
+            foreach (var format in formats)
             {
                 // match
                 bool match = true;
@@ -338,117 +437,7 @@ namespace Srk.BetaseriesApiFactory
 
                 foreach (var item in context.Methods.Where(m => m.Category == category.Key))
                 {
-                    text.WriteLine();
-                    text.WriteLine(indent, "/// <summary>");
-                    text.WriteLine(indent, "/// " + item.Description);
-                    text.WriteLine(indent, "/// Call for " + item.Method + " '" + item.UrlPath + "'.");
-                    text.WriteLine(indent, "/// </summary>");
-
-                    foreach (var arg in item.Arguments)
-                    {
-                        text.WriteLine(indent, "/// <param name=\"" + arg.Name + "\">" + arg.Description.ProperHtmlEscape() + "</param>");
-                    }
-
-                    // method return type
-                    text.Write(indent, "public ");
-                    string resultType = null, resultTypeFull = null;
-                    if (item.ResponseFormat != null)
-                    {
-                        if (item.ResponseFormat.ClassName != null)
-                        {
-                            resultType = item.ResponseFormat.ClassName;
-                            resultTypeFull = this.EntitiesNamespace + "." + resultType;
-                        }
-                        else
-                        {
-                            resultType = this.GetResultTypeName(item.UrlPath);
-                            resultTypeFull = this.EntitiesNamespace + "." + resultType;
-                        }
-                        text.Write(resultTypeFull + " ");
-                    }
-                    else
-                    {
-                        text.Write("void ");
-                    }
-
-                    // method name
-                    if (item.MethodName != null)
-                    {
-                        text.Write(item.MethodName);
-                    }
-                    else
-                    {
-                        if (item.Method == "DELETE")
-                            text.Write("Delete");
-                        text.Write(this.GetResultTypeName(item.UrlPath));
-                    }
-
-                    // method args
-                    text.Write("(");
-                    string sep = "";
-                    foreach (var arg in item.Arguments)
-                    {
-                        text.Write(sep);
-                        if (arg.EnumField != null)
-                        {
-                            text.Write(arg.EnumField.Name + " ");
-                        }
-                        else if (arg.IsArray)
-                        {
-                            text.Write("string[] ");
-                        }
-                        else
-                        {
-                            text.Write("string ");
-                        }
-
-                        text.Write(arg.Name);
-                        sep = ", ";
-                    }
-
-                    text.WriteLine(") {");
-                    indent++;
-
-                    // method code
-                    text.WriteLine(indent, "var parameters = new List<KVP<string, string>>(" + item.Arguments.Count + ");");
-                    foreach (var arg in item.Arguments)
-                    {
-                        if (arg.EnumField != null)
-                        {
-                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "\", " + arg.Name + ".ToString()));"); 
-                        }
-                        else if (arg.IsArray)
-                        {
-                            text.WriteLine(indent++, "foreach (var argValue in " + arg.Name + ") {");
-                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "[]\", argValue));");
-                            text.WriteLine(--indent, "}"); 
-                        }
-                        else
-                        {
-                            text.WriteLine(indent, "parameters.Add(new KVP<string, string>(\"" + arg.Name + "\", " + arg.Name + "));");
-                        }
-                    }
-
-                    text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.Method + "\", \"" + item.UrlPath + "\", parameters);");
-
-                    text.WriteLine(indent, "");
-                    if (item.ResponseFormat != null)
-                    {
-                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse<" + resultTypeFull + ">>(response);");
-                    }
-                    else
-                    {
-                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse>(response);");
-                    }
-
-                    text.WriteLine(indent, "this.client.HandleErrors(result);");
-
-                    if (item.ResponseFormat != null)
-                    {
-                        text.WriteLine(indent, "return result.Data;");
-                    }
-
-                    text.WriteLine(--indent, "}");
+                    this.WriteServiceMethod(text, indent, item);
                 }
 
                 text.WriteLine(--indent, "}");
@@ -461,6 +450,191 @@ namespace Srk.BetaseriesApiFactory
             text.Flush();
         }
 
+        private void WriteServiceMethod(TextWriter text, int indent, MethodDescription item)
+        {
+            // return type
+            string resultType = null, resultTypeFull = null;
+            if (item.ReturnRawResult)
+            {
+                resultType = resultTypeFull = "string";
+            }
+            else if (item.ResponseFormat != null)
+            {
+                if (item.ResponseFormat.ClassName != null)
+                {
+                    resultType = item.ResponseFormat.ClassName;
+                    resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                }
+                else
+                {
+                    resultType = this.GetResultTypeName(item.UrlPath);
+                    resultTypeFull = this.EntitiesNamespace + "." + resultType;
+                }
+            }
+
+            // doc
+            WriteServiceMethodDocumentation(text, indent, item);
+
+            // prototype
+            WriteServiceMethodPrototype(text, indent, item, resultTypeFull);
+
+            // code
+            WriteServiceMethodSyncCode(text, indent, item, resultTypeFull);
+        }
+
+        private void WriteServiceMethodDocumentation(TextWriter text, int indent, MethodDescription item)
+        {
+            text.WriteLine();
+            text.WriteLine(indent, "/// <summary>");
+            text.WriteLine(indent, "/// " + item.Description);
+            text.WriteLine(indent, "/// Call for " + item.Method + " '" + item.UrlPath + "'.");
+            text.WriteLine(indent, "/// </summary>");
+
+            foreach (var arg in item.Arguments)
+            {
+                text.WriteLine(indent, "/// <param name=\"" + arg.Name + "\">" + arg.Description.ProperHtmlEscape() + "</param>");
+            }
+        }
+
+        private void WriteServiceMethodPrototype(TextWriter text, int indent, MethodDescription item, string resultTypeFull)
+        {
+            // method return type
+            text.Write(indent, "public ");
+            if (resultTypeFull != null)
+            {
+                text.Write(resultTypeFull + " ");
+            }
+            else
+            {
+                ////text.Write("void ");
+                text.Write("BaseResponse ");
+            }
+
+            // method name
+            if (item.MethodName != null)
+            {
+                text.Write(item.MethodName);
+            }
+            else
+            {
+                if (item.Method == "DELETE")
+                    text.Write("Delete");
+                text.Write(this.GetResultTypeName(item.UrlPath));
+            }
+
+            // method args
+            text.Write("(");
+            string sep = "";
+            foreach (var arg in item.Arguments)
+            {
+                text.Write(sep);
+                if (arg.EnumField != null)
+                {
+                    text.Write(arg.EnumField.Name + " ");
+                }
+                else if (arg.IsArray)
+                {
+                    text.Write("string[] ");
+                }
+                else
+                {
+                    text.Write("string ");
+                }
+
+                text.Write(arg.Name);
+                sep = ", ";
+            }
+
+            text.WriteLine(")");
+        }
+
+        private void WriteServiceMethodSyncCode(TextWriter text, int indent, MethodDescription item, string resultTypeFull)
+        {
+            // method code
+            text.WriteLine("{");
+            indent++;
+
+            text.WriteLine(indent, "var context = new RequestContext();");
+            text.WriteLine(indent, "context.Method =  \"" + item.Method + "\";");
+            text.WriteLine(indent, "context.UrlPath = \"" + item.UrlPath + "\";");
+            ////text.WriteLine(indent, "var parameters = new List<KVP<string, string>>(" + item.Arguments.Count + ");");
+            int i = 0;
+            foreach (var arg in item.Arguments)
+            {
+                var method = arg.ArgumentType == ArgumentType.UrlQueryString
+                           ? "context.AddUrlArgumentToUrlQueryString"
+                           : arg.ArgumentType == ArgumentType.PostQueryString
+                           ? "context.AddUrlArgumentToPostContent"
+                           : "context.AddArgument";
+                var variable = arg.Name;
+
+                if (arg.Extras.ContainsKey("MD5"))
+                {
+                    string newVariable = "value" + i;
+                    text.WriteLine(indent, "var " + newVariable + " = this.client.ApplyMD5(" + variable + ");");
+                    variable = newVariable;
+                }
+
+                if (arg.EnumField != null)
+                {
+                    text.WriteLine(indent, method + "(\"" + arg.Name + "\", " + variable + ".ToString());");
+                }
+                else if (arg.IsArray)
+                {
+                    text.WriteLine(indent++, "foreach (var argValue in " + variable + ") {");
+                    text.WriteLine(indent, method + "(\"" + arg.Name + "[]\", argValue);");
+                    text.WriteLine(--indent, "}");
+                }
+                else
+                {
+                    text.WriteLine(indent, method + "(\"" + arg.Name + "\", " + variable + ");");
+                }
+
+                i++;
+            }
+
+            text.WriteLine(indent, "");
+            ////text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.Method + "\", \"" + item.UrlPath + "\", parameters);");
+            text.WriteLine(indent, "var response = this.client.ExecuteQuery(context);");
+
+
+            if (item.ReturnRawResult)
+            {
+                text.WriteLine(indent, "return response;");
+            }
+            else
+            {
+                text.WriteLine(indent, "");
+                if (item.ResponseFormat != null)
+                {
+                    if (item.ResponseFormat.Entity.UseBaseResponse)
+                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse<" + resultTypeFull + ">>(response);");
+                    else
+                        text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<" + resultTypeFull + ">(response);");
+                }
+                else
+                {
+                    text.WriteLine(indent, "var result = JsonConvert.DeserializeObject<BaseResponse>(response);");
+                }
+
+                text.WriteLine(indent, "this.client.HandleErrors(result);");
+
+                if (item.ResponseFormat != null)
+                {
+                    if (item.ResponseFormat.Entity.UseBaseResponse)
+                        text.WriteLine(indent, "return result.Data;");
+                    else
+                        text.WriteLine(indent, "return result;");
+                }
+                else
+                {
+                    text.WriteLine(indent, "return result;");
+                }
+            }
+
+            text.WriteLine(--indent, "}");
+        }
+
         protected void WriteEntities(ApiFactoryContext context, TextWriter text)
         {
             int indent = 1;
@@ -469,6 +643,7 @@ namespace Srk.BetaseriesApiFactory
             text.WriteLine();
             text.WriteLine("namespace " + this.EntitiesNamespace + " {");
             text.WriteLine(indent, "using System;");
+            text.WriteLine(indent, "using System.Runtime.Serialization;");
             
             foreach (var item in context.ResponseFormats)
             {
@@ -477,7 +652,14 @@ namespace Srk.BetaseriesApiFactory
                 text.WriteLine(indent, "/// <summary>");
                 text.WriteLine(indent, "/// Response format for '" + item.Key + "'.");
                 text.WriteLine(indent, "/// </summary>");
-                text.WriteLine(indent++, "public class " + className + " {");
+
+                if (item.Value.Entity.Fields.Any(f => f.Value.ContractName != null))
+                {
+                    text.WriteLine(indent, "[DataContract]");
+                }
+
+                text.WriteLine(indent, "public class " + className + (item.Value.Entity.Inherit != null ? (" : " + item.Value.Entity.Inherit) : ""));
+                text.WriteLine(indent++, "{");
                 foreach (var warning in item.Value.Warnings)
                 {
                     text.WriteLine(indent, "#warning " + warning);
@@ -485,7 +667,7 @@ namespace Srk.BetaseriesApiFactory
 
                 foreach (var field in item.Value.Entity.Fields.Values)
                 {
-                    this.WriteCSharpProperty(ref indent, text, field);
+                    this.WriteCSharpProperty(ref indent, text, field, true);
                 }
 
                 text.WriteLine(--indent, "}");
@@ -539,12 +721,22 @@ namespace Srk.BetaseriesApiFactory
             text.Flush();
         }
 
-        protected void WriteCSharpProperty(ref int indent, TextWriter text, EntityField field)
+        protected void WriteCSharpProperty(ref int indent, TextWriter text, EntityField field, bool useDataMembers)
         {
             text.WriteLine(indent, "");
             text.WriteLine(indent, "/// <summary>");
             text.WriteLine(indent, "/// Gets or sets the " + field.Name + ".");
             text.WriteLine(indent, "/// </summary>");
+
+            if (field.ContractName != null || useDataMembers)
+            {
+                var attributes = new Dictionary<string, string>();
+                if (field.ContractName != null)
+                    attributes.Add("Name", field.ContractName);
+                
+                text.WriteLine(indent, string.Format("[DataMember({0})]", string.Join(", ", attributes.Select(a => a.Key + " = \"" + a.Value + "\""))));
+            }
+
             switch (field.Type)
             {
                 case EntityFieldType.String:
@@ -587,7 +779,7 @@ namespace Srk.BetaseriesApiFactory
                     text.WriteLine(indent++, "public class " + subClassName + " {");
                     foreach (var subField in field.Entity.Fields)
                     {
-                        this.WriteCSharpProperty(ref indent, text, subField.Value);
+                        this.WriteCSharpProperty(ref indent, text, subField.Value, useDataMembers);
                     }
 
                     text.WriteLine(--indent, "}");
@@ -598,7 +790,6 @@ namespace Srk.BetaseriesApiFactory
                     text.WriteLine(indent, "public " + field.Type + " " + field.Name + " { get; set; }");
                     break;
             }
-
         }
 
         private string GetResultTypeName(MethodDescription item)
@@ -632,11 +823,14 @@ namespace Srk.BetaseriesApiFactory
             {
                 var request = (HttpWebRequest)HttpWebRequest.Create(documentationUrl);
                 var response = request.GetResponse();
+                string logString = null;
                 using (var responseStream = response.GetResponseStream())
                 {
                     var reader = new StreamReader(responseStream);
                     var html1 = reader.ReadToEnd();
+                    logString = html1;
                     var html = this.CleanHtml(html1);
+                    logString = html;
                     try
                     {
                         var xdoc = XDocument.Parse(html);
@@ -653,7 +847,7 @@ namespace Srk.BetaseriesApiFactory
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        throw new InvalidDocumentException("Failed to read '" + documentationUrl + "': " + ex.Message, ex, logString);
                     }
                 }
             }
@@ -923,6 +1117,54 @@ namespace Srk.BetaseriesApiFactory
             return entity;
         }
 
+        private Entity ParseResponseFormatDeclaration(XElement element)
+        {
+            var typeMap = new Dictionary<string, EntityFieldType>()
+            {
+                { "int", EntityFieldType.Integer },
+                { "string", EntityFieldType.String },
+                { "bool", EntityFieldType.Boolean },
+            };
+
+            var entity = new Entity();
+            entity.Name = element.AttributeValue("Name");
+
+            var inherit = element.AttributeValue("Inherit");
+            if (inherit != null)
+            {
+                entity.Inherit = inherit;
+            }
+
+            bool useBaseResponse;
+            var useBaseResponseValue = element.AttributeValue("UseBaseResponse");
+            if (useBaseResponseValue != null && bool.TryParse(useBaseResponseValue, out useBaseResponse))
+                entity.UseBaseResponse = useBaseResponse;
+
+            foreach (var propertyElement in element.Elements("Property"))
+            {
+                EntityField field;
+                var name = propertyElement.AttributeValue("Name");
+                if (propertyElement.Elements("Property").Count() > 0)
+                {
+                    field = new EntityField(name, EntityFieldType.Entity, null);
+                    field.ContractName = propertyElement.AttributeValue("ContractName");
+                    field.Entity = this.ParseResponseFormatDeclaration(propertyElement);
+                }
+                else
+                {
+                    var biltableType = propertyElement.AttributeValue("BlitableType");
+                    field = new EntityField(name, typeMap[biltableType], null)
+                    {
+                        ContractName = propertyElement.AttributeValue("ContractName"),
+                    };
+                }
+
+                entity.Fields.Add(name, field);
+            }
+
+            return entity;
+        }
+
         private string CleanHtml(string html)
         {
             // html tag has a attribute without value
@@ -939,6 +1181,7 @@ namespace Srk.BetaseriesApiFactory
             html = html.Replace("&mdash;", "");
             html = html.Replace("&rarr;", "");
             html = html.Replace("&copy;", "");
+            html = unescapedEntitiesRegex.Replace(html, "&amp;$1");
 
             // a div has no end tag...
             html = html.Replace("    </div></div></div>", "    </div></div>");

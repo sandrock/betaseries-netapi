@@ -52,6 +52,7 @@
     <ResponseFormatMatch>
       <UrlPath>comments/comments</UrlPath>
     </ResponseFormatMatch>
+    <SetClassName>Comment</SetClassName>
     <Remove />
   </Transform>
 
@@ -101,6 +102,10 @@
       <UrlPath>comments/comment</UrlPath>
     </Match>
     <SetMethodName>Post</SetMethodName>
+    <Transform Target="Argument">
+      <Match Name="text" />
+      <SetArgumentType>PostQueryString</SetArgumentType>
+    </Transform>
   </Transform>
 
   <Transform Target="Method">
@@ -277,6 +282,32 @@
       <UrlPath>members/auth</UrlPath>
     </Match>
     <SetMethodName>ClassicAuthenticate</SetMethodName>
+<!--
+    <ReturnRawResult />
+  {
+    "user":
+    {
+      "id":26940,"login":"Dev002","in_account":false
+    },
+    "token": "xxxxxxxxxxxx",
+    "hash": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "errors": []
+  }
+-->
+    
+    <Transform Target="Argument">
+      <Match Name="password" />
+      <MD5 />
+    </Transform>
+    <ResponseFormat Inherit="BaseResponse" Name="AuthenticationResult" UseBaseResponse="false">
+      <Property Name="User" ContractName="user">
+        <Property Name="Id" ContractName="id" BlitableType="int" />
+        <Property Name="Login" ContractName="login" BlitableType="string" />
+        <Property Name="InAccount" ContractName="in_account" BlitableType="bool" />
+      </Property>
+      <Property Name="Hash" ContractName="hash" BlitableType="string" />
+      <Property Name="Token" ContractName="token" BlitableType="string" />
+    </ResponseFormat>
   </Transform>
 
   <Transform Target="Method">

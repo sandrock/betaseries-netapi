@@ -15,11 +15,13 @@ namespace Srk.BetaseriesApi {
         /// <param name="action">Service action</param>
         /// <param name="parameters">Query string parameters</param>
         /// <returns>HTTP response body as a string.</returns>
-        public string ExecuteQuery(string action, Dictionary<string, string> parameters) {
+        public string ExecuteQuery(string action, Dictionary<string, string> parameters, string method = "GET")
+        {
             string queryString = GetQueryString(action, parameters);
 
             // prepare the web page we will be asking for
             HttpWebRequest request = PrepareRequest(queryString);
+            request.Method = method ?? "GET";
 
             // execute the request
             var stringResponse = GetStringResponse(request);
@@ -34,7 +36,8 @@ namespace Srk.BetaseriesApi {
         /// <param name="parameters">Query string parameters</param>
         /// <param name="postParameters">POST data parameters</param>
         /// <returns>HTTP response body as a string.</returns>
-        public string ExecuteQuery(string action, Dictionary<string, string> parameters, Dictionary<string, string> postParameters) {
+        public string ExecuteQuery(string action, Dictionary<string, string> parameters, Dictionary<string, string> postParameters, string method = "POST")
+        {
             string queryString = GetQueryString(action, parameters);
 
             // prepare POST data in memory
@@ -53,7 +56,7 @@ namespace Srk.BetaseriesApi {
 
             // prepare the web page we will be asking for
             HttpWebRequest request = PrepareRequest(queryString);
-            request.Method = "POST";
+            request.Method = method ?? "POST";
             request.ContentType = "application/x-www-form-urlencoded";
 
             // get request stream
@@ -66,7 +69,15 @@ namespace Srk.BetaseriesApi {
         }
 
         protected static string GetStringResponse(HttpWebRequest request) {
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                response = (HttpWebResponse)ex.Response;
+            }
 
             HandleHttpCodes(response.StatusCode);
 

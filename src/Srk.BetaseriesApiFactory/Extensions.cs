@@ -6,6 +6,7 @@ namespace Srk.BetaseriesApiFactory
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+using System.Xml.Linq;
 
     public static class Extensions
     {
@@ -59,6 +60,47 @@ namespace Srk.BetaseriesApiFactory
             }
 
             return builder.ToString();
+        }
+
+        public static string AttributeOrValue(this XElement element, XName name)
+        {
+            var attribute = element.Attribute(name);
+            if (attribute != null)
+                return attribute.Value;
+            return element.Value;
+        }
+
+        public static string AttributeValue(this XElement element, XName name)
+        {
+            var attribute = element.Attribute(name);
+            if (attribute != null)
+                return attribute.Value;
+            return null;
+        }
+
+        public static string AttributeOrElementValue(this XElement element, string name)
+        {
+            var attribute = element.Attribute(name);
+            if (attribute != null)
+                return attribute.Value;
+
+            return element.ElementValue(name);
+        }
+
+        public static string ElementValue(this XElement element, string name)
+        {
+            var names = name.Split('.');
+            XElement child = element;
+            foreach (var subname in names)
+            {
+                child = child.Element(subname);
+                if (child == null)
+                    return null;
+            }
+
+            if (child != element)
+                return child.Value;
+            return null;
         }
     }
 }

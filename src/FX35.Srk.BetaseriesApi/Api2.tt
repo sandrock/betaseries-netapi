@@ -13,7 +13,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 <#
+
 var factory = new Srk.BetaseriesApiFactory.ApiFactory();
+factory.EntitiesNamespace = "Srk.BetaseriesApi2";
+factory.ServicesNamespace = "Srk.BetaseriesApi2";
+
 var stream = new System.IO.MemoryStream();
 var writer = new System.IO.StreamWriter(stream);
 try {
@@ -23,6 +27,10 @@ try {
 } catch (Exception ex) {
     this.WriteLine("/*");
     this.WriteLine(ex.ToString());
+
+    if (ex.InnerException != null)
+        this.WriteLine(ex.InnerException.ToString());
+
     this.WriteLine("*/");
 }
 

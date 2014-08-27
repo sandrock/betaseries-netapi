@@ -98,6 +98,7 @@
     <Compile Include="IMethodVersionReport.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="Notification.cs" />
+    <Compile Include="RequestContext.cs" />
     <Compile Include="Resources\ErrorStrings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
