@@ -289,6 +289,7 @@ namespace Srk.BetaseriesApiFactory
                 var matchName = matchElement.AttributeOrElementValue("Name");
                 var setArgumentType = transform.ElementValue("SetArgumentType");
                 var md5 = transform.ElementValue("MD5");
+                var setType = transform.ElementValue("SetType");
 
                 if (matchName == null)
                     return;
@@ -310,6 +311,11 @@ namespace Srk.BetaseriesApiFactory
 
                     if (md5 != null)
                         arg.Extras.Add("MD5", "MD5");
+
+                    if (setType != null)
+                    {
+                        arg.BlitableType = setType;
+                    }
                 }
             }
         }
@@ -507,7 +513,7 @@ namespace Srk.BetaseriesApiFactory
             else
             {
                 ////text.Write("void ");
-                text.Write("BaseResponse ");
+                text.Write("void ");
             }
 
             // method name
@@ -534,11 +540,11 @@ namespace Srk.BetaseriesApiFactory
                 }
                 else if (arg.IsArray)
                 {
-                    text.Write("string[] ");
+                    text.Write(arg.BlitableType + "[] ");
                 }
                 else
                 {
-                    text.Write("string ");
+                    text.Write(arg.BlitableType + " ");
                 }
 
                 text.Write(arg.Name);
@@ -551,9 +557,7 @@ namespace Srk.BetaseriesApiFactory
         private void WriteServiceMethodSyncCode(TextWriter text, int indent, MethodDescription item, string resultTypeFull)
         {
             // method code
-            text.WriteLine("{");
-            indent++;
-
+            text.WriteLine(indent++, "{");
             text.WriteLine(indent, "var context = new RequestContext();");
             text.WriteLine(indent, "context.Method =  \"" + item.Method + "\";");
             text.WriteLine(indent, "context.UrlPath = \"" + item.UrlPath + "\";");
@@ -570,8 +574,15 @@ namespace Srk.BetaseriesApiFactory
 
                 if (arg.Extras.ContainsKey("MD5"))
                 {
-                    string newVariable = "value" + i;
+                    string newVariable = "value" + i++;
                     text.WriteLine(indent, "var " + newVariable + " = this.client.ApplyMD5(" + variable + ");");
+                    variable = newVariable;
+                }
+
+                if (arg.BlitableType == "byte[]")
+                {
+                    string newVariable = "value" + i++;
+                    text.WriteLine(indent, "var " + newVariable + " = Convert.ToBase64String(" + variable + ");");
                     variable = newVariable;
                 }
 
@@ -589,14 +600,11 @@ namespace Srk.BetaseriesApiFactory
                 {
                     text.WriteLine(indent, method + "(\"" + arg.Name + "\", " + variable + ");");
                 }
-
-                i++;
             }
 
-            text.WriteLine(indent, "");
+            ////text.WriteLine(indent, "");
             ////text.WriteLine(indent, "var response = this.client.ExecuteQuery(\"" + item.Method + "\", \"" + item.UrlPath + "\", parameters);");
             text.WriteLine(indent, "var response = this.client.ExecuteQuery(context);");
-
 
             if (item.ReturnRawResult)
             {
@@ -628,7 +636,7 @@ namespace Srk.BetaseriesApiFactory
                 }
                 else
                 {
-                    text.WriteLine(indent, "return result;");
+                    ////text.WriteLine(indent, "return;");
                 }
             }
 

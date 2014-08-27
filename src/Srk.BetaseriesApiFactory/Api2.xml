@@ -316,6 +316,11 @@
       <UrlPath>members/avatar</UrlPath>
     </Match>
     <SetMethodName>SetProfilePicture</SetMethodName>
+    <Transform Target="Argument">
+      <Match Name="avatar" />
+      <SetArgumentType>PostQueryString</SetArgumentType>
+      <SetType>byte[]</SetType>
+    </Transform>
   </Transform>
 
   <Transform Target="Method">

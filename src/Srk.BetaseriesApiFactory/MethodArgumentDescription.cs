@@ -11,6 +11,7 @@ namespace Srk.BetaseriesApiFactory
         public MethodArgumentDescription()
         {
             this.Extras = new Dictionary<string, object>();
+            this.BlitableType = "string";
         }
 
         public string Name { get; set; }
@@ -24,6 +25,8 @@ namespace Srk.BetaseriesApiFactory
         public bool IsArray { get; set; }
 
         public Dictionary<string, object> Extras { get; set; }
+
+        public string BlitableType { get; set; }
 
         public override string ToString()
         {
