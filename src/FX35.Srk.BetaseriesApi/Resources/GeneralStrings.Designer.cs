@@ -70,6 +70,15 @@ namespace Srk.BetaseriesApi.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vous avez installé l&apos;application BetaSeries pour iPhone, Steve Jobs serait fier..
+        /// </summary>
+        public static string BadgeDesc_AppleFanboy {
+            get {
+                return ResourceManager.GetString("BadgeDesc_AppleFanboy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your beautiful face is now on your profile, it&apos;s for the drag?.
         /// </summary>
         public static string BadgeDesc_BeauxYeux {
@@ -106,11 +115,29 @@ namespace Srk.BetaseriesApi.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vous avez soumis 10 vidéos validées pour des séries. .
+        /// </summary>
+        public static string BadgeDesc_Cineaste {
+            get {
+                return ResourceManager.GetString("BadgeDesc_Cineaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Watched 25 shows, you start to get hooked, beware! .
         /// </summary>
         public static string BadgeDesc_Confirme {
             get {
                 return ResourceManager.GetString("BadgeDesc_Confirme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BetaSeries vous aime tellement qu&apos;il vous envoie des courriers avec de jolies choses dedans..
+        /// </summary>
+        public static string BadgeDesc_CourrierDuCoeur {
+            get {
+                return ResourceManager.GetString("BadgeDesc_CourrierDuCoeur", resourceCulture);
             }
         }
         
@@ -183,6 +210,24 @@ namespace Srk.BetaseriesApi.Resources {
         public static string BadgeDesc_Flashmob {
             get {
                 return ResourceManager.GetString("BadgeDesc_Flashmob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vous prenez vos marques dans la communauté de BetaSeries?.
+        /// </summary>
+        public static string BadgeDesc_ForumeurConfirme {
+            get {
+                return ResourceManager.GetString("BadgeDesc_ForumeurConfirme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vous êtes la star des forums ! On ne vous arrête plus !.
+        /// </summary>
+        public static string BadgeDesc_ForumeurExpert {
+            get {
+                return ResourceManager.GetString("BadgeDesc_ForumeurExpert", resourceCulture);
             }
         }
         
@@ -264,6 +309,15 @@ namespace Srk.BetaseriesApi.Resources {
         public static string BadgeDesc_Junior {
             get {
                 return ResourceManager.GetString("BadgeDesc_Junior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Le petit lapin est passé. Joyeuses Pâques !.
+        /// </summary>
+        public static string BadgeDesc_Lapinou {
+            get {
+                return ResourceManager.GetString("BadgeDesc_Lapinou", resourceCulture);
             }
         }
         
@@ -448,6 +502,15 @@ namespace Srk.BetaseriesApi.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apple Fanboy.
+        /// </summary>
+        public static string Badges_AppleFanboy {
+            get {
+                return ResourceManager.GetString("Badges_AppleFanboy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to beautiful eyes.
         /// </summary>
         public static string Badges_BeauxYeux {
@@ -484,11 +547,29 @@ namespace Srk.BetaseriesApi.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cinéaste.
+        /// </summary>
+        public static string Badges_Cineaste {
+            get {
+                return ResourceManager.GetString("Badges_Cineaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmed.
         /// </summary>
         public static string Badges_Confirme {
             get {
                 return ResourceManager.GetString("Badges_Confirme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Courrier du cœur.
+        /// </summary>
+        public static string Badges_CourrierDuCoeur {
+            get {
+                return ResourceManager.GetString("Badges_CourrierDuCoeur", resourceCulture);
             }
         }
         
@@ -561,6 +642,24 @@ namespace Srk.BetaseriesApi.Resources {
         public static string Badges_Flashmob {
             get {
                 return ResourceManager.GetString("Badges_Flashmob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forumeur Confirmé.
+        /// </summary>
+        public static string Badges_ForumeurConfirme {
+            get {
+                return ResourceManager.GetString("Badges_ForumeurConfirme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forumeur Expert.
+        /// </summary>
+        public static string Badges_ForumeurExpert {
+            get {
+                return ResourceManager.GetString("Badges_ForumeurExpert", resourceCulture);
             }
         }
         
@@ -642,6 +741,15 @@ namespace Srk.BetaseriesApi.Resources {
         public static string Badges_Junior {
             get {
                 return ResourceManager.GetString("Badges_Junior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lapinou.
+        /// </summary>
+        public static string Badges_Lapinou {
+            get {
+                return ResourceManager.GetString("Badges_Lapinou", resourceCulture);
             }
         }
         

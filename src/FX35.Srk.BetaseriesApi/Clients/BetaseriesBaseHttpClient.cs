@@ -180,9 +180,9 @@ namespace Srk.BetaseriesApi.Clients
             }
 
             if (postParameters != null && postParameters.Count > 0)
-                return this.http.ExecuteQuery(action, parameters, postParameters);
+                return this.Http.ExecuteQuery(action, parameters, postParameters);
             else
-                return this.http.ExecuteQuery(action, parameters);
+                return this.Http.ExecuteQuery(action, parameters);
         }
 
         #endregion

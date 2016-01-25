@@ -433,4 +433,40 @@
   <data name="Badges_Lunettes3d" xml:space="preserve">
     <value>3D glasses</value>
   </data>
+  <data name="BadgeDesc_AppleFanboy" xml:space="preserve">
+    <value>Vous avez installé l'application BetaSeries pour iPhone, Steve Jobs serait fier.</value>
+  </data>
+  <data name="BadgeDesc_Cineaste" xml:space="preserve">
+    <value>Vous avez soumis 10 vidéos validées pour des séries. </value>
+  </data>
+  <data name="BadgeDesc_CourrierDuCoeur" xml:space="preserve">
+    <value>BetaSeries vous aime tellement qu'il vous envoie des courriers avec de jolies choses dedans.</value>
+  </data>
+  <data name="BadgeDesc_ForumeurConfirme" xml:space="preserve">
+    <value>Vous prenez vos marques dans la communauté de BetaSeries?</value>
+  </data>
+  <data name="BadgeDesc_ForumeurExpert" xml:space="preserve">
+    <value>Vous êtes la star des forums ! On ne vous arrête plus !</value>
+  </data>
+  <data name="BadgeDesc_Lapinou" xml:space="preserve">
+    <value>Le petit lapin est passé. Joyeuses Pâques !</value>
+  </data>
+  <data name="Badges_AppleFanboy" xml:space="preserve">
+    <value>Apple Fanboy</value>
+  </data>
+  <data name="Badges_Cineaste" xml:space="preserve">
+    <value>Cinéaste</value>
+  </data>
+  <data name="Badges_CourrierDuCoeur" xml:space="preserve">
+    <value>Courrier du cœur</value>
+  </data>
+  <data name="Badges_ForumeurConfirme" xml:space="preserve">
+    <value>Forumeur Confirmé</value>
+  </data>
+  <data name="Badges_ForumeurExpert" xml:space="preserve">
+    <value>Forumeur Expert</value>
+  </data>
+  <data name="Badges_Lapinou" xml:space="preserve">
+    <value>Lapinou</value>
+  </data>
 </root>

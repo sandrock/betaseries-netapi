@@ -56,6 +56,13 @@ namespace Srk.BetaseriesApi
             serviceMap.Add("fiche", Badges.Fiche);
             serviceMap.Add("forumeur_debutant", Badges.ForumStarter);
             serviceMap.Add("peinture_fraiche", Badges.FreshPaint);
+            // added on 2016-01-20
+            serviceMap.Add("apple_fanboy", Badges.AppleFanboy);
+            serviceMap.Add("cineaste", Badges.Cineaste);
+            serviceMap.Add("courrier_du_coeur", Badges.CourrierDuCoeur);
+            serviceMap.Add("forumeur_confirme", Badges.ForumeurConfirme);
+            serviceMap.Add("forumeur_expert", Badges.ForumeurExpert);
+            serviceMap.Add("lapinou", Badges.Lapinou);
         }
 
         private static readonly Dictionary<string, Badges> serviceMap = new Dictionary<string, Badges>();
@@ -386,5 +393,11 @@ namespace Srk.BetaseriesApi
         /// Cent films dans votre liste, il va falloir penser à aller voir une séance 3D. Comment ça, non ?
         /// </summary>
         Lunettes3d,
+        AppleFanboy,
+        Cineaste,
+        CourrierDuCoeur,
+        ForumeurConfirme,
+        ForumeurExpert,
+        Lapinou,
     }
 }

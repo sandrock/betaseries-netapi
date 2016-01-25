@@ -10,14 +10,15 @@ namespace Srk.BetaseriesApi.Clients
     {
         private BetaseriesClientFactory factory;
         private bool isCacheEnabled = true;
+        private IHttpRequestWrapper http;
 
         /// <summary>
         /// This is a http query wrapper. Use for unit testing only.
         /// </summary>
-        protected IHttpRequestWrapper http
+        protected IHttpRequestWrapper Http
         {
             get { return this.http ?? (this.http = new HttpRequestWrapper(this.UrlFormat, this.BaseUrl, this.RealUserAgent)); }
-            set { http = value; }
+            set { this.http = value; }
         }
 
         private string RealUserAgent

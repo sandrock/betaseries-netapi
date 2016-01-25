@@ -11,7 +11,7 @@ namespace Srk.BetaseriesApiApp.ViewModels
     public class CommonViewModel : NotifyPropertyChanged
     {
         private IBetaseriesApi _client;
-        private Srk.BetaseriesApi2.BetaseriesClient _client2;
+        ////private Srk.BetaseriesApi2.BetaseriesClient _client2;
         private bool isBusy;
         private string errorMessage;
         private string statusMessage = "Ready.";
@@ -41,19 +41,19 @@ namespace Srk.BetaseriesApiApp.ViewModels
             }
         }
 
-        protected Srk.BetaseriesApi2.BetaseriesClient Client2
-        {
-            get
-            {
-                if (_client2 == null)
-                {
-                    var key = ConfigurationManager.AppSettings["ApiKey"];
-                    _client2 = new Srk.BetaseriesApi2.BetaseriesClient(key);
-                }
+        ////protected Srk.BetaseriesApi2.BetaseriesClient Client2
+        ////{
+        ////    get
+        ////    {
+        ////        if (_client2 == null)
+        ////        {
+        ////            var key = ConfigurationManager.AppSettings["ApiKey"];
+        ////            _client2 = new Srk.BetaseriesApi2.BetaseriesClient(key);
+        ////        }
 
-                return _client2;
-            }
-        }
+        ////        return _client2;
+        ////    }
+        ////}
 
         public bool IsBusy
         {
