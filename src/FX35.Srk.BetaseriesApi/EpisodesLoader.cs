@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// Helper to browse episodes within a tv show.
@@ -14,10 +15,8 @@ namespace Srk.BetaseriesApi {
     /// Original ticket: http://projects.sandrock.fr/trac/betaseries/ticket/64
     /// Will not dispose the API client.
     /// </remarks>
-    public class EpisodesLoader : IDisposable {
-
-        #region Internal properties
-
+    public class EpisodesLoader : IDisposable
+    {
         /// <summary>
         /// Betaseries API client.
         /// Will not be disposed avec a call to <see cref="Dispose"/>.
@@ -65,17 +64,16 @@ namespace Srk.BetaseriesApi {
         private Timer queueTimer;
         private volatile bool queuedTimerDisposition;
 
-        #endregion
-
-        #region Public properties
-
         /// <summary>
         /// Indicates an internal process is fetching information from the service.
         /// </summary>
-        public bool IsProcessing {
+        public bool IsProcessing
+        {
             get { return _isProcessing; }
-            set {
-                if (_isProcessing != value) {
+            set
+            {
+                if (_isProcessing != value)
+                {
                     _isProcessing = value;
                     RaiseProcessingEvent();
                 }
@@ -91,12 +89,15 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// This is the to-be-loaded episode accessor.
         /// </summary>
-        public Episode Episode {
+        public Episode Episode
+        {
             get { lock (instanceLock) { return _episode; } }
-            protected set {
+            protected set
+            {
                 bool changed = false;
                 //lock (instanceLock) {
-                if (_episode != value) {
+                if (_episode != value)
+                {
                     _episode = value;
                     changed = true;
                 }
@@ -117,12 +118,15 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         public event ErrorEventHandler ErrorOccuredEvent;
 
-        protected IEnumerable<Episode> Episodes {
+        protected IEnumerable<Episode> Episodes
+        {
             get { return _episodes; }
         }
         private readonly List<Episode> _episodes = new List<Episode>();
-        protected IEnumerable<Episode> EpisodesSorted {
-            get {
+        protected IEnumerable<Episode> EpisodesSorted
+        {
+            get
+            {
                 return _episodes
                     .OrderBy(e => e.Order)
                     .OrderBy(e => e.SeasonOrder);
@@ -136,30 +140,25 @@ namespace Srk.BetaseriesApi {
 
         private bool? episodeLoaded;
 
-        #endregion
-
-        #region .ctor
-
         /// <summary>
         /// Default class .ctor.
         /// </summary>
         /// <param name="betaseriesClient"></param>
         /// <param name="show"></param>
-        public EpisodesLoader(IBetaseriesApi betaseriesClient, Show show) {
+        public EpisodesLoader(IBetaseriesApi betaseriesClient, Show show)
+        {
             this.client = betaseriesClient;
             this.show = show;
             this.showUrl = show.Url;
         }
 
-        #endregion
-
-        #region Public methods
-
         /// <summary>
         /// Get the first episode.
         /// </summary>
-        public void GetFirst() {
-            lock (queueLock) {
+        public void GetFirst()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("first", null));
             }
             Run();
@@ -168,8 +167,10 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Get the previous episode.
         /// </summary>
-        public void GetPrevious() {
-            lock (queueLock) {
+        public void GetPrevious()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("prev", null));
             }
             Run();
@@ -178,8 +179,10 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Get the next episode.
         /// </summary>
-        public void GetNext() {
-            lock (queueLock) {
+        public void GetNext()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("next", null));
             }
             Run();
@@ -188,8 +191,10 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Get the last episode.
         /// </summary>
-        public void GetLast() {
-            lock (queueLock) {
+        public void GetLast()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("last", null));
             }
             Run();
@@ -198,8 +203,10 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Get the last episode seen.
         /// </summary>
-        public void GetLastSeen() {
-            lock (queueLock) {
+        public void GetLastSeen()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("lastseen", null));
             }
             Run();
@@ -208,8 +215,10 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Get the next episode to see.
         /// </summary>
-        public void GetNextToSee() {
-            lock (queueLock) {
+        public void GetNextToSee()
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("nexttosee", null));
             }
             Run();
@@ -219,8 +228,10 @@ namespace Srk.BetaseriesApi {
         /// Get an episode by number.
         /// </summary>
         /// <param name="number"></param>
-        public void Get(string number) {
-            lock (queueLock) {
+        public void Get(string number)
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("number", number));
             }
             Run();
@@ -231,8 +242,10 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="season"></param>
         /// <param name="episode"></param>
-        public void Get(uint season, uint episode) {
-            lock (queueLock) {
+        public void Get(uint season, uint episode)
+        {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("number", EpisodeNumbers.GetNumberAsString(season, episode)));
             }
             Run();
@@ -241,56 +254,73 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Refresh current episode.
         /// </summary>
-        public void RefreshCurrent() {
+        public void RefreshCurrent()
+        {
             if (_episode == null)
                 return;
 
-            lock (queueLock) {
+            lock (queueLock)
+            {
                 queue.Enqueue(new KeyValuePair<string, string>("refresh", _episode.Number));
             }
             Run();
         }
 
-        public void SetLastSeen(uint season, uint episode) {
-            foreach (var ep in EpisodesSorted) {
-                if (ep.SeasonOrder < season) {
+        public void SetLastSeen(uint season, uint episode)
+        {
+            foreach (var ep in EpisodesSorted)
+            {
+                if (ep.SeasonOrder < season)
+                {
                     ep.IsSeen = true;
-                } else if (ep.SeasonOrder == season) {
-                    if (ep.Order <= episode) {
+                }
+                else if (ep.SeasonOrder == season)
+                {
+                    if (ep.Order <= episode)
+                    {
                         ep.IsSeen = true;
-                    } else {
+                    }
+                    else
+                    {
                         ep.IsSeen = false;
                     }
-                } else {
+                }
+                else
+                {
                     ep.IsSeen = false;
                 }
             }
         }
 
-        #endregion
-
-        #region Internal methods
-
-        private void StartQueueTimer() {
-            lock (queueTimerLock) {
+        private void StartQueueTimer()
+        {
+            lock (queueTimerLock)
+            {
                 if (queueTimer == null)
                     queueTimer = new Timer(queueTimer_Tick, this, 500, 1000);
             }
         }
 
-        private void StopQueueTimer() {
-            lock (queueTimerLock) {
-                if (queueTimer != null) {
+        private void StopQueueTimer()
+        {
+            lock (queueTimerLock)
+            {
+                if (queueTimer != null)
+                {
                     queueTimer.Dispose();
                     queueTimer = null;
                 }
             }
         }
 
-        private void queueTimer_Tick(object state) {
-            if (queuedTimerDisposition) {
-                lock (queueTimerLock) {
-                    if (queueTimer != null) {
+        private void queueTimer_Tick(object state)
+        {
+            if (queuedTimerDisposition)
+            {
+                lock (queueTimerLock)
+                {
+                    if (queueTimer != null)
+                    {
                         queueTimer.Dispose();
                         queueTimer = null;
                     }
@@ -299,19 +329,25 @@ namespace Srk.BetaseriesApi {
             Run();
         }
 
-        private void Run() {
+        private void Run()
+        {
             if (_isProcessing)
                 return;
             if (queueLock == null || instanceLock == null)
                 throw new ObjectDisposedException("EpisodesLoader");
 
             // infinite loop detection
-            if (loopCount >= loopLimit) {
+            if (loopCount >= loopLimit)
+            {
                 KeyValuePair<string, string>? value = null;
-                lock (queueLock) {
-                    if (queue.Count > 0) {
+                lock (queueLock)
+                {
+                    if (queue.Count > 0)
+                    {
                         value = queue.Dequeue();
-                    } else {
+                    }
+                    else
+                    {
                         value = new KeyValuePair<string, string>("-", "-");
                     }
                 }
@@ -321,21 +357,26 @@ namespace Srk.BetaseriesApi {
                     System.Diagnostics.Debugger.Break();
 #endif
                 loopCount = 0;
-                try {
+                try
+                {
                     throw new InvalidOperationException(msg);
-                } catch (InvalidOperationException ex) {
+                }
+                catch (InvalidOperationException ex)
+                {
                     ReportError(ex);
                 }
             }
 
             // unqueue next element
             KeyValuePair<string, string>? unqueued = null;
-            lock (queueLock) {
+            lock (queueLock)
+            {
                 if (queue.Count > 0)
                     unqueued = queue.Peek();
             }
 
-            if (!unqueued.HasValue) {
+            if (!unqueued.HasValue)
+            {
                 loopCount = 0;
                 return;
             }
@@ -351,7 +392,8 @@ namespace Srk.BetaseriesApi {
             Episode ep = null;
             bool found = false;
 
-            lock (instanceLock) {
+            lock (instanceLock)
+            {
                 uint currentSeasonNbr = Episode != null ? Episode.SeasonOrder : uint.Parse(show.Seasons.FirstOrDefault().Season);
                 var nextSeason = show.Seasons
                     .SkipWhile(s => uint.Parse(s.Season) != currentSeasonNbr)
@@ -369,16 +411,21 @@ namespace Srk.BetaseriesApi {
 
             bigswitch:
                 #region Stupid switch
-                switch (command) {
+                switch (command)
+                {
                     case "number":
                         ep = _episodes.SingleOrDefault(e => e.Number == unqueued.Value.Value);
-                        if (episodeLoaded.HasValue) {
+                        if (episodeLoaded.HasValue)
+                        {
                             episodeLoaded = null;
                             accepted = true;
-                            if (ep != null) {
+                            if (ep != null)
+                            {
                                 Episode = ep;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             accepted = false;
                             uint season = 0, number = 0;
                             EpisodeNumbers.GetNumbers(unqueued.Value.Value, out season, out number);
@@ -386,19 +433,25 @@ namespace Srk.BetaseriesApi {
                         }
                         break;
                     case "refresh":
-                        if (episodeBeingRefreshed == null) {
+                        if (episodeBeingRefreshed == null)
+                        {
                             episodeBeingRefreshed = Episode;
                             accepted = false;
                             uint season = 0, number = 0;
                             EpisodeNumbers.GetNumbers(unqueued.Value.Value, out season, out number);
                             FetchEpisode(season, number);
-                        } else {
+                        }
+                        else
+                        {
                             accepted = true;
                             episodeBeingRefreshed = null;
                             ep = _episodes.SingleOrDefault(e => e.Number == unqueued.Value.Value);
-                            if (ep != null) {
+                            if (ep != null)
+                            {
                                 Episode = ep;
-                            } else {
+                            }
+                            else
+                            {
                                 //TODO: unfinished code?
                             }
                         }
@@ -408,12 +461,15 @@ namespace Srk.BetaseriesApi {
                         var firstSeason = uint.Parse(show.Seasons.First().Season);
 
                         // check if first season is loaded
-                        if (seasons.Contains(firstSeason)) {
+                        if (seasons.Contains(firstSeason))
+                        {
                             accepted = true;
 
                             // then return first element
                             Episode = EpisodesSorted.First();
-                        } else {
+                        }
+                        else
+                        {
                             // season not loaded, load it
                             accepted = false;
                             FetchSeason(firstSeason);
@@ -425,12 +481,15 @@ namespace Srk.BetaseriesApi {
                         var lastSeason = uint.Parse(show.Seasons.Last().Season);
 
                         // check if last season is loaded
-                        if (seasons.Contains(lastSeason)) {
+                        if (seasons.Contains(lastSeason))
+                        {
                             accepted = true;
 
                             // then return last element
                             Episode = EpisodesSorted.Last();
-                        } else {
+                        }
+                        else
+                        {
                             // season not loaded, load it
                             accepted = false;
                             FetchSeason(lastSeason);
@@ -439,7 +498,8 @@ namespace Srk.BetaseriesApi {
 
                     case "next":
                         // check current season is loaded
-                        if (!seasons.Contains(currentSeasonNbr)) {
+                        if (!seasons.Contains(currentSeasonNbr))
+                        {
                             accepted = false;
                             FetchSeason(currentSeasonNbr);
                             break;
@@ -447,7 +507,8 @@ namespace Srk.BetaseriesApi {
 
                         // check next season is loaded
                         //TODO: check that the next episode is not in the current season
-                        if (!isLastSeason && !seasons.Contains(nextSeasonNbr.Value)) {
+                        if (!isLastSeason && !seasons.Contains(nextSeasonNbr.Value))
+                        {
                             accepted = false;
                             FetchSeason(nextSeasonNbr.Value);
                             break;
@@ -455,12 +516,15 @@ namespace Srk.BetaseriesApi {
 
                         // current and next seasons are available, continue
                         accepted = true;
-                        foreach (var item in EpisodesSorted) {
-                            if (found) {
+                        foreach (var item in EpisodesSorted)
+                        {
+                            if (found)
+                            {
                                 ep = item;
                                 break;
                             }
-                            if (item.Number == Episode.Number) {
+                            if (item.Number == Episode.Number)
+                            {
                                 found = true;
                             }
                         }
@@ -471,7 +535,8 @@ namespace Srk.BetaseriesApi {
 
                     case "prev":
                         // check current season is loaded
-                        if (!seasons.Contains(currentSeasonNbr)) {
+                        if (!seasons.Contains(currentSeasonNbr))
+                        {
                             accepted = false;
                             FetchSeason(currentSeasonNbr);
                             break;
@@ -479,7 +544,8 @@ namespace Srk.BetaseriesApi {
 
                         // check previous season is loaded
                         //TODO: check that the previous episode is not in the current season
-                        if (!isFirstSeason && !seasons.Contains(prevSeasonNbr.Value)) {
+                        if (!isFirstSeason && !seasons.Contains(prevSeasonNbr.Value))
+                        {
                             accepted = false;
                             FetchSeason(prevSeasonNbr.Value);
                             break;
@@ -487,11 +553,15 @@ namespace Srk.BetaseriesApi {
 
                         // current and previous seasons are available, continue
                         accepted = true;
-                        foreach (var item in EpisodesSorted) {
-                            if (item.Number == Episode.Number) {
+                        foreach (var item in EpisodesSorted)
+                        {
+                            if (item.Number == Episode.Number)
+                            {
                                 found = true;
                                 break;
-                            } else {
+                            }
+                            else
+                            {
                                 ep = item;
                             }
                         }
@@ -503,25 +573,32 @@ namespace Srk.BetaseriesApi {
                     case "lastseen":
                     case "nexttosee":
                         // fetch the next episode
-                        if (!hasNextEpisode) {
+                        if (!hasNextEpisode)
+                        {
                             accepted = false;
                             FetchNextEpisode();
                         }
-                            // when fetched, show it
-                        else {
+                        // when fetched, show it
+                        else
+                        {
                             accepted = true;
 
                             // if all episodes are seen, go to last
-                            if (nextEpisode == null) {
+                            if (nextEpisode == null)
+                            {
                                 command = "last";
                                 goto bigswitch;
                             }
-                                // if there is a next episode
-                            else {
-                                if (command == "lastseen") {
+                            // if there is a next episode
+                            else
+                            {
+                                if (command == "lastseen")
+                                {
                                     command = "prev";
                                     goto bigswitch;
-                                } else {
+                                }
+                                else
+                                {
                                     Episode = nextEpisode;
                                 }
                             }
@@ -539,65 +616,83 @@ namespace Srk.BetaseriesApi {
             }
 
             bool @continue = false;
-            if (accepted) {
-                lock (queueLock) {
+            if (accepted)
+            {
+                lock (queueLock)
+                {
                     if (queue.Count > 0)
                         queue.Dequeue();
                     @continue = queue.Count > 0;
                 }
                 loopCount = 0;
-                if (@continue) {
+                if (@continue)
+                {
                     // deadlock :(
                     //Run();
                     StartQueueTimer();
-                } else {
+                }
+                else
+                {
                     StopQueueTimer();
                 }
             }
 
         }
 
-        private void FetchSeason(uint season) {
+        private void FetchSeason(uint season)
+        {
             IsProcessing = true;
-            try {
+            try
+            {
                 client.GetEpisodesAsync(show.Url, season, this.client_GetEpisodesEnded);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ReportError(ex);
             }
         }
 
-        private void FetchEpisode(uint season, uint number) {
+        private void FetchEpisode(uint season, uint number)
+        {
             IsProcessing = true;
             episodeLoaded = false;
-            try {
+            try
+            {
                 client.GetEpisodeAsync(show.Url, season, number, this.client_GetEpisodeEnded);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ReportError(ex);
             }
         }
 
-        private void FetchNextEpisode() {
+        private void FetchNextEpisode()
+        {
             IsProcessing = true;
-            try {
+            try
+            {
                 client.GetMembersNextShowEpisodeAsync(true, show.Url, this.client_GetMembersNextShowEpisodeEnded);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ReportError(ex);
             }
         }
 
-        #endregion
-
-        #region Async responses
-
-        void client_GetEpisodesEnded(object sender, AsyncResponseArgs<IList<Episode>> e) {
-            if (e.Succeed) {
-                if (e.Data.Count > 0) {
+        void client_GetEpisodesEnded(object sender, AsyncResponseArgs<IList<Episode>> e)
+        {
+            if (e.Succeed)
+            {
+                if (e.Data.Count > 0)
+                {
                     var season = e.Data.FirstOrDefault().SeasonOrder;
 
-                    lock (instanceLock) {
+                    lock (instanceLock)
+                    {
                         // remove volatile episodes from this season
                         var toRemove = _episodes.Where(ep => ep.SeasonOrder == season).ToArray();
-                        foreach (var ex in toRemove) {
+                        foreach (var ex in toRemove)
+                        {
                             _episodes.Remove(ex);
                         }
 
@@ -608,21 +703,29 @@ namespace Srk.BetaseriesApi {
                         if (!seasons.Contains(season))
                             seasons.Add(season);
                     }
-                } else {
+                }
+                else
+                {
                     ReportError(new Exception("No episode and no error were returned from service"));
                 }
-            } else {
+            }
+            else
+            {
                 ReportError(e.Error);
             }
             IsProcessing = false;
             Run();
         }
 
-        void client_GetEpisodeEnded(object sender, AsyncResponseArgs<Episode> e) {
+        void client_GetEpisodeEnded(object sender, AsyncResponseArgs<Episode> e)
+        {
             episodeLoaded = true;
-            if (e.Succeed) {
-                if (e.Data != null) {
-                    lock (instanceLock) {
+            if (e.Succeed)
+            {
+                if (e.Data != null)
+                {
+                    lock (instanceLock)
+                    {
                         // remove existing episode
                         var existing = _episodes.SingleOrDefault(ep => ep.Number == e.Data.Number);
                         if (existing != null)
@@ -631,23 +734,33 @@ namespace Srk.BetaseriesApi {
                         // add episode
                         _episodes.Add(e.Data);
                     }
-                } else {
+                }
+                else
+                {
                     ReportError(new Exception("No episode and no error were returned from service"));
                 }
-            } else {
+            }
+            else
+            {
                 ReportError(e.Error);
             }
             IsProcessing = false;
             Run();
         }
 
-        void client_GetMembersNextShowEpisodeEnded(object sender, AsyncResponseArgs<Episode> e) {
-            lock (instanceLock) {
+        void client_GetMembersNextShowEpisodeEnded(object sender, AsyncResponseArgs<Episode> e)
+        {
+            lock (instanceLock)
+            {
                 hasNextEpisode = true;
-                if (e.Succeed) {
+                if (e.Succeed)
+                {
                     nextEpisode = e.Data;
-                } else {
-                    lock (queueLock) {
+                }
+                else
+                {
+                    lock (queueLock)
+                    {
                         queue.Dequeue();
                     }
                     ReportError(e.Error);
@@ -657,37 +770,35 @@ namespace Srk.BetaseriesApi {
             Run();
         }
 
-        #endregion
-
-        #region Event raising methods
-
-        private void ReportError(Exception ex) {
+        private void ReportError(Exception ex)
+        {
             ErrorEventHandler handler = ErrorOccuredEvent;
-            if (handler != null) {
+            if (handler != null)
+            {
                 handler.Invoke(this, new AsyncResponseArgs(ex));
             }
         }
 
-        private void RaiseProcessingEvent() {
+        private void RaiseProcessingEvent()
+        {
             if (IsProcessingChangedEvent != null)
                 IsProcessingChangedEvent(this, EventArgs.Empty);
         }
 
-        private void RaiseEpisodeChangedEvent() {
+        private void RaiseEpisodeChangedEvent()
+        {
             if (EpisodeChangedEvent != null)
                 EpisodeChangedEvent(this, EventArgs.Empty);
         }
-
-        #endregion
-
-        #region IDisposable Members
 
         /// <summary>
         /// Clear event handlers.
         /// This will not dispose the client.
         /// </summary>
-        public void Dispose() {
-            lock (instanceLock) {
+        public void Dispose()
+        {
+            lock (instanceLock)
+            {
                 IsProcessingChangedEvent = null;
                 EpisodeChangedEvent = null;
             }
@@ -695,7 +806,8 @@ namespace Srk.BetaseriesApi {
             _episodes.Clear();
             _episode = null;
 
-            if (queueTimer != null) {
+            if (queueTimer != null)
+            {
                 queueTimer.Dispose();
                 queueTimer = null;
             }
@@ -704,11 +816,7 @@ namespace Srk.BetaseriesApi {
             queueLock = null;
             queueTimerLock = null;
         }
-
-        #endregion
-
     }
 
     public delegate void ErrorEventHandler(object sender, AsyncResponseArgs args);
-
 }

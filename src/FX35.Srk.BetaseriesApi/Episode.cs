@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿
 
-namespace Srk.BetaseriesApi {
-
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     /// <summary>
     /// POCO representing an episode from a TV Show.
     /// </summary>
-    public class Episode : IComparable {
+    public class Episode : IComparable
+    {
+        private List<Comment> _comments;
 
         /// <summary>
         /// Default .ctor.
         /// </summary>
-        public Episode() { }
+        public Episode()
+        {
+        }
 
         /// <summary>
         /// .ctor used for episode list parsing
@@ -40,7 +45,8 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// .ctor used for episode list parsing
         /// </summary>
-        internal Episode(string show, string showUrl, string title, string number, uint globalNumber, DateTime? date, bool? downloaded, bool seen) {
+        internal Episode(string show, string showUrl, string title, string number, uint globalNumber, DateTime? date, bool? downloaded, bool seen)
+        {
             ShowName = show;
             ShowUrl = showUrl;
             Title = title;
@@ -55,7 +61,8 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// .ctor used for timeline parsing
         /// </summary>
-        internal Episode(string number, string showUrl, string show, string title) {
+        internal Episode(string number, string showUrl, string show, string title)
+        {
             Number = number;
             ShowName = show;
             ShowUrl = showUrl;
@@ -67,7 +74,8 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// .ctor used for planning parsing
         /// </summary>
-        internal Episode(string showUrl, string showTitle, string title, string number, uint episodeOrder, uint seasonOrder, DateTime? date) {
+        internal Episode(string showUrl, string showTitle, string title, string number, uint episodeOrder, uint seasonOrder, DateTime? date)
+        {
             ShowUrl = showUrl;
             ShowName = showTitle;
             Title = title;
@@ -153,7 +161,7 @@ namespace Srk.BetaseriesApi {
         /// Value is not always available.
         /// </summary>
         public bool? IsDownloaded { get; set; }
-        
+
         /// <summary>
         /// Name of the TV show.
         /// Its value come from episodes/episode/show.
@@ -183,8 +191,10 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         public int? UserRating { get; set; }
 
-        public int InternalGlobalNumber {
-            get {
+        public int InternalGlobalNumber
+        {
+            get
+            {
                 return (int)this.SeasonOrder * 1000 + (int)this.Order;
             }
         }
@@ -205,7 +215,6 @@ namespace Srk.BetaseriesApi {
                 }
             }
         }
-        private List<Comment> _comments;
 
         private void RaisePropertyChanged(string propertyName)
         {
@@ -213,9 +222,11 @@ namespace Srk.BetaseriesApi {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        internal void FillFields() {
+        internal void FillFields()
+        {
             uint s = 0, e = 0;
-            if (Number != null) {
+            if (Number != null)
+            {
                 EpisodeNumbers.GetNumbers(Number, out s, out e);
                 if (Order == 0)
                     Order = e;
@@ -225,9 +236,13 @@ namespace Srk.BetaseriesApi {
                     EpisodeNumber = e.ToString();
                 if (Season == null)
                     Season = s.ToString();
-            } else {
-                if (EpisodeNumber != null && Season != null) {
-                    if (uint.TryParse(Season, out s) && uint.TryParse(EpisodeNumber, out e)) {
+            }
+            else
+            {
+                if (EpisodeNumber != null && Season != null)
+                {
+                    if (uint.TryParse(Season, out s) && uint.TryParse(EpisodeNumber, out e))
+                    {
                         Number = EpisodeNumbers.GetNumberAsString(s, e);
                         if (Order == 0)
                             Order = e;
@@ -240,48 +255,55 @@ namespace Srk.BetaseriesApi {
             }
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return string.Format("{0} {1}", ShowUrl ?? ShowName, Number);
         }
 
-        #region INotifyPropertyChanged Members
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion
-
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             var other = obj as Episode;
             if (other == null || other.Number == null)
                 return false;
+
             if (Episode.ReferenceEquals(this, other))
                 return true;
 
-            if (ShowUrl != null && other.ShowUrl != null) {
+            if (ShowUrl != null && other.ShowUrl != null)
+            {
                 return this.ShowUrl == other.ShowUrl && this.Number == other.Number;
             }
-            if (ShowName != null && other.ShowName != null) {
+
+            if (ShowName != null && other.ShowName != null)
+            {
                 return this.ShowName == other.ShowName && this.Number == other.Number;
             }
 
             return false;
         }
 
-        public bool Equals(Episode other) {
+        public bool Equals(Episode other)
+        {
             if (Episode.ReferenceEquals(this, other))
                 return true;
 
-            if (ShowUrl != null && other.ShowUrl != null) {
+            if (ShowUrl != null && other.ShowUrl != null)
+            {
                 return this.ShowUrl == other.ShowUrl && this.Number == other.Number;
             }
-            if (ShowName != null && other.ShowName != null) {
+
+            if (ShowName != null && other.ShowName != null)
+            {
                 return this.ShowName == other.ShowName && this.Number == other.Number;
             }
 
             return false;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             var show = ShowUrl ?? ShowName;
             return (show != null ? show.GetHashCode() : -1) ^ (Number != null ? Number.GetHashCode() : -1);
         }
@@ -304,7 +326,8 @@ namespace Srk.BetaseriesApi {
         /// <exception cref="T:System.ArgumentException">
         ///   <paramref name="obj"/> is not the same type as this instance.
         ///   </exception>
-        public int CompareTo(object obj) {
+        public int CompareTo(object obj)
+        {
             var comp = (Episode)obj;
 
             int me = (int)this.SeasonOrder * 1000 + (int)this.Order;

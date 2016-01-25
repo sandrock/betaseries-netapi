@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
+﻿
+namespace Srk.BetaseriesApi.Clients
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml;
+    using System.Xml.Linq;
 
-namespace Srk.BetaseriesApi.Clients {
-    partial class BetaseriesXmlClient {
-
-        #region IMethodVersionReport Members
-
+    partial class BetaseriesXmlClient
+    {
         /// <summary>
         /// Returns a dictionary containing the implementation date of each API method.
         /// </summary>
-        public IDictionary<string, int> MethodsVersion {
-            get {
+        public IDictionary<string, int> MethodsVersion
+        {
+            get
+            {
                 var dic = new Dictionary<string, int>();
                 dic.Add("subtitles/last", 20110305);
                 dic.Add("subtitles/show", 20110305);
@@ -48,8 +50,5 @@ namespace Srk.BetaseriesApi.Clients {
                 return dic;
             }
         }
-
-        #endregion
-
     }
 }

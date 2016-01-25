@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Globalization;
+﻿
+namespace Srk.BetaseriesApi.Clients
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Globalization;
 
-namespace Srk.BetaseriesApi.Clients {
-    partial class BetaseriesXmlClient {
-
+    partial class BetaseriesXmlClient
+    {
         private static readonly string ParseErrorMessage = "Could not parse service response";
 
         /// <summary>
@@ -15,10 +17,14 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="content">the HTTP response content</param>
         /// <returns>the root XML element</returns>
-        private static XElement ParseResponse(string content) {
-            try {
+        private static XElement ParseResponse(string content)
+        {
+            try
+            {
                 return XDocument.Parse(content).Root;
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
@@ -28,11 +34,14 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>
-        private static BetaError[] GetErrors(XElement root) {
+        private static BetaError[] GetErrors(XElement root)
+        {
             BetaError[] errors = null;
             var errorsNode = root.Element("errors");
-            if (errorsNode.HasElements) {
-                try {
+            if (errorsNode.HasElements)
+            {
+                try
+                {
                     //errors = errorsNode
                     //    .Elements("error")
                     //    .Select(e => new BetaError(e.Attribute("code").Value, e.Value))
@@ -41,10 +50,13 @@ namespace Srk.BetaseriesApi.Clients {
                         .Elements("error")
                         .Select(e => new BetaError(e.Element("code").Value, e.Element("content").Value))
                         .ToArray();
-                } catch (XmlException ex) {
+                }
+                catch (XmlException ex)
+                {
                     throw new ClientException(ParseErrorMessage, ex);
                 }
             }
+
             return errors;
         }
 
@@ -53,20 +65,25 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        private static IList<Show> ParseShows(XElement xml) {
+        private static IList<Show> ParseShows(XElement xml)
+        {
             var showsNode = xml.Element("shows");
             if (showsNode == null || !showsNode.HasElements)
                 return null;
-            try {
+            try
+            {
                 return showsNode
                     .Elements("show")
-                    .Select(e => new Show {
+                    .Select(e => new Show
+                    {
                         Title = e.Element("title").Value,
                         Url = e.Element("url").Value,
                         IsInProfile = e.ElementValueNbool("is_in_account")
                     })
                     .ToArray();
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
@@ -76,33 +93,39 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        private static Show ParseShow(XElement xml) {
-            try {
+        private static Show ParseShow(XElement xml)
+        {
+            try
+            {
                 return xml
-                       .Elements("show")
-                       .Select(e => new Show {
-                           Title = e.Element("title").Value,
-                           Url = e.Element("url").Value,
-                           Description = e.Element("description").Value,
-                           Status = e.Element("status").Value,
-                           PictureUrl = e.ElementValueString("banner"),
-                           Genres = new List<string>(
-                               e.Elements("genres")
-                                .Elements("genre")
-                                .Select(f => f.Value)),
-                           Seasons = new List<Show.SeasonCount>(
-                               e.Element("seasons")
-                               .Elements("season")
-                               .Select(e2 => new Show.SeasonCount {
-                                   Season = e2.Element("number").Value,
-                                   Episodes = e2.Element("episodes").Value
-                               })
-                               .ToList()),
-                           TVDBId = e.Element("id_thetvdb").Value,
-                           IsInProfile = e.ElementValueNbool("is_in_account"),
-                       })
-                       .FirstOrDefault();
-            } catch (XmlException ex) {
+                    .Elements("show")
+                    .Select(e => new Show
+                    {
+                        Title = e.Element("title").Value,
+                        Url = e.Element("url").Value,
+                        Description = e.Element("description").Value,
+                        Status = e.Element("status").Value,
+                        PictureUrl = e.ElementValueString("banner"),
+                        Genres = new List<string>(
+                            e.Elements("genres")
+                            .Elements("genre")
+                            .Select(f => f.Value)),
+                        Seasons = new List<Show.SeasonCount>(
+                            e.Element("seasons")
+                            .Elements("season")
+                            .Select(e2 => new Show.SeasonCount
+                            {
+                                Season = e2.Element("number").Value,
+                                Episodes = e2.Element("episodes").Value
+                            })
+                            .ToList()),
+                        TVDBId = e.Element("id_thetvdb").Value,
+                        IsInProfile = e.ElementValueNbool("is_in_account"),
+                    })
+                    .FirstOrDefault();
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
@@ -112,44 +135,48 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        private static IList<Episode> ParseEpisodesWithSeasons(XElement xml) {
-            try {
+        private static IList<Episode> ParseEpisodesWithSeasons(XElement xml)
+        {
+            try
+            {
                 return xml
-                       .Descendants("episode")
-                       .Where(e => e.HasElements)
+                    .Descendants("episode")
+                    .Where(e => e.HasElements)
 
-                       // instanciation is now using a full ctor
-                       // leave comments for reference
-                       .Select(e => new Episode(
-                           //Season = 
-                           e.Parent.Parent.Element("number").Value,
-                           //SeasonOrder = int.Parse(e.Parent.Parent.Element("number").Value),
-                           //Title = 
-                           e.Element("title").Value,
-                           //Description = 
-                           e.Element("description").Value,
-                           //PictureUrl = 
-                           e.ElementValueString("screen"),
-                           //Number = 
-                           e.Element("number").Value,
-                           //EpisodeNumber = 
-                           e.Element("episode").Value,
-                           //Order = int.Parse(e.Element("episode").Value),
-                           //Date = 
-                           e.ElementValueTimestampToDatetime("date"),
-                           //Ratings = 
-                           e.Element("note").ElementValue("members", 0),
-                           //Rating = 
-                           e.Element("note").ElementValueNfloat("mean"),
-                           //UserRating = 
-                           e.Element("note").ElementValueNint("self"),
-                           //IsDownloaded = 
-                           e.ElementValueNbool("downloaded"),
-                           //IsSeen = 
-                           e.ElementValueNbool("has_seen")
-                       ))
-                       .ToList();
-            } catch (XmlException ex) {
+                    // instanciation is now using a full ctor
+                // leave comments for reference
+                    .Select(e => new Episode(
+                        //Season = 
+                        e.Parent.Parent.Element("number").Value,
+                        //SeasonOrder = int.Parse(e.Parent.Parent.Element("number").Value),
+                        //Title = 
+                        e.Element("title").Value,
+                        //Description = 
+                        e.Element("description").Value,
+                        //PictureUrl = 
+                        e.ElementValueString("screen"),
+                        //Number = 
+                        e.Element("number").Value,
+                        //EpisodeNumber = 
+                        e.Element("episode").Value,
+                        //Order = int.Parse(e.Element("episode").Value),
+                        //Date = 
+                        e.ElementValueTimestampToDatetime("date"),
+                        //Ratings = 
+                        e.Element("note").ElementValue("members", 0),
+                        //Rating = 
+                        e.Element("note").ElementValueNfloat("mean"),
+                        //UserRating = 
+                        e.Element("note").ElementValueNint("self"),
+                        //IsDownloaded = 
+                        e.ElementValueNbool("downloaded"),
+                        //IsSeen = 
+                        e.ElementValueNbool("has_seen")
+                    ))
+                    .ToList();
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
@@ -159,8 +186,10 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        private static IList<Episode> ParseEpisodes(XElement xml) {
-            try {
+        private static IList<Episode> ParseEpisodes(XElement xml)
+        {
+            try
+            {
                 return xml
                     .Descendants("episode")
                     .Where(e => e.HasElements)
@@ -185,53 +214,55 @@ namespace Srk.BetaseriesApi.Clients {
                         false
                     ))
                     .ToList();
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static string ParseSessionToken(XElement xml) {
-            try {
+        private static string ParseSessionToken(XElement xml)
+        {
+            try
+            {
                 return xml
                     .Element("member")
                     .Element("token")
                     .Value;
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static Member ParseMember(XElement xml) {
+        private static Member ParseMember(XElement xml)
+        {
             var memberNode = xml.Element("member");
             var stats = memberNode.Element("stats");
 
-            try {
-                var member = new Member {
-                    Username =
-                        memberNode.Element("login").Value,
-                    EpisodeCount =
-                        stats.ElementValue("episodes", 0u),
-                    EpisodesToWatchCount =
-                        stats.ElementValue("episodes_to_watch", 0u),
-                    PictureUrl =
-                        memberNode.ElementValueString("avatar"),
-                    Progress =
-                        stats.ElementValueString("progress"),
-                    SeasonCount =
-                        stats.ElementValue("seasons", 0u),
-                    ShowCount =
-                        stats.ElementValue("shows", 0u),
-                    TimeRemaining =
-                        stats.ElementValueTimespanFromMinutes("time_to_spend"),
-                    TimeSpent =
-                        stats.ElementValueTimespanFromMinutes("time_on_tv")
+            try
+            {
+                var member = new Member
+                {
+                    Username = memberNode.Element("login").Value,
+                    EpisodeCount = stats.ElementValue("episodes", 0u),
+                    EpisodesToWatchCount = stats.ElementValue("episodes_to_watch", 0u),
+                    PictureUrl = memberNode.ElementValueString("avatar"),
+                    Progress = stats.ElementValueString("progress"),
+                    SeasonCount = stats.ElementValue("seasons", 0u),
+                    ShowCount = stats.ElementValue("shows", 0u),
+                    TimeRemaining = stats.ElementValueTimespanFromMinutes("time_to_spend"),
+                    TimeSpent = stats.ElementValueTimespanFromMinutes("time_on_tv")
                 };
 
                 var showsNode = memberNode.Element("shows");
-                if (showsNode != null && showsNode.HasElements) {
+                if (showsNode != null && showsNode.HasElements)
+                {
                     member.Shows = showsNode
                         .Elements("show")
-                        .Select(e => new Show {
+                        .Select(e => new Show
+                        {
                             Url = e.ElementValueString("url"),
                             Title = e.ElementValueString("title"),
                         })
@@ -239,30 +270,39 @@ namespace Srk.BetaseriesApi.Clients {
                 }
 
                 return member;
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static IList<Notification> ParseNotifications(XElement xml) {
-            try {
+        private static IList<Notification> ParseNotifications(XElement xml)
+        {
+            try
+            {
                 return xml
                     .Element("notifications")
                     .Elements("notification")
-                    .Select(e => new Notification {
+                    .Select(e => new Notification
+                    {
                         NotificationId = e.ElementValue("id", (ulong)0),
                         Date = e.ElementValue("date", DateTime.MinValue),
                         Content = e.Element("text").Value,
                         Seen = e.ElementValue("seen", false)
                     })
                     .ToList();
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static IList<TimelineItem> ParseTimeline(XElement xml) {
-            try {
+        private static IList<TimelineItem> ParseTimeline(XElement xml)
+        {
+            try
+            {
                 return xml
                     .Element("timeline")
                     .Elements("item")
@@ -271,12 +311,15 @@ namespace Srk.BetaseriesApi.Clients {
                         e.Element("type").Value, e.ElementValueTimestampToDatetime("date"),
                         e.Element("html").Value, ParseTimelineEpisode(e)))
                     .ToList();
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static Episode ParseTimelineEpisode(XElement timelineItemNode) {
+        private static Episode ParseTimelineEpisode(XElement timelineItemNode)
+        {
             if (timelineItemNode == null || !timelineItemNode.HasElements)
                 return null;
 
@@ -298,19 +341,24 @@ namespace Srk.BetaseriesApi.Clients {
             );
         }
 
-        private static IList<string> ParseFriends(XElement xml) {
-            try {
+        private static IList<string> ParseFriends(XElement xml)
+        {
+            try
+            {
                 return xml
                     .Element("friends")
                     .Elements("friend")
                     .Select(e => e.Value)
                     .ToList();
-            } catch (XmlException ex) {
+            }
+            catch (XmlException ex)
+            {
                 throw new ClientException(ParseErrorMessage, ex);
             }
         }
 
-        private static string[] ParseBadges(XElement xml) {
+        private static string[] ParseBadges(XElement xml)
+        {
             return xml
                 .Element("badges")
                 .Elements("badge")
@@ -318,7 +366,8 @@ namespace Srk.BetaseriesApi.Clients {
                 .ToArray();
         }
 
-        private static readonly ApiChange[] otherChanges = new ApiChange[] {
+        private static readonly ApiChange[] otherChanges = new ApiChange[]
+        {
             new ApiChange { Action = "show/search", Date = 20101014, Type = ApiChangeType.New },
             new ApiChange { Action = "show/add", Date = 20101014, Type = ApiChangeType.New },
             new ApiChange { Action = "show/remove", Date = 20101014, Type = ApiChangeType.New },
@@ -338,7 +387,8 @@ namespace Srk.BetaseriesApi.Clients {
             new ApiChange { Action = "timeline/member", Date = 20101014, Type = ApiChangeType.New }
         };
 
-        private static ApiStatus ParseStatus(XElement xml) {
+        private static ApiStatus ParseStatus(XElement xml)
+        {
             var status = new ApiStatus();
 
             var websiteNode = xml.Element("website");
@@ -347,7 +397,8 @@ namespace Srk.BetaseriesApi.Clients {
             var filesNode = apiNode != null ? apiNode.Element("files") : null;
             var methodsNode = apiNode != null ? apiNode.Element("methods") : null;
 
-            if (websiteNode != null && websiteNode.HasElements) {
+            if (websiteNode != null && websiteNode.HasElements)
+            {
 
                 // website/status
                 status.WebsiteStatus = websiteNode.Element("status").Value;
@@ -356,24 +407,28 @@ namespace Srk.BetaseriesApi.Clients {
                 status.WebsiteDatabase = websiteNode.Element("database").Value;
             }
 
-            if (apiNode != null && apiNode.HasElements) {
+            if (apiNode != null && apiNode.HasElements)
+            {
 
                 // api/version
                 status.ApiVersion = apiNode.Element("version").Value;
 
                 // api/changes
-                if (versionsNode != null) {
+                if (versionsNode != null)
+                {
                     var changes = new List<ApiChange>();
                     changes.AddRange(versionsNode
                         .Descendants("change")
-                        .Select(e => new ApiChange() {
+                        .Select(e => new ApiChange()
+                        {
                             Action = e.Element("value").Value,
                             Date = e.Parent.Parent.ElementValue("date", 0),
                             Type = GetApiChangeType(e.Element("type").Value)
                         })
                         .ToArray());
 
-                    foreach (var item in otherChanges) {
+                    foreach (var item in otherChanges)
+                    {
                         if (!changes.Any(c => c.Action == item.Action))
                             changes.Add(item);
                     }
@@ -382,10 +437,12 @@ namespace Srk.BetaseriesApi.Clients {
                 }
 
                 // api/files
-                if (filesNode != null) {
+                if (filesNode != null)
+                {
                     status.Files = filesNode
                         .Elements("file")
-                        .Select(e => new ApiFile() {
+                        .Select(e => new ApiFile()
+                        {
                             Name = e.Element("name").Value,
                             Date = e.ElementValue("last_change", 0L)
                         })
@@ -393,10 +450,12 @@ namespace Srk.BetaseriesApi.Clients {
                 }
 
                 // api/methods
-                if (methodsNode != null) {
+                if (methodsNode != null)
+                {
                     status.Methods = methodsNode
                         .Elements("method")
-                        .Select(e => new ApiMethod() {
+                        .Select(e => new ApiMethod()
+                        {
                             Name = e.Element("name").Value,
                             DateCreated = e.ElementValue("created", 0),
                             DateUpdated = e.ElementValue("updated", 0)
@@ -407,8 +466,10 @@ namespace Srk.BetaseriesApi.Clients {
             return status;
         }
 
-        private static ApiChangeType GetApiChangeType(string value) {
-            switch (value.ToLower()) {
+        private static ApiChangeType GetApiChangeType(string value)
+        {
+            switch (value.ToLower())
+            {
                 case "updated":
                     return ApiChangeType.Update;
                 case "new":
@@ -418,19 +479,20 @@ namespace Srk.BetaseriesApi.Clients {
             }
         }
 
-        //added By Crevette
+        // added By Crevette
         /// <summary>
         /// Parser for comment List
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        private static IList<Comment> ParseComment(XElement xml) {
+        private static IList<Comment> ParseComment(XElement xml)
+        {
             return xml
                 .Element("comments")
                 .Elements("comment")
                 .Select(e => new Comment(
                     e.Element("login").Value,
-                    new DateTime(1970,1,1).AddSeconds(int.Parse(e.Element("date").Value)),
+                    new DateTime(1970, 1, 1).AddSeconds(int.Parse(e.Element("date").Value)),
                     e.Element("text").Value,
                     int.Parse(e.Element("inner_id").Value),
                     int.Parse(e.Element("in_reply_to").Value)
@@ -438,11 +500,13 @@ namespace Srk.BetaseriesApi.Clients {
                 .ToList();
         }
 
-        private static IList<Subtitle> ParseSubtitle(XElement xml)  {
+        private static IList<Subtitle> ParseSubtitle(XElement xml)
+        {
             return xml
                 .Element("subtitles")
                 .Elements("subtitle")
-                .Select(e => new Subtitle() {
+                .Select(e => new Subtitle()
+                {
                     Title = e.Element("title").Value,
                     Season = int.Parse(e.Element("season").Value),
                     Episode = int.Parse(e.Element("episode").Value),
@@ -455,19 +519,19 @@ namespace Srk.BetaseriesApi.Clients {
                 .ToList();
         }
 
-        private static IList<Episode> ParsePlanning(XElement xml) {
+        private static IList<Episode> ParsePlanning(XElement xml)
+        {
             uint duint = 0;
             return xml
                 .Element("planning")
                 .Elements("item")
                 .Select(e => new Episode(
                       e.ElementValueString("url"), e.ElementValueString("show"),
-                      e.ElementValueString("title"),  e.ElementValueString("number"),
-                      e.ElementValue("episode", duint), e.ElementValue("season", duint), 
+                      e.ElementValueString("title"), e.ElementValueString("number"),
+                      e.ElementValue("episode", duint), e.ElementValue("season", duint),
                       e.ElementValueTimestampToDatetime("date")
                 ))
                 .ToList();
         }
-
     }
 }

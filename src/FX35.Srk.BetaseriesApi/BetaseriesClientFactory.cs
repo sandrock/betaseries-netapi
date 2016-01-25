@@ -1,12 +1,12 @@
-﻿using System;
-using System.Configuration;
-using Srk.BetaseriesApi.Clients;
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Configuration;
+    using Srk.BetaseriesApi.Clients;
 
-namespace Srk.BetaseriesApi {
-
-    partial class BetaseriesClientFactory {
-
-        #region Client creation
+    partial class BetaseriesClientFactory
+    {
 
 #if PocketPC
 #else
@@ -15,14 +15,15 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="shareSessionToken">true will activate session token sharing for all clients created from this factory</param>
         /// <returns></returns>
-        public static BetaseriesClientFactory CreateFromConfiguration(bool shareSessionToken) {
+        public static BetaseriesClientFactory CreateFromConfiguration(bool shareSessionToken)
+        {
             return new BetaseriesClientFactory(
                 ConfigurationManager.AppSettings["BetaseriesApiKey"],
                 ConfigurationManager.AppSettings["BetaseriesApiUserAgent"],
                 shareSessionToken);
         }
 #endif
-        
+
 #if PocketPC
 #else
         /// <summary>
@@ -45,14 +46,11 @@ namespace Srk.BetaseriesApi {
         /// Object type is <see cref="BetaseriesXmlClient"/>.
         /// </summary>
         /// <returns></returns>
-        public IBetaseriesApi CreateDefaultClient() {
+        public IBetaseriesApi CreateDefaultClient()
+        {
             var o = new BetaseriesXmlClient(ApiKey, ApiUserAgent);
             o.RegisterFactory(this, SessionToken, SessionUsername);
             return o;
         }
-
-        #endregion
-        
-
     }
 }

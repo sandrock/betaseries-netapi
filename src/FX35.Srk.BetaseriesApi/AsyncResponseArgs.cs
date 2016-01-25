@@ -1,38 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represent an API response with no data.
     /// </summary>
-    public class AsyncResponseArgs : EventArgs {
-
-        // <summary>
-        // Class .ctor to mark the response as a unknown failure.
-        // </summary>
-        //public AsyncResponseArgs() {
-        //
-        //}
+    public class AsyncResponseArgs : EventArgs
+    {
+        private readonly Dictionary<string, string> requestData;
 
         /// <summary>
         /// Class .ctor to mark the response as a success or failure with no data.
         /// </summary>
         /// <param name="succeed"></param>
-        public AsyncResponseArgs(bool succeed) : this(succeed, null) { }
+        public AsyncResponseArgs(bool succeed)
+            : this(succeed, null)
+        {
+        }
 
         /// <summary>
         /// Class .ctor to mark the response as a failure with no data.
         /// </summary>
         /// <param name="exception"></param>
-        public AsyncResponseArgs(Exception exception) : this(exception, null) { }
+        public AsyncResponseArgs(Exception exception)
+            : this(exception, null)
+        {
+        }
 
         /// <summary>
         /// Class .ctor to mark the response as a success or failure with no data.
         /// </summary>
         /// <param name="succeed"></param>
         /// <param name="requestData"></param>
-        public AsyncResponseArgs(bool succeed, Dictionary<string, string> requestData) {
+        public AsyncResponseArgs(bool succeed, Dictionary<string, string> requestData)
+        {
             this.Succeed = succeed;
             this.requestData = requestData;
         }
@@ -42,7 +45,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="exception"></param>
         /// <param name="requestData"></param>
-        public AsyncResponseArgs(Exception exception, Dictionary<string, string> requestData) {
+        public AsyncResponseArgs(Exception exception, Dictionary<string, string> requestData)
+        {
             this.Error = exception;
             this.Succeed = false;
             this.requestData = requestData;
@@ -56,9 +60,12 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Service error.
         /// </summary>
-        public BetaError BetaError {
-            get {
-                if (Error is BetaException) {
+        public BetaError BetaError
+        {
+            get
+            {
+                if (Error is BetaException)
+                {
                     return ((BetaException)Error).BetaError;
                 }
                 return null;
@@ -74,14 +81,18 @@ namespace Srk.BetaseriesApi {
         /// Contains data from the initial request.
         /// This field is not used yet.
         /// </summary>
-        public Dictionary<string, string> RequestData { get { return requestData; } }
-        private readonly Dictionary<string, string> requestData;
+        public Dictionary<string, string> RequestData
+        {
+            get { return requestData; }
+        }
 
         /// <summary>
         /// Returns an error message from <see cref="BetaError"/> or <see cref="Error"/>.
         /// </summary>
-        public string Message {
-            get {
+        public string Message
+        {
+            get
+            {
                 return BetaError != null ? BetaError.DisplayMessage : Error != null ? Error.Message : null;
             }
         }
@@ -92,31 +103,35 @@ namespace Srk.BetaseriesApi {
     /// Represent an API response with data.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AsyncResponseArgs<T> : AsyncResponseArgs {
-
-        //public AsyncResponseArgs()
-        //    : base() {
-
-        //}
-
+    public class AsyncResponseArgs<T> : AsyncResponseArgs
+    {
         /// <summary>
         /// Class .ctor to mark the response as a failure with no data.
         /// </summary>
         /// <param name="exception"></param>
-        public AsyncResponseArgs(Exception exception) : base(exception) { }
+        public AsyncResponseArgs(Exception exception)
+            : base(exception)
+        {
+        }
 
         /// <summary>
         /// Class .ctor to mark the response as a success with data.
         /// </summary>
         /// <param name="data"></param>
-        public AsyncResponseArgs(T data) : this(data, null) { }
+        public AsyncResponseArgs(T data)
+            : this(data, null)
+        {
+        }
 
         /// <summary>
         /// Class .ctor to mark the response as a failure with no data.
         /// </summary>
         /// <param name="exception"></param>
         /// <param name="requestData"></param>
-        public AsyncResponseArgs(Exception exception, Dictionary<string, string> requestData) : base(exception, requestData) { }
+        public AsyncResponseArgs(Exception exception, Dictionary<string, string> requestData)
+            : base(exception, requestData)
+        {
+        }
 
         /// <summary>
         /// Class .ctor to mark the response as a success with data.
@@ -124,7 +139,8 @@ namespace Srk.BetaseriesApi {
         /// <param name="data"></param>
         /// <param name="requestData"></param>
         public AsyncResponseArgs(T data, Dictionary<string, string> requestData)
-            : base(true, requestData) {
+            : base(true, requestData)
+        {
             this.Data = data;
         }
 
@@ -133,7 +149,5 @@ namespace Srk.BetaseriesApi {
         /// This can be null event if <see cref="AsyncResponseArgs.Succeed"/> is true.
         /// </summary>
         public T Data { get; set; }
-
     }
-
 }

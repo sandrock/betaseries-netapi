@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Web;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Web;
 
     /// <summary>
     /// Real implementation of <see cref="IHttpRequestWrapper"/>.
     /// </summary>
-    partial class HttpRequestWrapper {
-
+    partial class HttpRequestWrapper
+    {
         /// <summary>
         /// Base HTTP url for queries. 
         /// This will permit to use a different base adresse (for HTTPS, different port or domain name...).
@@ -38,14 +39,17 @@ namespace Srk.BetaseriesApi {
         /// <param name="urlFormat"></param>
         /// <param name="baseUrl"></param>
         /// <param name="userAgent"></param>
-        public HttpRequestWrapper(string urlFormat, string baseUrl, string userAgent) {
+        public HttpRequestWrapper(string urlFormat, string baseUrl, string userAgent)
+        {
             UrlFormat = urlFormat;
             BaseUrl = baseUrl;
             UserAgent = userAgent;
         }
 
-        private static void HandleHttpCodes(HttpStatusCode code) {
-            switch ((int)code) {
+        private static void HandleHttpCodes(HttpStatusCode code)
+        {
+            switch ((int)code)
+            {
                 // Good statuses
                 case (int)HttpStatusCode.OK:
                     break;
@@ -110,7 +114,8 @@ namespace Srk.BetaseriesApi {
             }
         }
 
-        private static string PostEncode(string value) {
+        private static string PostEncode(string value)
+        {
             return value.Replace("=", "%3D").Replace("&", "%26");
         }
 
@@ -120,7 +125,8 @@ namespace Srk.BetaseriesApi {
         /// <param name="action"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        protected string GetQueryString(string action, Dictionary<string, string> parameters) {
+        protected string GetQueryString(string action, Dictionary<string, string> parameters)
+        {
             parameters = parameters ?? new Dictionary<string, string>();
 
             var querystring = parameters.GetQueryString();
@@ -128,6 +134,5 @@ namespace Srk.BetaseriesApi {
             string str = string.Format(UrlFormat, BaseUrl, action, querystring);
             return str;
         }
-
     }
 }

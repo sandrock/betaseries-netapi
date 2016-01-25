@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
+namespace Srk.BetaseriesApi.Clients
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-namespace Srk.BetaseriesApi.Clients {
 
     public class UnitTestClient : IBetaseriesBaseApi, IBetaseriesSyncAsyncApi {
 

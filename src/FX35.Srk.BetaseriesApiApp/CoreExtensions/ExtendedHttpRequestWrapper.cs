@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using Srk.BetaseriesApi;
+﻿
+namespace Srk.BetaseriesApiApp.CoreExtensions
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Net;
+    using Srk.BetaseriesApi;
 
-namespace Srk.BetaseriesApiApp.CoreExtensions {
-    internal class ExtendedHttpRequestWrapper : HttpRequestWrapper, IHttpRequestWrapper {
-        
+    internal class ExtendedHttpRequestWrapper : HttpRequestWrapper, IHttpRequestWrapper
+    {
         /// <summary>
         /// Default .ctor.
         /// </summary>
         /// <param name="urlFormat"></param>
         /// <param name="baseUrl"></param>
         /// <param name="userAgent"></param>
-        public ExtendedHttpRequestWrapper(string urlFormat, string baseUrl, string userAgent) : base(urlFormat, baseUrl, userAgent) {
+        public ExtendedHttpRequestWrapper(string urlFormat, string baseUrl, string userAgent)
+            : base(urlFormat, baseUrl, userAgent)
+        {
         }
 
         public string QueryString { get; private set; }
 
-        public new string ExecuteQuery(string action, Dictionary<string, string> parameters) {
+        public new string ExecuteQuery(string action, Dictionary<string, string> parameters)
+        {
             string queryString = GetQueryString(action, parameters);
             this.QueryString = queryString;
 
@@ -32,7 +37,8 @@ namespace Srk.BetaseriesApiApp.CoreExtensions {
             return stringResponse;
         }
 
-        public new string ExecuteQuery(string action, Dictionary<string, string> parameters, Dictionary<string, string> postParameters) {
+        public new string ExecuteQuery(string action, Dictionary<string, string> parameters, Dictionary<string, string> postParameters)
+        {
             string queryString = GetQueryString(action, parameters);
             this.QueryString = queryString;
 

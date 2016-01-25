@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System.Collections.Generic;
 
-namespace Srk.BetaseriesApi {
-    internal interface IMethodVersionReport {
-
+    internal interface IMethodVersionReport
+    {
         IDictionary<string, int> MethodsVersion { get; }
-
     }
 }

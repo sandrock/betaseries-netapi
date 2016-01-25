@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents the betaseries.com API.

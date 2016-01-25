@@ -1,20 +1,22 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Utility class for TV shows episode numbers.
     /// </summary>
-    public static class EpisodeNumbers {
-
+    public static class EpisodeNumbers
+    {
         /// <summary>
         /// Returns a standardized episode number like "S03E14".
         /// </summary>
         /// <param name="season"></param>
         /// <param name="episode"></param>
         /// <returns></returns>
-        public static string GetNumberAsString(uint season, uint episode) {
+        public static string GetNumberAsString(uint season, uint episode)
+        {
             return string.Format("S{0,2:00}E{1,2:00}", season, episode);
         }
 
@@ -25,12 +27,14 @@ namespace Srk.BetaseriesApi {
         /// <param name="season"></param>
         /// <param name="episode"></param>
         /// <returns></returns>
-        public static bool GetNumbers(string number, out int season, out int episode) {
+        public static bool GetNumbers(string number, out int season, out int episode)
+        {
             int s = 0, e = 0;
             bool ok = false;
 
             var match = EpisodeNumberRegex.Match(number);
-            if (match.Success && match.Groups[1] != null && match.Groups[2] != null) {
+            if (match.Success && match.Groups[1] != null && match.Groups[2] != null)
+            {
 #if PocketPC
                 try {
                     s = int.Parse(match.Groups[1].Value);
@@ -55,12 +59,14 @@ namespace Srk.BetaseriesApi {
         /// <param name="season"></param>
         /// <param name="episode"></param>
         /// <returns></returns>
-        public static bool GetNumbers(string number, out uint season, out uint episode) {
+        public static bool GetNumbers(string number, out uint season, out uint episode)
+        {
             uint s = 0, e = 0;
             bool ok = false;
 
             var match = EpisodeNumberRegex.Match(number);
-            if (match.Success && match.Groups[1] != null && match.Groups[2] != null) {
+            if (match.Success && match.Groups[1] != null && match.Groups[2] != null)
+            {
 #if PocketPC
                 try {
                     s = uint.Parse(match.Groups[1].Value);
@@ -82,6 +88,5 @@ namespace Srk.BetaseriesApi {
         /// Regex to match an episode number like "S03E14".
         /// </summary>
         public static readonly Regex EpisodeNumberRegex = new Regex("^S(\\d+)E(\\d+)$", RegexOptions.IgnoreCase);
-
     }
 }

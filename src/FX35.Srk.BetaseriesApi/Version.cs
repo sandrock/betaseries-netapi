@@ -1,11 +1,11 @@
 ﻿
-namespace Srk.BetaseriesApi {
-
+namespace Srk.BetaseriesApi
+{
     /// <summary>
     /// Basic class to keep track of the current version.
     /// </summary>
-    public static class Version {
-
+    public static class Version
+    {
         /// <summary>
         /// Internal name of this library.
         /// </summary>
@@ -21,6 +21,5 @@ namespace Srk.BetaseriesApi {
         /// Computed user-agent for this library.
         /// </summary>
         internal static readonly string LibraryUserAgent = LibraryName + "/" + LibraryVersion;
-
     }
 }

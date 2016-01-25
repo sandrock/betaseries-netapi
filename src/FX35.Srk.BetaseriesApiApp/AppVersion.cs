@@ -1,10 +1,11 @@
 ﻿
-namespace Srk.BetaseriesApiApp {
-
+namespace Srk.BetaseriesApiApp
+{
     /// <summary>
     /// Basic class to keep track of the current version.
     /// </summary>
-    public static class AppVersion {
+    public static class AppVersion
+    {
 
         /// <summary>
         /// The application internal name.
@@ -21,6 +22,5 @@ namespace Srk.BetaseriesApiApp {
         /// Computed user-agent for this app.
         /// </summary>
         public static readonly string ApplicationUserAgent = ApplicationName + "/" + ApplicationVersion;
-
     }
 }

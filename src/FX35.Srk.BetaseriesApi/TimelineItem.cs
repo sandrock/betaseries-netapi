@@ -1,18 +1,20 @@
-﻿using System;
-using Srk.BetaseriesApi.Resources;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using Srk.BetaseriesApi.Resources;
 
     /// <summary>
     /// Timeline item.
     /// </summary>
-    public class TimelineItem {
+    public class TimelineItem
+    {
 
         /// <summary>
         /// Default .ctor.
         /// </summary>
-        public TimelineItem() {
-
+        public TimelineItem()
+        {
         }
 
         /// <summary>
@@ -25,7 +27,8 @@ namespace Srk.BetaseriesApi {
         /// <param name="date"></param>
         /// <param name="content"></param>
         /// <param name="episode"></param>
-        public TimelineItem(string reference, string username, string type, DateTime? date, string content, Episode episode) {
+        public TimelineItem(string reference, string username, string type, DateTime? date, string content, Episode episode)
+        {
             Reference = reference;
             Username = username;
             Content = content;
@@ -43,9 +46,11 @@ namespace Srk.BetaseriesApi {
 
         #region Parsing
 
-        public static TimelineItemType ParseTimelineItemType(string value) {
+        public static TimelineItemType ParseTimelineItemType(string value)
+        {
             TimelineItemType type = TimelineItemType.Unknown;
-            switch (value) {
+            switch (value)
+            {
                 case "friend_add":
                     type = TimelineItemType.FriendAdded;
                     break;
@@ -101,18 +106,25 @@ namespace Srk.BetaseriesApi {
             return type;
         }
 
-        private void FindTimelineItemType() {
+        private void FindTimelineItemType()
+        {
             TimelineItemType type = ParseTimelineItemType(ServiceType);
-            if (type == TimelineItemType.Comment && Reference != null) {
-                if (Reference.StartsWith("membre.")) {
+            if (type == TimelineItemType.Comment && Reference != null)
+            {
+                if (Reference.StartsWith("membre."))
+                {
                     // "membre.albator"
                     type = TimelineItemType.CommentOnMember;
                     Reference = Reference.Substring(7);
-                } else if (Reference.StartsWith("serie.")) {
+                }
+                else if (Reference.StartsWith("serie."))
+                {
                     // "serie.dexter"
                     type = TimelineItemType.CommentOnShow;
                     Reference = Reference.Substring(6);
-                } else if (Reference.StartsWith("episode.")) {
+                }
+                else if (Reference.StartsWith("episode."))
+                {
                     type = TimelineItemType.CommentOnEpisode;
                     // "episode.dexter.s02e04"
                     Reference = Reference.Substring(8);
@@ -120,7 +132,8 @@ namespace Srk.BetaseriesApi {
                     ReferenceEpisode = new Episode(refSplit[1], refSplit[0], null, null);
                 }
             }
-            if (type == TimelineItemType.BadgeEarned) {
+            if (type == TimelineItemType.BadgeEarned)
+            {
                 Badges badge;
                 BadgesUtil.TryParseBadge(Reference, out badge);
                 ReferenceBadge = badge;
@@ -138,14 +151,18 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// Translated message.
         /// </summary>
-        public string Message {
-            get {
-                try {
+        public string Message
+        {
+            get
+            {
+                try
+                {
                     string reference = null;
-                    switch (Type) {
+                    switch (Type)
+                    {
                         case TimelineItemType.UserRegistered:
                             return string.Format(GetFormatableTranslation(Type), Username);
-                        case TimelineItemType.MarkedAs :
+                        case TimelineItemType.MarkedAs:
                             reference = ReferenceEpisode != null ?
                                 string.Concat(Reference, " ", ReferenceEpisode.Number) :
                                 Reference;
@@ -163,7 +180,9 @@ namespace Srk.BetaseriesApi {
                         default:
                             return string.Format(GetFormatableTranslation(Type), Username, Reference);
                     }
-                } catch {
+                }
+                catch
+                {
                     return string.Format("{0}, {1} ({2}) {3}.", Username, Type.ToString(), ServiceType, Reference);
                 }
             }
@@ -213,7 +232,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="type"></param>
         /// <returns>Something like "{0} did something to {1}."</returns>
-        public static string GetFormatableTranslation(string type) {
+        public static string GetFormatableTranslation(string type)
+        {
             return GeneralStrings.ResourceManager.GetString(
                 string.Concat("TimelineItemType_", type, "_")
             ) ?? string.Concat("{0} ", type, " {1}");
@@ -226,22 +246,24 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="type"></param>
         /// <returns>Something like "{0} did something to {1}."</returns>
-        public static string GetFormatableTranslation(TimelineItemType type) {
+        public static string GetFormatableTranslation(TimelineItemType type)
+        {
             return GetFormatableTranslation(type.ToString());
         }
 
         #endregion
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return string.Format("{0} by {1} on {2}", Type.ToString(), Username, Reference);
         }
-
     }
 
     /// <summary>
     /// To be used with <see cref="TimelineItem"/>.
     /// </summary>
-    public enum TimelineItemType {
+    public enum TimelineItemType
+    {
 
         /// <summary>
         /// Default value if parsing fails.
@@ -342,8 +364,6 @@ namespace Srk.BetaseriesApi {
         /// <summary>
         /// 
         /// </summary>
-        WikiUpdate
-
+        WikiUpdate,
     }
-
 }

@@ -1,14 +1,24 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.ComponentModel;
+    using System.Collections.Generic;
 
     //addede by Crevette
     /// <summary>
     /// POCO representing a comment.
     /// </summary>
-    public class Comment {
+    public class Comment
+    {
+        private string _status;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Comment()
+        {
+        }
 
         /// <summary>
         /// Name of the TV show.
@@ -53,6 +63,14 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         public int InreplyTo { get; set; }
 
+        /// <summary>
+        /// Because this object is not always filled.
+        /// </summary>
+        public bool IsLoaded
+        {
+            get { return Status != null; }
+        }
+
         public string Status
         {
             get { return _status; }
@@ -65,28 +83,6 @@ namespace Srk.BetaseriesApi {
                 }
             }
         }
-        private string _status;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Comment() {
-
-        }
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        
-        /// <summary>
-        /// Because this object is not always filled.
-        /// </summary>
-        public bool IsLoaded
-        {
-            get { return Status != null; }
-        }
 
         internal Comment(string username, DateTime postdate, string text, int innerid, int inreplyto)
         {
@@ -97,12 +93,16 @@ namespace Srk.BetaseriesApi {
             InreplyTo = inreplyto;
         }
 
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
 #pragma warning disable 1591
-        #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion
 #pragma warning restore 1591
 
     }

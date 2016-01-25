@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows.Data;
-using System.Windows.Input;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using Srk.BetaseriesApi;
-using Srk.BetaseriesApiApp.Properties;
-
+﻿
 namespace Srk.BetaseriesApiApp.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Text;
+    using System.Windows.Data;
+    using System.Windows.Input;
+    using GalaSoft.MvvmLight;
+    using GalaSoft.MvvmLight.Command;
+    using Srk.BetaseriesApi;
+    using Srk.BetaseriesApiApp.Properties;
+
     public class BadgeVM
     {
         public string ServiceName { get; set; }

@@ -1,6 +1,6 @@
 ﻿
-namespace Srk.BetaseriesApi {
-
+namespace Srk.BetaseriesApi
+{
     /// <summary>
     /// Delegate for a service response not containing data.
     /// </summary>
@@ -15,5 +15,4 @@ namespace Srk.BetaseriesApi {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public delegate void AsyncResponseHandler<T>(object sender, AsyncResponseArgs<T> e);
-
 }

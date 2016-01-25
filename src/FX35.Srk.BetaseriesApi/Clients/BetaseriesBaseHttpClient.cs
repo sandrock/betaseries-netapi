@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Web;
-
+﻿
 namespace Srk.BetaseriesApi.Clients
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Reflection;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading;
+    using System.Web;
 
     /// <summary>
     /// This is a base partial Betaseries client implementation fitted for HTTP data transfert.
@@ -18,8 +19,6 @@ namespace Srk.BetaseriesApi.Clients
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public partial class BetaseriesBaseHttpClient : IBetaseriesApi, IDisposable
     {
-        #region Properties
-
         /// <summary>
         /// Base HTTP url for queries. 
         /// This will permit to use a different base adresse (for HTTPS, different port or domain name...).
@@ -36,54 +35,53 @@ namespace Srk.BetaseriesApi.Clients
         /// </summary>
         protected readonly string UrlFormat;
 
-        #region IBetaseriesBaseApi Members
+        private string userAgent;
+        private string key;
+        private string sessionToken;
+        private string sessionUsername;
 
         public string UserAgent
         {
-            get { return _userAgent; }
-            set { _userAgent = value; }
+            get { return userAgent; }
+            set { userAgent = value; }
         }
-        private string _userAgent;
 
         public string Key
         {
-            get { return _key; }
-            set { _key = value; }
+            get { return this.key; }
+            set { this.key = value; }
         }
-        private string _key;
 
         public string SessionToken
         {
-            get { return _sessionToken; }
+            get { return this.sessionToken; }
         }
-        private string _sessionToken;
 
         public string SessionUsername
         {
-            get { return _sessionUsername; }
+            get { return this.sessionUsername; }
         }
-        private string _sessionUsername;
 
         public void SetSessionTokens(string newSessionToken, string newSessionUsername)
         {
-            _sessionToken = newSessionToken;
-            _sessionUsername = newSessionUsername;
+            this.sessionToken = newSessionToken;
+            this.sessionUsername = newSessionUsername;
 
             if (factory != null)
             {
-                factory.RaiseSessionTokenChanged(this, _sessionToken, _sessionUsername);
+                factory.RaiseSessionTokenChanged(this, this.sessionToken, this.sessionUsername);
             }
         }
 
-        #endregion
+        protected BetaseriesBaseHttpClient(string urlFormat, string apiKey)
+            : this(urlFormat, apiKey, null, null)
+        {
+        }
 
-        #endregion
-
-        #region .ctor
-
-        protected BetaseriesBaseHttpClient(string urlFormat, string apiKey) : this(urlFormat, apiKey, null, null) { }
-
-        protected BetaseriesBaseHttpClient(string urlFormat, string apiKey, string userAgent) : this(urlFormat, apiKey, userAgent, null) { }
+        protected BetaseriesBaseHttpClient(string urlFormat, string apiKey, string userAgent)
+            : this(urlFormat, apiKey, userAgent, null)
+        {
+        }
 
         /// <summary>
         /// Mandatory .ctor
@@ -96,13 +94,12 @@ namespace Srk.BetaseriesApi.Clients
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentException("Missing API Key", "apiKey");
-            Key = apiKey;
-            UserAgent = userAgent ?? "unknown-client";
-            BaseUrl = baseUrl ?? "http://api.betaseries.com/";
-            UrlFormat = urlFormat;
-        }
 
-        #endregion
+            this.Key = apiKey;
+            this.UserAgent = userAgent ?? "unknown-client";
+            this.BaseUrl = baseUrl ?? "http://api.betaseries.com/";
+            this.UrlFormat = urlFormat;
+        }
 
         #region HTTP Query
 
@@ -114,7 +111,7 @@ namespace Srk.BetaseriesApi.Clients
         /// <returns>HTTP response body as a string.</returns>
         protected virtual string ExecuteQuery(string action, params string[] keyValues)
         {
-            return ExecuteQuery(action, null, keyValues);
+            return this.ExecuteQuery(action, null, keyValues);
         }
 
         /// <summary>
@@ -125,7 +122,7 @@ namespace Srk.BetaseriesApi.Clients
         /// <returns>HTTP response body as a string.</returns>
         protected virtual string ExecuteQuery(string action, Dictionary<string, string> parameters)
         {
-            return ExecuteQuery(action, null, parameters);
+            return this.ExecuteQuery(action, null, parameters);
         }
 
         /// <summary>
@@ -140,6 +137,7 @@ namespace Srk.BetaseriesApi.Clients
         {
             if (keyValues.Length % 2 != 0)
                 throw new ArgumentException("Invalid parameters count", "keyvalues");
+
             Dictionary<string, string> parameters = null;
             if (keyValues.Length > 0)
             {
@@ -156,9 +154,11 @@ namespace Srk.BetaseriesApi.Clients
                     {
                         parameters.Add(key, item);
                     }
+
                     isKey = !isKey;
                 }
             }
+
             return ExecuteQuery(action, postParameters, parameters);
         }
 
@@ -178,10 +178,11 @@ namespace Srk.BetaseriesApi.Clients
             {
                 parameters["token"] = SessionToken;
             }
+
             if (postParameters != null && postParameters.Count > 0)
-                return http.ExecuteQuery(action, parameters, postParameters);
+                return this.http.ExecuteQuery(action, parameters, postParameters);
             else
-                return http.ExecuteQuery(action, parameters);
+                return this.http.ExecuteQuery(action, parameters);
         }
 
         #endregion
@@ -664,11 +665,12 @@ namespace Srk.BetaseriesApi.Clients
         {
             if (disposing)
             {
-                if (factory != null)
+                if (this.factory != null)
                 {
-                    factory.SessionTokenChangedEvent -= factory_SessionTokenChangedEvent;
-                    factory = null;
+                    this.factory.SessionTokenChangedEvent -= this.factory_SessionTokenChangedEvent;
+                    this.factory = null;
                 }
+
                 ClearEventHandlers();
             }
         }
@@ -710,8 +712,7 @@ namespace Srk.BetaseriesApi.Clients
         {
             byte[] data = System.Text.Encoding.UTF8.GetBytes(value);
 
-            using (System.Security.Cryptography.MD5CryptoServiceProvider x =
-                new System.Security.Cryptography.MD5CryptoServiceProvider())
+            using (var x = new MD5CryptoServiceProvider())
             {
                 data = x.ComputeHash(data);
             }

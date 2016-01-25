@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Srk.BetaseriesApi.Clients {
+﻿
+namespace Srk.BetaseriesApi.Clients
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// This is the default Betaseries client implementation using XML data type transfert.
@@ -11,16 +12,18 @@ namespace Srk.BetaseriesApi.Clients {
     /// <remarks>
     /// The async pattern is implemented in the base class.
     /// </remarks>
-    public partial class BetaseriesXmlClient : BetaseriesBaseHttpClient, IMethodVersionReport {
-
-        #region .ctor
+    public partial class BetaseriesXmlClient : BetaseriesBaseHttpClient, IMethodVersionReport
+    {
 
         /// <summary>
         /// Simpliest class .ctor.
         /// </summary>
         /// <param name="apiKey">your API key (ask it on the website, don't use someone else's)</param>
         /// <param name="userAgent">anything like MyBetaseriesApp/1.0.0.0 (name/version)</param>
-        public BetaseriesXmlClient(string apiKey, string userAgent) : this(apiKey, userAgent, null) { }
+        public BetaseriesXmlClient(string apiKey, string userAgent)
+            : this(apiKey, userAgent, null)
+        {
+        }
 
         /// <summary>
         /// Other class .ctor to override the BaseUrl.
@@ -28,20 +31,23 @@ namespace Srk.BetaseriesApi.Clients {
         /// <param name="apiKey">your API key (ask it on the website, don't use someone else's)</param>
         /// <param name="userAgent">anything like MyBetaseriesApp/1.0.0.0 (name/version)</param>
         /// <param name="baseUrl">If you want to override urls (nice for https)</param>
-        public BetaseriesXmlClient(string apiKey, string userAgent, string baseUrl) : base("{0}{1}.xml?{2}", apiKey, userAgent, baseUrl) { }
-
-        #endregion
+        public BetaseriesXmlClient(string apiKey, string userAgent, string baseUrl)
+            : base("{0}{1}.xml?{2}", apiKey, userAgent, baseUrl)
+        {
+        }
 
 #pragma warning disable 1591
         #region IBetaseriesApi Members
 
         #region Shows
 
-        public override IList<Show> SearchShows(string title) {
+        public override IList<Show> SearchShows(string title)
+        {
             if (string.IsNullOrEmpty(title))
                 throw new ArgumentException("Search parameter must be non-empty", "title");
 
-            if (IsCacheEnabled) {
+            if (IsCacheEnabled)
+            {
                 var fromCache = SearchShowsFromCache(title);
                 if (fromCache != null)
                     return fromCache;
@@ -57,11 +63,13 @@ namespace Srk.BetaseriesApi.Clients {
             return result;
         }
 
-        public override Show GetShow(string url) {
+        public override Show GetShow(string url)
+        {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentException("Empty show identifier", "url");
 
-            if (IsCacheEnabled) {
+            if (IsCacheEnabled)
+            {
                 var fromCache = GetShowFromCache(url);
                 if (fromCache != null)
                     return fromCache;
@@ -74,7 +82,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseShow(xml);
         }
 
-        public override IList<Episode> GetEpisodes(string showUrl) {
+        public override IList<Episode> GetEpisodes(string showUrl)
+        {
             if (string.IsNullOrEmpty(showUrl))
                 throw new ArgumentException("Empty show identifier", "showUrl");
 
@@ -85,12 +94,13 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseEpisodesWithSeasons(xml);
         }
 
-        public override IList<Episode> GetEpisodes(string showUrl, uint season) {
+        public override IList<Episode> GetEpisodes(string showUrl, uint season)
+        {
             if (string.IsNullOrEmpty(showUrl))
                 throw new ArgumentException("Empty show identifier", "showUrl");
 
             var response = ExecuteQuery(
-                "shows/episodes/" + showUrl, 
+                "shows/episodes/" + showUrl,
                 "season", season.ToString());
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
@@ -98,13 +108,14 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseEpisodesWithSeasons(xml);
         }
 
-        public override Episode GetEpisode(string showUrl, uint season, uint episode) {
+        public override Episode GetEpisode(string showUrl, uint season, uint episode)
+        {
             if (string.IsNullOrEmpty(showUrl))
                 throw new ArgumentException("Empty show identifier", "showUrl");
 
             var response = ExecuteQuery(
-                "shows/episodes/" + showUrl, 
-                "season", season.ToString(), 
+                "shows/episodes/" + showUrl,
+                "season", season.ToString(),
                 "episode", episode.ToString());
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
@@ -112,7 +123,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseEpisodesWithSeasons(xml).FirstOrDefault();
         }
 
-        public override void AddShow(string showUrl) {
+        public override void AddShow(string showUrl)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -123,7 +135,8 @@ namespace Srk.BetaseriesApi.Clients {
             HandleError(GetErrors(xml));
         }
 
-        public override void RemoveShow(string showUrl) {
+        public override void RemoveShow(string showUrl)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -138,7 +151,8 @@ namespace Srk.BetaseriesApi.Clients {
 
         #region Members
 
-        public override string Authenticate(string username, string password) {
+        public override string Authenticate(string username, string password)
+        {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentException("username is empty", "username");
             if (string.IsNullOrEmpty(password))
@@ -155,7 +169,8 @@ namespace Srk.BetaseriesApi.Clients {
             return SessionToken;
         }
 
-        public override bool GetIsSessionActive() {
+        public override bool GetIsSessionActive()
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
 
@@ -163,9 +178,11 @@ namespace Srk.BetaseriesApi.Clients {
             var xml = ParseResponse(response);
             var errors = GetErrors(xml);
 
-            if (errors != null && errors.Length > 0) {
+            if (errors != null && errors.Length > 0)
+            {
                 var err2001 = errors.FirstOrDefault(e => e.IntCode == 2001);
-                if (errors.Length == 1 && err2001 != null) {
+                if (errors.Length == 1 && err2001 != null)
+                {
                     return false;
                 }
             }
@@ -175,7 +192,8 @@ namespace Srk.BetaseriesApi.Clients {
             return true;
         }
 
-        public override void Logoff() {
+        public override void Logoff()
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
 
@@ -183,28 +201,34 @@ namespace Srk.BetaseriesApi.Clients {
             var xml = ParseResponse(response);
             var errors = GetErrors(xml);
 
-            if (errors != null && errors.Length > 0) {
+            if (errors != null && errors.Length > 0)
+            {
                 var err2001 = errors.FirstOrDefault(e => e.IntCode == 2001);
-                if (errors.Length == 1 && err2001 != null) {
+                if (errors.Length == 1 && err2001 != null)
+                {
                     // session has expired
                     SetSessionTokens(null, null);
                     return;
                 }
             }
-            
+
             HandleError(errors);
 
             SetSessionTokens(null, null);
         }
 
-        public override Member GetMember(string username) {
+        public override Member GetMember(string username)
+        {
             if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(SessionToken))
                 throw new ArgumentException("username and SessionToken are empty", "username");
 
             string response;
-            if (username == null) {
+            if (username == null)
+            {
                 response = ExecuteQuery("members/infos");
-            } else {
+            }
+            else
+            {
                 response = ExecuteQuery("members/infos/" + username);
             }
             var xml = ParseResponse(response);
@@ -213,7 +237,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseMember(xml);
         }
 
-        public override void Signup(string username, string password, string email) {
+        public override void Signup(string username, string password, string email)
+        {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentException("username must not be empty", "username");
             if (string.IsNullOrEmpty(password))
@@ -226,7 +251,8 @@ namespace Srk.BetaseriesApi.Clients {
             HandleError(GetErrors(xml));
         }
 
-        public override IList<Episode> GetMembersNextEpisodes(bool onlyNextEpisode) {
+        public override IList<Episode> GetMembersNextEpisodes(bool onlyNextEpisode)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
 
@@ -241,7 +267,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseEpisodes(xml);
         }
 
-        public override Episode GetMembersNextShowEpisode(bool onlyNextEpisode, string showUrl) {
+        public override Episode GetMembersNextShowEpisode(bool onlyNextEpisode, string showUrl)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -259,7 +286,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseEpisodes(xml).SingleOrDefault();
         }
 
-        public override void SetEpisodeAsSeen(string showUrl, uint season, uint episode, ushort? mark) {
+        public override void SetEpisodeAsSeen(string showUrl, uint season, uint episode, ushort? mark)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -280,7 +308,8 @@ namespace Srk.BetaseriesApi.Clients {
             RemoveShowFromCache(showUrl);
         }
 
-        public override void SetEpisodeAsDownloaded(string showUrl, uint season, uint episode) {
+        public override void SetEpisodeAsDownloaded(string showUrl, uint season, uint episode)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -297,7 +326,8 @@ namespace Srk.BetaseriesApi.Clients {
             RemoveShowFromCache(showUrl);
         }
 
-        public override void SetEpisodeMark(string showUrl, uint season, uint episode, ushort mark) {
+        public override void SetEpisodeMark(string showUrl, uint season, uint episode, ushort mark)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -317,7 +347,8 @@ namespace Srk.BetaseriesApi.Clients {
             RemoveShowFromCache(showUrl);
         }
 
-        public override IList<Notification> GetNotifications(bool? seen, uint? count, uint? fromNotificationId) {
+        public override IList<Notification> GetNotifications(bool? seen, uint? count, uint? fromNotificationId)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
 
@@ -336,7 +367,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseNotifications(xml);
         }
 
-        public override IList<string> GetFriends(string username) {
+        public override IList<string> GetFriends(string username)
+        {
             if (username == null && SessionToken == null)
                 throw new ArgumentException("username and SessionToken are empty", "username");
 
@@ -354,7 +386,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseFriends(xml);
         }
 
-        public override string[] GetBadges(string username) {
+        public override string[] GetBadges(string username)
+        {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentException("username is empty", "username");
 
@@ -369,15 +402,18 @@ namespace Srk.BetaseriesApi.Clients {
 
         #region Planning
 
-        public override IList<Episode> GetMembersPlanning(string username) {
+        public override IList<Episode> GetMembersPlanning(string username)
+        {
             return GetMembersPlanning(username, null);
         }
 
-        public override IList<Episode> GetMembersPlanning(string username, bool unseenOnly) {
+        public override IList<Episode> GetMembersPlanning(string username, bool unseenOnly)
+        {
             return GetMembersPlanning(username, unseenOnly);
         }
 
-        IList<Episode> GetMembersPlanning(string username, bool? unseenOnly) {
+        IList<Episode> GetMembersPlanning(string username, bool? unseenOnly)
+        {
             if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(SessionUsername))
                 throw new ArgumentException("username and SessionUsername are empty", "username");
 
@@ -394,7 +430,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParsePlanning(xml);
         }
 
-        public override IList<Episode> GetPlanning() {
+        public override IList<Episode> GetPlanning()
+        {
             var response = ExecuteQuery("planning/general");
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
@@ -406,7 +443,8 @@ namespace Srk.BetaseriesApi.Clients {
 
         #region Timeline
 
-        public override IList<TimelineItem> GetFriendsTimeline(uint? count) {
+        public override IList<TimelineItem> GetFriendsTimeline(uint? count)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
 
@@ -421,7 +459,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseTimeline(xml);
         }
 
-        public override IList<TimelineItem> GetMainTimeline(uint? count) {
+        public override IList<TimelineItem> GetMainTimeline(uint? count)
+        {
             var dic = new Dictionary<string, string>();
             if (count.HasValue)
                 dic["number"] = count.Value.ToString();
@@ -433,7 +472,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseTimeline(xml);
         }
 
-        public override IList<TimelineItem> GetMemberTimeline(string username, uint? count) {
+        public override IList<TimelineItem> GetMemberTimeline(string username, uint? count)
+        {
             if (username == null && SessionUsername == null)
                 throw new ArgumentException("username and SessionToken are empty", "username");
             username = username ?? SessionUsername;
@@ -486,7 +526,8 @@ namespace Srk.BetaseriesApi.Clients {
             return ParseComment(xml);
         }
 
-        public override void CommentShow(string showUrl, string comment, uint? inReplyTo) {
+        public override void CommentShow(string showUrl, string comment, uint? inReplyTo)
+        {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not logged-in");
             if (string.IsNullOrEmpty(showUrl))
@@ -512,7 +553,7 @@ namespace Srk.BetaseriesApi.Clients {
             if (SessionToken == null)
                 throw new InvalidOperationException("Not Logged-in");
             if (string.IsNullOrEmpty(showUrl))
-                throw new ArgumentException("Empty show identifier","url");
+                throw new ArgumentException("Empty show identifier", "url");
             if (string.IsNullOrEmpty(comment))
                 throw new ArgumentException("A comment must be provided", "comment");
 
@@ -572,7 +613,7 @@ namespace Srk.BetaseriesApi.Clients {
         {
             if (string.IsNullOrEmpty(showUrl))
                 throw new ArgumentException("Search parameter must be not empty", "showUrl");
-            
+
             if (string.IsNullOrEmpty(language))
                 throw new ArgumentException("Search parameter mus be not empty", "language");
 
@@ -587,7 +628,7 @@ namespace Srk.BetaseriesApi.Clients {
             if (string.IsNullOrEmpty(language))
                 throw new ArgumentException("Search parameter mus be not empty", "language");
 
-            var response = ExecuteQuery("subtitles/last","number",number.ToString(),"language",language);
+            var response = ExecuteQuery("subtitles/last", "number", number.ToString(), "language", language);
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
             return ParseSubtitle(xml);
@@ -598,7 +639,7 @@ namespace Srk.BetaseriesApi.Clients {
             if (string.IsNullOrEmpty(language))
                 throw new ArgumentException("Search parameter mus be not empty", "language");
 
-            var response = ExecuteQuery("subtitles/last","language", language);
+            var response = ExecuteQuery("subtitles/last", "language", language);
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
             return ParseSubtitle(xml);
@@ -614,7 +655,8 @@ namespace Srk.BetaseriesApi.Clients {
 
         #endregion
 
-        public override ApiStatus GetStatus() {
+        public override ApiStatus GetStatus()
+        {
             string response = ExecuteQuery("status");
             var xml = ParseResponse(response);
             HandleError(GetErrors(xml));
@@ -624,6 +666,5 @@ namespace Srk.BetaseriesApi.Clients {
 
         #endregion
 #pragma warning restore 1591
-
     }
 }

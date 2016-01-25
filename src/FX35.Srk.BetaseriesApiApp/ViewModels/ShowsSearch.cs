@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows.Input;
-using System.Windows.Threading;
-using GalaSoft.MvvmLight.Command;
-using Srk.BetaseriesApi;
+﻿
+namespace Srk.BetaseriesApiApp.ViewModels
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Threading;
+    using System.Windows.Input;
+    using System.Windows.Threading;
+    using GalaSoft.MvvmLight.Command;
+    using Srk.BetaseriesApi;
 
-namespace Srk.BetaseriesApiApp.ViewModels {
-    public class ShowsSearch : CommonViewModel {
+    public class ShowsSearch : CommonViewModel
+    {
 
-        public string SearchString {
+        public string SearchString
+        {
             get { return _searchString; }
-            set {
-                if (_searchString != value) {
+            set
+            {
+                if (_searchString != value)
+                {
                     _searchString = value;
                     RaisePropertyChanged("SearchString");
                 }
@@ -21,20 +27,25 @@ namespace Srk.BetaseriesApiApp.ViewModels {
         }
         private string _searchString;
 
-        public ObservableCollection<Show> Shows {
+        public ObservableCollection<Show> Shows
+        {
             get { return _shows; }
         }
         private readonly ObservableCollection<Show> _shows =
           new ObservableCollection<Show>();
 
-        public Show SelectedShow {
+        public Show SelectedShow
+        {
             get { return _selectedShow; }
-            set {
-                if (_selectedShow != value) {
+            set
+            {
+                if (_selectedShow != value)
+                {
                     _selectedShow = value;
                     RaisePropertyChanged("SelectedShow");
 
-                    if (!value.IsLoaded) {
+                    if (!value.IsLoaded)
+                    {
                         LoadShowAsync(value);
                     }
                 }
@@ -42,7 +53,9 @@ namespace Srk.BetaseriesApiApp.ViewModels {
         }
         private Show _selectedShow;
 
-        public ShowsSearch(Main main) : base(main) {
+        public ShowsSearch(Main main)
+            : base(main)
+        {
 
         }
 
@@ -52,9 +65,12 @@ namespace Srk.BetaseriesApiApp.ViewModels {
         /// Search
         /// To be bound in the view.
         /// </summary>
-        public ICommand SearchCommand {
-            get {
-                if (_searchCommand == null) {
+        public ICommand SearchCommand
+        {
+            get
+            {
+                if (_searchCommand == null)
+                {
                     _searchCommand = new RelayCommand(
                         OnSearch, CanSearch);
                 }
@@ -63,11 +79,13 @@ namespace Srk.BetaseriesApiApp.ViewModels {
         }
         private ICommand _searchCommand;
 
-        private void OnSearch() {
+        private void OnSearch()
+        {
             DoSearchAsync(SearchString);
         }
 
-        private bool CanSearch() {
+        private bool CanSearch()
+        {
             return !string.IsNullOrEmpty(SearchString) && IsNotBusy;
         }
 
@@ -76,26 +94,35 @@ namespace Srk.BetaseriesApiApp.ViewModels {
 
         #region Search
 
-        private void DoSearchAsync(string searchString) {
+        private void DoSearchAsync(string searchString)
+        {
             UpdateStatus("Searching...", true);
 
-            ThreadPool.QueueUserWorkItem(param => {
+            ThreadPool.QueueUserWorkItem(param =>
+            {
                 IList<Show> result = null;
-                
-                try {
+
+                try
+                {
                     result = client.SearchShows(searchString);
-                } catch (Exception ex) {
-                    CurrentDispatcher.BeginInvoke(new Action(() => {
+                }
+                catch (Exception ex)
+                {
+                    CurrentDispatcher.BeginInvoke(new Action(() =>
+                    {
                         UpdateStatus(ex.Message, false);
                     }));
                     return;
                 }
 
-                CurrentDispatcher.BeginInvoke(new Action(() => {
+                CurrentDispatcher.BeginInvoke(new Action(() =>
+                {
                     UpdateStatus("Done.", false);
                     Shows.Clear();
-                    if (result != null) {
-                        foreach (var item in result) {
+                    if (result != null)
+                    {
+                        foreach (var item in result)
+                        {
                             Shows.Add(item);
                         }
                     }
@@ -105,11 +132,14 @@ namespace Srk.BetaseriesApiApp.ViewModels {
 
         #endregion
 
-        private void LoadShowAsync(Show value) {
-            ThreadPool.QueueUserWorkItem(param => {
+        private void LoadShowAsync(Show value)
+        {
+            ThreadPool.QueueUserWorkItem(param =>
+            {
                 var result = client.GetShow(value.Url);
 
-                CurrentDispatcher.BeginInvoke(new Action(() => {
+                CurrentDispatcher.BeginInvoke(new Action(() =>
+                {
                     value.Merge(result);
                 }));
             });

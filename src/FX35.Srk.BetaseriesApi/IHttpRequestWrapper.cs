@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-namespace Srk.BetaseriesApi {
-    public interface IHttpRequestWrapper {
-
+    public interface IHttpRequestWrapper
+    {
         /// <summary>
         /// Download a response string.
         /// </summary>
@@ -22,6 +24,5 @@ namespace Srk.BetaseriesApi {
         /// <param name="postParameters">POST data parameters</param>
         /// <returns>HTTP response body as a string.</returns>
         string ExecuteQuery(string action, Dictionary<string, string> parameters, Dictionary<string, string> postParameters, string method = "POST");
-
     }
 }

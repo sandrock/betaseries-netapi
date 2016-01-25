@@ -1,16 +1,20 @@
-﻿using System;
-using System.Configuration;
-using System.Windows;
-using GalaSoft.MvvmLight.Threading;
-using Srk.BetaseriesApiApp.ViewModels;
+﻿
+namespace Srk.BetaseriesApiApp
+{
+    using System;
+    using System.Configuration;
+    using System.Windows;
+    using GalaSoft.MvvmLight.Threading;
+    using Srk.BetaseriesApiApp.ViewModels;
 
-namespace Srk.BetaseriesApiApp {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
-            InitializeComponent();
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            this.InitializeComponent();
             DispatcherHelper.Initialize();
 
             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -21,7 +25,8 @@ namespace Srk.BetaseriesApiApp {
             }));
         }
 
-        public Main Model {
+        public Main Model
+        {
             get { return DataContext as Main; }
         }
     }

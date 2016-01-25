@@ -79,7 +79,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Api2.tt.cs</LastGenOutput>
     </None>
-    <None Include="ApiImplementation.cd" />
     <None Include="Clients\UnitTestClient.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="DictionaryExtensions.cs" />
@@ -133,20 +132,24 @@
     <EmbeddedResource Include="Resources\ErrorStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\GeneralStrings.fr-fr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GeneralStrings.fr-fr.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\GeneralStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GeneralStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ErrorStrings.fr-fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorStrings.fr-fr.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,12 @@ namespace Srk.BetaseriesApiApp.ViewModels
 
     public class CommonViewModel : NotifyPropertyChanged
     {
+        private IBetaseriesApi _client;
+        private Srk.BetaseriesApi2.BetaseriesClient _client2;
+        private bool isBusy;
+        private string errorMessage;
+        private string statusMessage = "Ready.";
+
         protected readonly Main main;
 
         protected Dispatcher CurrentDispatcher = Dispatcher.CurrentDispatcher;
@@ -34,7 +40,6 @@ namespace Srk.BetaseriesApiApp.ViewModels
                 return _client;
             }
         }
-        private IBetaseriesApi _client;
 
         protected Srk.BetaseriesApi2.BetaseriesClient Client2
         {
@@ -49,16 +54,15 @@ namespace Srk.BetaseriesApiApp.ViewModels
                 return _client2;
             }
         }
-        private Srk.BetaseriesApi2.BetaseriesClient _client2;
 
         public bool IsBusy
         {
-            get { return _isBusy; }
+            get { return this.isBusy; }
             set
             {
-                if (_isBusy != value)
+                if (this.isBusy != value)
                 {
-                    _isBusy = value;
+                    this.isBusy = value;
                     RaisePropertyChanged("IsBusy");
                     RaisePropertyChanged("IsNotBusy");
                     OnBusyStateChanged();
@@ -67,37 +71,34 @@ namespace Srk.BetaseriesApiApp.ViewModels
         }
         public bool IsNotBusy
         {
-            get { return !_isBusy; }
+            get { return !this.isBusy; }
         }
-        private bool _isBusy;
 
         public string ErrorMessage
         {
-            get { return _errorMessage; }
+            get { return this.errorMessage; }
             set
             {
-                if (_errorMessage != value)
+                if (this.errorMessage != value)
                 {
-                    _errorMessage = value;
+                    this.errorMessage = value;
                     RaisePropertyChanged("ErrorMessage");
                 }
             }
         }
-        private string _errorMessage;
 
         public string StatusMessage
         {
-            get { return _statusMessage; }
+            get { return this.statusMessage; }
             set
             {
-                if (_statusMessage != value)
+                if (this.statusMessage != value)
                 {
-                    _statusMessage = value;
+                    this.statusMessage = value;
                     RaisePropertyChanged("StatusMessage");
                 }
             }
         }
-        private string _statusMessage = "Ready.";
 
         protected void UpdateStatus(string status, Exception error, bool isBusy)
         {
@@ -137,6 +138,5 @@ namespace Srk.BetaseriesApiApp.ViewModels
             _client.Dispose();
             _client = null;
         }
-
     }
 }

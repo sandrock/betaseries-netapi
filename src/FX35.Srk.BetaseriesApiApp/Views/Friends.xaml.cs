@@ -1,12 +1,16 @@
-﻿using System.Windows.Controls;
+﻿
+namespace Srk.BetaseriesApiApp.Views
+{
+    using System.Windows.Controls;
 
-namespace Srk.BetaseriesApiApp.Views {
     /// <summary>
     /// Interaction logic for Friends.xaml
     /// </summary>
-    public partial class Friends : UserControl {
-        public Friends() {
-            InitializeComponent();
+    public partial class Friends : UserControl
+    {
+        public Friends()
+        {
+            this.InitializeComponent();
         }
     }
 }

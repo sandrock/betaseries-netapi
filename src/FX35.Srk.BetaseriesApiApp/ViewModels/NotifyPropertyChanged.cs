@@ -1,7 +1,7 @@
 ﻿
 
-namespace Srk.BetaseriesApiApp.ViewModels {
-
+namespace Srk.BetaseriesApiApp.ViewModels
+{
     using System;
     using System.ComponentModel;
     using System.Windows;
@@ -11,7 +11,8 @@ namespace Srk.BetaseriesApiApp.ViewModels {
     /// </summary>
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
-        public bool IsInDesignMode {
+        public bool IsInDesignMode
+        {
             get { return DesignerProperties.GetIsInDesignMode(new DependencyObject()); }
         }
 

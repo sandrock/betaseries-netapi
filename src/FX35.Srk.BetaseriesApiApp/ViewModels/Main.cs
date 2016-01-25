@@ -1,8 +1,29 @@
 ﻿
 
-using Srk.BetaseriesApi;
-namespace Srk.BetaseriesApiApp.ViewModels {
-    public class Main : CommonViewModel {
+namespace Srk.BetaseriesApiApp.ViewModels
+{
+    using Srk.BetaseriesApi;
+    public class Main : CommonViewModel
+    {
+        private string apiKey;
+        private ShowInfo showInfo;
+        private ShowsSearch showsSearch;
+        private Login login;
+        private Version version;
+        private Badges badges;
+        private TimelineVM mainTimeline;
+        private TimelineVM ownTimeline;
+        private TimelineVM friendsTimeline;
+        private DebugVM debug;
+        private ShowEpisodesComments episodesComments;
+        private ShowEpisodesSubtitles episodesSubtitles;
+        private UserBadges userBadges;
+        private FriendsVM friends;
+        private QueryVM query;
+
+        public Main()
+        {
+        }
 
         public string ApiKey
         {
@@ -18,82 +39,76 @@ namespace Srk.BetaseriesApiApp.ViewModels {
                 }
             }
         }
-        private string apiKey;
-        
 
-        public ShowInfo ShowInfo {
-            get { return _showInfo ?? (_showInfo = new ShowInfo(this)); }
-        }
-        private ShowInfo _showInfo;
 
-        public ShowsSearch ShowsSearch {
-            get { return _showsSearch ?? (_showsSearch = new ShowsSearch(this)); }
+        public ShowInfo ShowInfo
+        {
+            get { return this.showInfo ?? (this.showInfo = new ShowInfo(this)); }
         }
-        private ShowsSearch _showsSearch;
 
-        public Login Login {
-            get { return _login ?? (_login = new Login(this)); }
+        public ShowsSearch ShowsSearch
+        {
+            get { return this.showsSearch ?? (this.showsSearch = new ShowsSearch(this)); }
         }
-        private Login _login;
 
-        public Version Version {
-            get { return _version ?? (_version = new Version(this)); }
+        public Login Login
+        {
+            get { return this.login ?? (this.login = new Login(this)); }
         }
-        private Version _version;
 
-        public Badges Badges {
-            get { return _badges ?? (_badges = new Badges(this)); }
+        public Version Version
+        {
+            get { return this.version ?? (this.version = new Version(this)); }
         }
-        private Badges _badges;
-        
-        public TimelineVM MainTimeline {
-            get { return _mainTimeline ?? (_mainTimeline = new TimelineVM(this, TimelineKind.Main)); }
-        }
-        private TimelineVM _mainTimeline;
 
-        public TimelineVM OwnTimeline {
-            get { return _ownTimeline ?? (_ownTimeline = new TimelineVM(this, TimelineKind.Own)); }
+        public Badges Badges
+        {
+            get { return this.badges ?? (this.badges = new Badges(this)); }
         }
-        private TimelineVM _ownTimeline;
 
-        public TimelineVM FriendsTimeline {
-            get { return _friendsTimeline ?? (_friendsTimeline = new TimelineVM(this, TimelineKind.Friends)); }
+        public TimelineVM MainTimeline
+        {
+            get { return this.mainTimeline ?? (this.mainTimeline = new TimelineVM(this, TimelineKind.Main)); }
         }
-        private TimelineVM _friendsTimeline;
 
-        public DebugVM Debug {
-            get { return _debug ?? (_debug = new DebugVM()); }
+        public TimelineVM OwnTimeline
+        {
+            get { return this.ownTimeline ?? (this.ownTimeline = new TimelineVM(this, TimelineKind.Own)); }
         }
-        private DebugVM _debug;
 
-        public ShowEpisodesComments EpisodesComments {
-            get { return _episodesComments ?? (_episodesComments = new ShowEpisodesComments(this)); }
+        public TimelineVM FriendsTimeline
+        {
+            get { return this.friendsTimeline ?? (this.friendsTimeline = new TimelineVM(this, TimelineKind.Friends)); }
         }
-        private ShowEpisodesComments _episodesComments;
+
+        public DebugVM Debug
+        {
+            get { return this.debug ?? (this.debug = new DebugVM()); }
+        }
+
+        public ShowEpisodesComments EpisodesComments
+        {
+            get { return this.episodesComments ?? (this.episodesComments = new ShowEpisodesComments(this)); }
+        }
 
         public ShowEpisodesSubtitles EpisodesSubtitles
         {
-            get { return _episodesSubtitles ?? (_episodesSubtitles = new ShowEpisodesSubtitles(this)); }
-        }
-        private ShowEpisodesSubtitles _episodesSubtitles;
-
-        public UserBadges UserBadges {
-            get { return _userBadges ?? (_userBadges = new UserBadges(this)); }
-        }
-        private UserBadges _userBadges;
-
-        public FriendsVM Friends {
-            get { return _friends ?? (_friends = new FriendsVM(this)); }
-        }
-        private FriendsVM _friends;
-
-        public QueryVM Query {
-            get { return _query ?? (_query = new QueryVM(this)); }
-        }
-        private QueryVM _query;
-        
-        public Main() {
+            get { return this.episodesSubtitles ?? (this.episodesSubtitles = new ShowEpisodesSubtitles(this)); }
         }
 
+        public UserBadges UserBadges
+        {
+            get { return this.userBadges ?? (this.userBadges = new UserBadges(this)); }
+        }
+
+        public FriendsVM Friends
+        {
+            get { return this.friends ?? (this.friends = new FriendsVM(this)); }
+        }
+
+        public QueryVM Query
+        {
+            get { return this.query ?? (this.query = new QueryVM(this)); }
+        }
     }
 }

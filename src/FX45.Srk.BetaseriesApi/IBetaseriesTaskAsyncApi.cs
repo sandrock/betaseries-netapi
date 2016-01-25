@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Srk.BetaseriesApi {
+namespace Srk.BetaseriesApi
+{
     /// <summary>
     /// Represents the betaseries.com API.
     /// This interface requires asynchronous implementation via the new .NET 4 Tasks pattern TaskAsync(for async/await usage).
     /// </summary>
-    public interface IBetaseriesTaskAsyncApi : IBetaseriesBaseApi, IDisposable {
+    public interface IBetaseriesTaskAsyncApi : IBetaseriesBaseApi, IDisposable
+    {
         #region Shows
 
         /// <summary>

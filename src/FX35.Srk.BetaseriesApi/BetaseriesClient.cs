@@ -16,6 +16,13 @@ namespace Srk.BetaseriesApi2
         private string UrlFormat = "{0}{1}?{2}";
         private string BaseUrl = "https://api.betaseries.com/";
 
+        public BetaseriesClient(string apiKey)
+        {
+            this.apiKey = apiKey;
+        }
+
+        public string UserAgent { get; set; }
+
         private string RealUserAgent
         {
             get { return string.Format("{0} {1}", Srk.BetaseriesApi.Version.LibraryUserAgent, UserAgent ?? "unknown app"); }
@@ -29,13 +36,6 @@ namespace Srk.BetaseriesApi2
             get { return _http ?? (_http = new HttpRequestWrapper(UrlFormat, BaseUrl, RealUserAgent)); }
             set { _http = value; }
         }
-
-        public BetaseriesClient(string apiKey)
-        {
-            this.apiKey = apiKey;
-        }
-
-        public string UserAgent { get; set; }
 
         internal virtual string ExecuteQuery(RequestContext request)
         {

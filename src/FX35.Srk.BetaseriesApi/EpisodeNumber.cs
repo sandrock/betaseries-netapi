@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Simple struct to easy episode numbers manipulations
     /// </summary>
-    public struct EpisodeNumber {
-
+    public struct EpisodeNumber
+    {
         /// <summary>
         /// Season number.
         /// </summary>
@@ -24,9 +25,9 @@ namespace Srk.BetaseriesApi {
         /// Returns a full number like "S02E08".
         /// </summary>
         /// <returns></returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             return EpisodeNumbers.GetNumberAsString(Season, Episode);
         }
-
     }
 }

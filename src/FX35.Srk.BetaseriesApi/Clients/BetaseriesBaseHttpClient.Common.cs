@@ -1,22 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿
+namespace Srk.BetaseriesApi.Clients
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
 
-namespace Srk.BetaseriesApi.Clients {
-    partial class BetaseriesBaseHttpClient {
+    partial class BetaseriesBaseHttpClient
+    {
+        private BetaseriesClientFactory factory;
+        private bool isCacheEnabled = true;
 
         /// <summary>
         /// This is a http query wrapper. Use for unit testing only.
         /// </summary>
-        protected IHttpRequestWrapper http {
-            get { return _http ?? (_http = new HttpRequestWrapper(UrlFormat, BaseUrl, RealUserAgent)); }
-            set { _http = value; }
+        protected IHttpRequestWrapper http
+        {
+            get { return this.http ?? (this.http = new HttpRequestWrapper(this.UrlFormat, this.BaseUrl, this.RealUserAgent)); }
+            set { http = value; }
         }
-        private IHttpRequestWrapper _http;
 
-        private string RealUserAgent {
-            get { return string.Format("{0} {1}", Version.LibraryUserAgent, UserAgent); }
+        private string RealUserAgent
+        {
+            get { return string.Format("{0} {1}", Srk.BetaseriesApi.Version.LibraryUserAgent, this.UserAgent); }
         }
 
         #region Error handling
@@ -26,11 +32,14 @@ namespace Srk.BetaseriesApi.Clients {
         /// The throws an exception if the parameter is not null.
         /// </summary>
         /// <param name="exception"></param>
-        protected void HandleError(Exception exception) {
+        protected void HandleError(Exception exception)
+        {
             HandleCustomError(exception);
-            if (exception is WebException) {
+            if (exception is WebException)
+            {
                 throw new ServiceException("The service does not seem available. Check your Internet connection and the service status. ");
             }
+
             throw exception;
         }
 
@@ -38,8 +47,8 @@ namespace Srk.BetaseriesApi.Clients {
         /// Empty overridable method to handle custom errors.
         /// </summary>
         /// <param name="exception"></param>
-        protected virtual void HandleCustomError(Exception exception) {
-
+        protected virtual void HandleCustomError(Exception exception)
+        {
         }
 
         /// <summary>
@@ -47,7 +56,8 @@ namespace Srk.BetaseriesApi.Clients {
         /// Do nothing if error is null.
         /// </summary>
         /// <param name="error"></param>
-        protected static void HandleError(BetaError error) {
+        protected static void HandleError(BetaError error)
+        {
             if (error == null)
                 return;
 
@@ -59,7 +69,8 @@ namespace Srk.BetaseriesApi.Clients {
         /// Do nothing if errors is null.
         /// </summary>
         /// <param name="errors"></param>
-        protected static void HandleError(IEnumerable<BetaError> errors) {
+        protected static void HandleError(IEnumerable<BetaError> errors)
+        {
             if (errors == null)
                 return;
 
@@ -71,21 +82,23 @@ namespace Srk.BetaseriesApi.Clients {
 
         #region Factory and session sharing
 
-        private BetaseriesClientFactory factory;
 
-        internal void RegisterFactory(BetaseriesClientFactory factory, string sessionToken, string sessionUsername) {
+        internal void RegisterFactory(BetaseriesClientFactory factory, string sessionToken, string sessionUsername)
+        {
             this.factory = factory;
 
-            factory.SessionTokenChangedEvent += factory_SessionTokenChangedEvent;
+            this.factory.SessionTokenChangedEvent += this.factory_SessionTokenChangedEvent;
 
-            _sessionToken = sessionToken;
-            _sessionUsername = sessionUsername;
+            this.sessionToken = sessionToken;
+            this.sessionUsername = sessionUsername;
         }
 
-        private void factory_SessionTokenChangedEvent(object sender, SessionTokenEventArgs e) {
-            if (e.Sender != this) {
-                _sessionToken = e.NewSessionToken;
-                _sessionUsername = e.NewSessionUsername;
+        private void factory_SessionTokenChangedEvent(object sender, SessionTokenEventArgs e)
+        {
+            if (e.Sender != this)
+            {
+                this.sessionToken = e.NewSessionToken;
+                this.sessionUsername = e.NewSessionUsername;
             }
         }
 
@@ -97,40 +110,43 @@ namespace Srk.BetaseriesApi.Clients {
         /// Let's you enable a static memory cache.
         /// Very simple implementation, not recommanded for a heavy scenario.
         /// </summary>
-        public bool IsCacheEnabled {
-            get { return _isCacheEnabled; }
-            set { _isCacheEnabled = value; }
+        public bool IsCacheEnabled
+        {
+            get { return this.isCacheEnabled; }
+            set { this.isCacheEnabled = value; }
         }
-        private bool _isCacheEnabled = true;
-        
+
         /// <summary>
         /// Clears the static memory cache.
         /// This will not disable caching.
         /// </summary>
-        public static void ClearCache() {
-            _showsCache.Clear();
-            _showSearchesCache.Clear();
+        public static void ClearCache()
+        {
+            showsCache.Clear();
+            showSearchesCache.Clear();
         }
 
         #region Show searches
 
-        private static readonly Dictionary<string, IList<Show>> _showSearchesCache = new Dictionary<string, IList<Show>>();
+        private static readonly Dictionary<string, IList<Show>> showSearchesCache = new Dictionary<string, IList<Show>>();
 
-        protected IList<Show> SearchShowsFromCache(string title) {
-            if (_showSearchesCache == null || !IsCacheEnabled)
+        protected IList<Show> SearchShowsFromCache(string title)
+        {
+            if (showSearchesCache == null || !this.IsCacheEnabled)
                 return null;
-            return _showSearchesCache.FirstOrDefault(i => i.Key == title).Value;
+            return showSearchesCache.FirstOrDefault(i => i.Key == title).Value;
         }
 
-        protected static void SearchShowsToCache(string title, IList<Show> shows) {
-            _showSearchesCache[title] = shows;
+        protected static void SearchShowsToCache(string title, IList<Show> shows)
+        {
+            showSearchesCache[title] = shows;
         }
 
         #endregion
 
         #region Shows
 
-        private static readonly List<Show> _showsCache = new List<Show>();
+        private static readonly List<Show> showsCache = new List<Show>();
 
         /// <summary>
         /// Returns a show from the cache.
@@ -138,30 +154,32 @@ namespace Srk.BetaseriesApi.Clients {
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        protected Show GetShowFromCache(string url) {
-            if (_showsCache == null || !IsCacheEnabled)
+        protected Show GetShowFromCache(string url)
+        {
+            if (showsCache == null || !this.IsCacheEnabled)
                 return null;
-            return _showsCache.FirstOrDefault(s => s.Url == url);
+            return showsCache.FirstOrDefault(s => s.Url == url);
         }
 
         /// <summary>
         /// Remove a show from the cache.
         /// </summary>
         /// <param name="url"></param>
-        protected void RemoveShowFromCache(string url) {
-            if (_showsCache == null || _showsCache.Count == 0)
+        protected void RemoveShowFromCache(string url)
+        {
+            if (showsCache == null || showsCache.Count == 0)
                 return;
 
-            var existing = _showsCache.FirstOrDefault(s => s.Url == url);
+            var existing = showsCache.FirstOrDefault(s => s.Url == url);
 
             if (existing != null)
-                _showsCache.Remove(existing);
+                showsCache.Remove(existing);
 
-            if (_episodeListsCache == null || _episodeListsCache.Count == 0)
+            if (episodeListsCache == null || episodeListsCache.Count == 0)
                 return;
 
-            if (_episodeListsCache.ContainsKey(url))
-                _episodeListsCache.Remove(url);
+            if (episodeListsCache.ContainsKey(url))
+                episodeListsCache.Remove(url);
         }
 
         /// <summary>
@@ -169,64 +187,69 @@ namespace Srk.BetaseriesApi.Clients {
         /// Returns null is cache is disabled.
         /// </summary>
         /// <param name="show"></param>
-        protected void GetShowToCache(Show show) {
+        protected void GetShowToCache(Show show)
+        {
             var existing = GetShowFromCache(show.Url);
             if (existing != null)
-                _showsCache.Remove(existing);
-            _showsCache.Add(show);
+                showsCache.Remove(existing);
+            showsCache.Add(show);
         }
 
-        protected void ClearShowsCache() {
-            _showsCache.Clear();
+        protected void ClearShowsCache()
+        {
+            showsCache.Clear();
         }
 
         #endregion
 
         #region Episode lists
 
-        private readonly static Dictionary<string, IList<Episode>> _episodeListsCache = new Dictionary<string, IList<Episode>>();
+        private readonly static Dictionary<string, IList<Episode>> episodeListsCache = new Dictionary<string, IList<Episode>>();
 
-        protected IList<Episode> GetEpisodesFromCache(string showUrl) {
-            if (_episodeListsCache == null || !IsCacheEnabled)
+        protected IList<Episode> GetEpisodesFromCache(string showUrl)
+        {
+            if (episodeListsCache == null || !this.IsCacheEnabled)
                 return null;
-            return _episodeListsCache.FirstOrDefault(i => i.Key == showUrl).Value;
+            return episodeListsCache.FirstOrDefault(i => i.Key == showUrl).Value;
         }
 
-        protected static void GetEpisodesToCache(string showUrl, IList<Episode> episodes) {
-            _episodeListsCache[showUrl] = episodes;
+        protected static void GetEpisodesToCache(string showUrl, IList<Episode> episodes)
+        {
+            episodeListsCache[showUrl] = episodes;
         }
 
         #endregion
 
         #region Episodes
 
-        private readonly static Dictionary<string, Episode> _episodesCache = new Dictionary<string, Episode>();
+        private readonly static Dictionary<string, Episode> episodesCache = new Dictionary<string, Episode>();
 
-        protected Episode GetEpisodeFromCache(string showUrl, string number) {
+        protected Episode GetEpisodeFromCache(string showUrl, string number)
+        {
             string key = string.Concat(showUrl, "/", number);
 
-            if (_episodesCache == null || !IsCacheEnabled || !_episodesCache.ContainsKey(key))
+            if (episodesCache == null || !this.IsCacheEnabled || !episodesCache.ContainsKey(key))
                 return null;
-            return _episodesCache[key];
+            return episodesCache[key];
         }
 
-        protected static void GetEpisodeToCache(string showUrl, string number, Episode episode) {
+        protected static void GetEpisodeToCache(string showUrl, string number, Episode episode)
+        {
             string key = string.Concat(showUrl, "/", number);
 
-            _episodesCache[key] = episode;
+            episodesCache[key] = episode;
         }
 
-        protected void ClearEpisodeFromCache(string showUrl, string number) {
+        protected void ClearEpisodeFromCache(string showUrl, string number)
+        {
             string key = string.Concat(showUrl, "/", number);
 
-            if (_episodesCache.ContainsKey(key))
-                _episodesCache.Remove(key);
+            if (episodesCache.ContainsKey(key))
+                episodesCache.Remove(key);
         }
 
         #endregion
 
         #endregion
-
-
     }
 }

@@ -1,11 +1,13 @@
-﻿using System;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
 
     /// <summary>
     /// Represent a user notification.
     /// </summary>
-    public class Notification {
+    public class Notification
+    {
 
         /// <summary>
         /// The unique ID.
@@ -26,6 +28,5 @@ namespace Srk.BetaseriesApi {
         /// Boolean to mark the notification as seen.
         /// </summary>
         public bool Seen { get; set; }
-
     }
 }

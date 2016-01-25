@@ -1,14 +1,16 @@
-﻿using System;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Runtime.Serialization;
 
     [Serializable]
-    partial class ClientException : Exception {
+    partial class ClientException : Exception
+    {
 
-        protected ClientException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
-
+        protected ClientException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

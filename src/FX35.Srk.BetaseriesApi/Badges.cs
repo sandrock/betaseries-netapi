@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Srk.BetaseriesApi.Resources;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Srk.BetaseriesApi.Resources;
 
     /// <summary>
     /// To work with badges :)
     /// </summary>
-    public static class BadgesUtil {
-
-        static BadgesUtil() {
+    public static class BadgesUtil
+    {
+        static BadgesUtil()
+        {
             serviceMap.Add("amateur", Badges.Amateur);
             serviceMap.Add("blogueur_influent", Badges.BlogueurInfluent);
             serviceMap.Add("capitaine_spock", Badges.CapitaineSpock);
@@ -56,12 +58,13 @@ namespace Srk.BetaseriesApi {
             serviceMap.Add("peinture_fraiche", Badges.FreshPaint);
         }
 
-        private static readonly Dictionary<string, Badges> serviceMap = new Dictionary<string,Badges>();
+        private static readonly Dictionary<string, Badges> serviceMap = new Dictionary<string, Badges>();
 
         /// <summary>
         /// Return known service keys.
         /// </summary>
-        public static string[] ServiceKeys {
+        public static string[] ServiceKeys
+        {
             get { return serviceMap.Keys.ToArray(); }
         }
 
@@ -71,11 +74,15 @@ namespace Srk.BetaseriesApi {
         /// <param name="serviceKey"></param>
         /// <param name="badge"></param>
         /// <returns>true if parsing succeed</returns>
-        public static bool TryParseBadge(string serviceKey, out Badges badge) {
-            if (serviceMap.ContainsKey(serviceKey)) {
+        public static bool TryParseBadge(string serviceKey, out Badges badge)
+        {
+            if (serviceMap.ContainsKey(serviceKey))
+            {
                 badge = serviceMap[serviceKey];
                 return true;
-            } else {
+            }
+            else
+            {
                 badge = Badges.Unknown;
                 return false;
             }
@@ -87,7 +94,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="badge"></param>
         /// <returns></returns>
-        public static string GetName(Badges badge) {
+        public static string GetName(Badges badge)
+        {
             return GetName(badge.ToString());
         }
 
@@ -97,12 +105,16 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="internalKey">key is Badges.ToString()</param>
         /// <returns></returns>
-        public static string GetName(string internalKey) {
-            try {
+        public static string GetName(string internalKey)
+        {
+            try
+            {
                 return GeneralStrings.ResourceManager.GetString(
                     string.Concat("Badges_", internalKey)
                 ) ?? internalKey;
-            } catch {
+            }
+            catch
+            {
                 return internalKey;
             }
         }
@@ -113,7 +125,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="badge"></param>
         /// <returns></returns>
-        public static string GetTranslatedName(Badges badge) {
+        public static string GetTranslatedName(Badges badge)
+        {
             return GetTranslatedName(badge.ToString());
         }
 
@@ -123,12 +136,16 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="internalKey">key is Badges.ToString()</param>
         /// <returns></returns>
-        public static string GetTranslatedName(string internalKey) {
-            try {
+        public static string GetTranslatedName(string internalKey)
+        {
+            try
+            {
                 return GeneralStrings.ResourceManager.GetString(
                     string.Concat("Badges_", internalKey)
                 );
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }
@@ -138,7 +155,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="badge"></param>
         /// <returns></returns>
-        public static string GetDescription(Badges badge) {
+        public static string GetDescription(Badges badge)
+        {
             return GetDescription(badge.ToString());
         }
 
@@ -147,12 +165,16 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="internalKey">key is Badges.ToString()</param>
         /// <returns></returns>
-        public static string GetDescription(string internalKey) {
-            try {
+        public static string GetDescription(string internalKey)
+        {
+            try
+            {
                 return GeneralStrings.ResourceManager.GetString(
                     string.Concat("BadgeDesc_", internalKey)
                 );
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }
@@ -162,7 +184,8 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static Badges Parse(string key) {
+        public static Badges Parse(string key)
+        {
             return serviceMap.ContainsKey(key) ? serviceMap[key] : Badges.Unknown;
         }
 
@@ -173,7 +196,6 @@ namespace Srk.BetaseriesApi {
     /// </summary>
     public enum Badges
     {
-
         /// <summary>
         /// Badly parsed badges or new one.
         /// </summary>

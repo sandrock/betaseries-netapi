@@ -1,11 +1,11 @@
 ﻿
-namespace Srk.BetaseriesApi {
-
+namespace Srk.BetaseriesApi
+{
     /// <summary>
     /// API status class.
     /// </summary>
-    public class ApiStatus {
-
+    public class ApiStatus
+    {
         /// <summary>
         /// Expected values: ok
         /// </summary>
@@ -41,29 +41,29 @@ namespace Srk.BetaseriesApi {
     /// <summary>
     /// To be used with <see cref="ApiChange"/>.
     /// </summary>
-    public enum ApiChangeType {
-
+    public enum ApiChangeType
+    {
         /// <summary>
         /// Default value if parsing fails.
         /// </summary>
         Unknown,
-        
+
         /// <summary>
         /// This is a new thing.
         /// </summary>
         New,
-        
+
         /// <summary>
         /// Something gets an update!
         /// </summary>
-        Update
+        Update,
     }
 
     /// <summary>
     /// API change.
     /// </summary>
-    public struct ApiChange {
-
+    public struct ApiChange
+    {
         /// <summary>
         /// A date formated like "20100130".
         /// </summary>
@@ -83,8 +83,8 @@ namespace Srk.BetaseriesApi {
     /// <summary>
     /// API Method.
     /// </summary>
-    public struct ApiMethod {
-
+    public struct ApiMethod
+    {
         /// <summary>
         /// API method name (like "shows/details").
         /// </summary>
@@ -104,8 +104,8 @@ namespace Srk.BetaseriesApi {
     /// <summary>
     /// API file ???
     /// </summary>
-    public struct ApiFile {
-
+    public struct ApiFile
+    {
         /// <summary>
         /// File name.
         /// </summary>
@@ -116,5 +116,4 @@ namespace Srk.BetaseriesApi {
         /// </summary>
         public long Date;
     }
-
 }

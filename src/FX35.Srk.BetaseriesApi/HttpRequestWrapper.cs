@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-using System.Web;
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Net;
+    using System.IO;
+    using System.Web;
 
-namespace Srk.BetaseriesApi {
-    public partial class HttpRequestWrapper : IHttpRequestWrapper {
-
+    public partial class HttpRequestWrapper : IHttpRequestWrapper
+    {
         /// <summary>
         /// Download a response string.
         /// </summary>
@@ -44,9 +46,11 @@ namespace Srk.BetaseriesApi {
             var postDataStream = CreatePostStream(postParameters);
 
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached && false) {
+            if (System.Diagnostics.Debugger.IsAttached && false)
+            {
                 string postString = null;
-                using (var sr = new StreamReader(postDataStream)) {
+                using (var sr = new StreamReader(postDataStream))
+                {
                     postString = sr.ReadToEnd();
                 }
                 postDataStream.Seek(0L, SeekOrigin.Begin);
@@ -68,7 +72,8 @@ namespace Srk.BetaseriesApi {
             return stringResponse;
         }
 
-        protected static string GetStringResponse(HttpWebRequest request) {
+        protected static string GetStringResponse(HttpWebRequest request)
+        {
             HttpWebResponse response;
             try
             {
@@ -88,12 +93,14 @@ namespace Srk.BetaseriesApi {
             byte[] buf = new byte[8192];
             int count = 0;
 
-            do {
+            do
+            {
                 // fill the buffer with data
                 count = resStream.Read(buf, 0, buf.Length);
 
                 // make sure we read some data
-                if (count != 0) {
+                if (count != 0)
+                {
                     // translate from bytes to ASCII text
                     sb.Append(Encoding.UTF8.GetString(buf, 0, count));
                 }
@@ -104,37 +111,47 @@ namespace Srk.BetaseriesApi {
             return stringResponse;
         }
 
-        protected static void SendPostData(MemoryStream postDataStream, HttpWebRequest request) {
-            using (var requestStream = request.GetRequestStream()) {
-                try {
+        protected static void SendPostData(MemoryStream postDataStream, HttpWebRequest request)
+        {
+            using (var requestStream = request.GetRequestStream())
+            {
+                try
+                {
                     byte[] buffer = new byte[4096];
                     int bytesRead = 0;
-                    while ((bytesRead = postDataStream.Read(buffer, 0, buffer.Length)) != 0) {
+                    while ((bytesRead = postDataStream.Read(buffer, 0, buffer.Length)) != 0)
+                    {
                         requestStream.Write(buffer, 0, bytesRead);
                         requestStream.Flush();
                     }
                     requestStream.Close();
                     postDataStream.Close();
-                } catch {
+                }
+                catch
+                {
                     throw;
-                } finally {
+                }
+                finally
+                {
                     postDataStream.Dispose();
                 }
             }
         }
 
-        protected HttpWebRequest PrepareRequest(string queryString) {
-            HttpWebRequest request = (HttpWebRequest)
-                WebRequest.Create(new Uri(queryString, UriKind.Absolute));
+        protected HttpWebRequest PrepareRequest(string queryString)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(queryString, UriKind.Absolute));
             request.AllowAutoRedirect = false;
             request.UserAgent = UserAgent;
             return request;
         }
 
-        protected static MemoryStream CreatePostStream(Dictionary<string, string> postParameters) {
+        protected static MemoryStream CreatePostStream(Dictionary<string, string> postParameters)
+        {
             var postDataStream = new MemoryStream();
             string sep = string.Empty;
-            foreach (var item in postParameters) {
+            foreach (var item in postParameters)
+            {
                 var bytes = UTF8Encoding.UTF8.GetBytes(string.Concat(
                     item.Key, '=', PostEncode(item.Value)));
                 postDataStream.Write(bytes, 0, bytes.Length);
@@ -142,6 +159,5 @@ namespace Srk.BetaseriesApi {
             postDataStream.Seek(0L, SeekOrigin.Begin);
             return postDataStream;
         }
-
     }
 }

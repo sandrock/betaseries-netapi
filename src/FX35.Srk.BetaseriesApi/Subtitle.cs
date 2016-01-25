@@ -1,23 +1,36 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-
+﻿
 namespace Srk.BetaseriesApi
 {
+    using System;
+    using System.ComponentModel;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represent a subtitle file.
     /// 
     /// </summary>
-    public class Subtitle {
+    public class Subtitle
+    {
+        private string _status;
+
+        public Subtitle()
+        {
+        }
 
         public string Title { get; set; }
+
         public int Season { get; set; }
+
         public int Episode { get; set; }
+
         public string Language { get; set; }
+
         public string Url { get; set; }
+
         public int Quality { get; set; }
+
         public string FileName { get; set; }
+
         public string Source { get; set; }
 
         public string Status
@@ -32,18 +45,6 @@ namespace Srk.BetaseriesApi
                 }
             }
         }
-        private string _status;
-
-        public Subtitle()
-        {
-
-        }
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         /// <summary>
         /// Because this object is not always filled.
@@ -53,10 +54,12 @@ namespace Srk.BetaseriesApi
             get { return Status != null; }
         }
 
-        #region INotifyPropertyChanged Members
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

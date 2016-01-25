@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Srk.BetaseriesApi {
+﻿
+namespace Srk.BetaseriesApi
+{
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represent a betaseries member.
     /// </summary>
-    public class Member {
+    public class Member
+    {
 
         /// <summary>
         /// This is the unique ID.
@@ -68,9 +70,9 @@ namespace Srk.BetaseriesApi {
         /// Returns a <see cref="System.String"/> that represents the current <see cref="Member"/>.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             return Username;
         }
-
     }
 }

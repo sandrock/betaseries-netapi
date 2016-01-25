@@ -11,8 +11,10 @@ FR: Dans cette branche: **implémenter l'API v2.2 à la place de la v1.0**.
 
 * **Goal: make new apps for betaseries!**  
 Objectif : construire des apps cool pour betaseries !
-* **Fun constraint: Generate code instead of writing it!**  
-Contrainte fun : générer les codes source au lieu de les écrire directement !
+* --Fun constraint: Generate code instead of writing it!--  That's not fun.  
+--Contrainte fun : générer les codes source au lieu de les écrire directement !-- Nop, don't do it.
+
+
 
 What's this?
 ============
@@ -47,79 +49,31 @@ C'est une librairie .NET permettant l'utilisation de l'API de betaseries.com ave
 This library is available for:  
 Cette librairie est disponible pour :
 
- `[x]` Microsoft .NET 3.5 assembly 
- `[ ]` Silverlight 4     
- `[ ]` Windows 8 Apps    
- `[ ]` Windows Phone 8   
- `[ ]` Windows Phone 7   
- `[ ]` Windows Mobile 6  
+- [ ] Microsoft .NET 3.5 assembly
+- [ ] Silverlight 4
+- [ ] Windows 8 Apps
+- [ ] Windows Phone 8
+- [ ] Windows Phone 7
+- [ ] Windows Mobile 6
 
 Code generation 
 ============
 
-Rules for the win
---------------
+Previous commits were going in the wrong direction.
 
-This library is written in a special way.  
-Cette librairie est écrite d'une façon spéciale.
+Roadmap to success:
 
-1. Source code related to API requests MUST be generated based on the official documentation.  
-   Les codes sources d'appel des méthodes API DOIVENT être générés sur la base de la documentation officielle.  
-1. Source code related to API requests MAY be enhanced using a rules file (Api2.xml)  
-   Les codes sources d'appel des méthodes API PEUVENT être modifiés par l'application de règles personnalisées.
+- [x] Format code, stylecop pass
+- [ ] Drop .NET < 4.5 support
+- [ ] Switch to Microsoft.Net.Http
+- [ ] Mark all methods obsolete
+- [ ] Convert major methods
+- [ ] Clean wrong code
+- [ ] Merge to main
+- [ ] NUGET
 
-Rule 1 allows updating code in a automated way. Just run a template file and everything is up-to-date.  
-La règle 1 permet la mise à jour automatisée de la librairie. Executer un template et c'est à jour.
 
-Rule 2 covers stuff code generation cannot cover (custom method names, special cases...)  
-La règle 2 permet de contourner ce que le génération automatique ne peut pas bien gérer (noms des méthodes, traitements spéciaux...)
 
-The project `Srk.BetaseriesApiFactory` does the big job. The Api2.tt file uses a `ApiFactory` object to generate API calls and data structures in C#.
-
-	class ApiFactory
-	{
-	    public void Run(TextWriter text)
-	    {
-	        var context = new ApiFactoryContext();
-	        this.FetchDocumentation(context);       // from http://www.betaseries.com/api/methodes/ 
-	        this.ReviewDocumentation(context);      // cleanup method names and stuff
-		
-	        this.LoadTransforms(context, text);     // load & apply custom rules
-	        this.ApplyTransforms(context, text, methods: true, argumentEnums: true);
-	        this.ApplyTransforms(context, text, responseFormats: true);
-		
-	        this.WriteEntities(context, text);      // generate DTOs 
-	        this.WriteArgumentEnums(context, text); // generate DTOs
-	        this.WriteService(context, text);       // generate calls and main classes
-	    }
-	}
-
-Big issues
---------------
-
-* The documentation is not easy to read from C#
-* The documentation does not always include result structures
-* The documentation may not specify argument types
-* Result structures are hard to handle in C#
- * The main result object should contain static property names (errors and data).
- * The main result object's main data entry does not have a predictable name
-
-Progress
---------------
-
-`[x]` Setup .tt file anf code factory for .NET 3.5
-`[x]` Fetch documentation pages from website (normalize html to xml, parse content)  
-`[x]` Translate documentation into description objects (methods, arguments, result structures)  
-`[x]` Generate data structures and method calls in C#  
-`[x]` Create a custom rules file and apply those rules  
-`[-]` Verify main API methods (authentication, lists, posts)  
-`[ ]` Verify all API methods  
-`[ ]` The library is "ready", update http://www.betaseries.com/wiki/Srk.BetaseriesApi  
-`[ ]` Implement async methods based on callbacks (.NET 3.5)    
-`[ ]` Implement async methods based on callbacks (Silverlight 4)  
-`[ ]` Implement async methods based on callbacks (Windows Phone 7)  
-`[ ]` Implement async methods based on async/await (.NET 4.5)  
-`[ ]` Implement async methods based on async/await (Windows Phone 8)  
 
 License
 =======
