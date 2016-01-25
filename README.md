@@ -6,7 +6,7 @@ This project started on [CodePlex](https://betaseries.codeplex.com/). The codeba
 WORK IN PROGRESS
 ============
 
-**This code does not work.**
+**This code might still work.** The API v1 is still up.
 
 EN: In this branch: **the code targets the v1 API which is not active anymore**.  
 FR: Dans cette branche: **le code vise l'API v1 qui n'est plus active**.
