@@ -3,6 +3,16 @@ Srk.BetaseriesApi, the .NET wrapper to the [betaseries.com](http://www.betaserie
 
 This project started on [CodePlex](https://betaseries.codeplex.com/). The codebase has a new home here.
 
+WORK IN PROGRESS
+============
+
+**This code does not work.**
+
+EN: In this branch: **the code targets the v1 API which is not active anymore**.  
+FR: Dans cette branche: **le code vise l'API v1 qui n'est plus active**.
+
+There is a branch with work in progress for the new API.
+
 What's this?
 ============
 
